@@ -1,0 +1,14 @@
+name: dev-feisty
+channels:
+  - conda-forge
+dependencies:
+  - codecov
+  - jupyterlab
+  - nbsphinx
+  - netcdf4  
+  - numpydoc  
+  - pip
+  - pre-commit
+  - pytest
+  - pytest-cov
+  - xarray
