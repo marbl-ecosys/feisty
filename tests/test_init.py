@@ -99,19 +99,20 @@ def test_fish_mod_init():
     assert fish_mod._size_class_masses
     assert fish_mod._size_class_bnds_ratio
     assert fish_mod.functional_types
-    assert fish_mod._mortality_types
+    assert fish_mod.mortality_types
 
     # check some 1:1 values
-    assert fish_mod._PI_be_cutoff == settings_dict_def['model_settings']['PI_be_cutoff']
     assert (
-        fish_mod._pdc_type_keys
-        == settings_dict_def['model_settings']['pelagic_demersal_coupling_types']
+        fish_mod.PI_be_cutoff == settings_dict_def['model_settings']['benthic_pelagic_depth_cutoff']
+    )
+    assert set(fish_mod._pdc_type_keys) == set(
+        settings_dict_def['model_settings']['pelagic_demersal_coupling_type_keys']
     )
     assert fish_mod._pelagic_functional_type_keys == set(
-        settings_dict_def['model_settings']['pelagic_functional_types']
+        settings_dict_def['model_settings']['pelagic_functional_type_keys']
     )
     assert fish_mod._demersal_functional_type_keys == set(
-        settings_dict_def['model_settings']['demersal_functional_types']
+        settings_dict_def['model_settings']['demersal_functional_type_keys']
     )
 
 
@@ -129,7 +130,7 @@ def test_fish_mod_size_class_bounds():
 def test_func_type_init():
     import feisty.fish_mod as fish_mod
 
-    func_types_expected = settings_dict_def['model_settings']['functional_type_names']
+    func_types_expected = settings_dict_def['model_settings']['functional_type_keys']
 
     # ensure all are present
     assert set(fish_mod.functional_types.keys()) == set(func_types_expected)
@@ -166,9 +167,11 @@ def test_bad_mortality_type_fails():
 
 
 def test_bad_pelagic_demersal_coupling_types_fails():
-    """init should fail if there is an unknown pelagic_demersal_coupling_types"""
+    """init should fail if there is an unknown pelagic_demersal_coupling_type_keys"""
     settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_types'].append('UnkownType')
+    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_type_keys'].append(
+        'UnkownType'
+    )
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
@@ -178,9 +181,9 @@ def test_bad_pelagic_demersal_coupling_types_fails():
 
 
 def test_bad_pelagic_functional_types_fails():
-    """init should fail if there is an unknown pelagic_functional_types"""
+    """init should fail if there is an unknown pelagic_functional_type_keys"""
     settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['model_settings']['pelagic_functional_types'].append('UnkownType')
+    settings_dict_def_bad['model_settings']['pelagic_functional_type_keys'].append('UnkownType')
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
@@ -193,12 +196,12 @@ def test_bad_functional_types_apply_pref():
     """init should fail if type is in apply_preference but not in pelagic_demersal_coupling_types"""
     settings_dict_def_bad = feisty.settings.get_defaults()
 
-    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_types'] = [
+    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_type_keys'] = [
         'demersal',
         'piscivore',
     ]
 
-    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_apply_pref_types'] = [
+    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_apply_pref_type_keys'] = [
         'forage',
         'demersal',
     ]
@@ -211,9 +214,9 @@ def test_bad_functional_types_apply_pref():
 
 
 def test_bad_demersal_functional_types_fails():
-    """init should fail if there is an unknown demersal_functional_types"""
+    """init should fail if there is an unknown demersal_functional_type_keys"""
     settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['model_settings']['demersal_functional_types'].append('UnkownType')
+    settings_dict_def_bad['model_settings']['demersal_functional_type_keys'].append('UnkownType')
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
@@ -234,13 +237,13 @@ def test_bad_size_class_fail():
         )
 
 
-def test_duplicated_pelagic_demersal_types():
+def test_duplicated_pelagic_demersal_type_keys():
     settings_dict_def_bad = feisty.settings.get_defaults()
     combined_list = (
-        settings_dict_def_bad['model_settings']['pelagic_functional_types']
-        + settings_dict_def_bad['model_settings']['demersal_functional_types']
+        settings_dict_def_bad['model_settings']['pelagic_functional_type_keys']
+        + settings_dict_def_bad['model_settings']['demersal_functional_type_keys']
     )
-    settings_dict_def_bad['model_settings']['pelagic_functional_types'] = combined_list
+    settings_dict_def_bad['model_settings']['pelagic_functional_type_keys'] = combined_list
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,

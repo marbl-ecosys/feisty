@@ -7,24 +7,24 @@ model_settings:
     small: [0.001, 0.5]
     medium: [0.5, 250.]
     large: [250., 125000.]
-  functional_type_names:
+  functional_type_keys:
     - zooplankton
     - forage
     - piscivore
     - demersal
     - benthic_prey
-  pelagic_demersal_coupling_types:
+  pelagic_demersal_coupling_type_keys:
     - piscivore
     - demersal
-  pelagic_demersal_coupling_apply_pref_types:
+  pelagic_demersal_coupling_apply_pref_type_keys:
     - demersal
-  pelagic_functional_types:
+  pelagic_functional_type_keys:
     - forage
     - piscivore
-  demersal_functional_types:
+  demersal_functional_type_keys:
     - demersal
     - benthic_prey
-  PI_be_cutoff: 200.
+  benthic_pelagic_depth_cutoff: 200.
 
 zooplankton:
   - name: Zoo

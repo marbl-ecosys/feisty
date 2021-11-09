@@ -104,7 +104,7 @@ def test_fish_bad_energy_frac_somatic_growth():
 
 
 def test_fish_init_uncoupled():
-    """ensure that we cannot initialize fish with pelagic_demersal_coupling = True if functional_type is not in pelagic_demersal_coupling_types"""
+    """ensure that we cannot initialize fish with pelagic_demersal_coupling = True if functional_type is not in pelagic_demersal_coupling_type_keys"""
     settings_dict_def_fish_bad_pdc = settings.get_defaults()
 
     for i in range(len(settings_dict_def_fish_bad_pdc['fish'])):
@@ -120,14 +120,14 @@ def test_fish_init_uncoupled():
 
 def test_fish_apply_pref():
     pdc_apply_pref_type_keys = settings_dict_def['model_settings'][
-        'pelagic_demersal_coupling_apply_pref_types'
+        'pelagic_demersal_coupling_apply_pref_type_keys'
     ]
     for i, fish in enumerate(F.fish):
         pdc_apply_pref = fish_settings[i]['functional_type'] in pdc_apply_pref_type_keys
-        assert fish._pdc_apply_pref == pdc_apply_pref
+        assert fish.pdc_apply_pref == pdc_apply_pref
 
 
 def test_is_demersal():
     for fish in F.fish:
-        is_demersal = fish.functional_type in model_settings['demersal_functional_types']
+        is_demersal = fish.functional_type in model_settings['demersal_functional_type_keys']
         assert is_demersal == fish_mod.is_demersal(fish.name)

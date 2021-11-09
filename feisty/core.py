@@ -1,7 +1,7 @@
 import numpy as np
 import xarray as xr
 
-from . import domain, feeding, fish_mod, settings
+from . import domain, feeding, fish_mod, process, settings
 
 
 class feisty_instance_type(object):
@@ -224,7 +224,7 @@ class feisty_instance_type(object):
 
     def _compute_temperature(self):
         for i in range(self.n_fish):
-            self.tendency_data.T_habitat[i, :] = fish_mod.t_weighted_mean_temp(
+            self.tendency_data.T_habitat[i, :] = process.t_weighted_mean_temp(
                 self.gcm_state.T_pelagic,
                 self.gcm_state.T_bottom,
                 self.tendency_data.t_frac_pelagic[i, :],
@@ -239,7 +239,7 @@ class feisty_instance_type(object):
         )
 
     def _update_benthic_biomass(self):
-        fish_mod.compute_benthic_biomass_update(
+        process.compute_benthic_biomass_update(
             self.tendency_data.benthic_biomass_new,
             benthic_prey_list=self.benthic_prey,
             biomass=self.biomass,
@@ -249,20 +249,20 @@ class feisty_instance_type(object):
         self.set_benthic_prey_biomass(self.tendency_data.benthic_biomass_new)
 
     def _compute_metabolism(self):
-        fish_mod.compute_metabolism(
+        process.compute_metabolism(
             self.tendency_data.metabolism_rate,
             self.fish,
             self.tendency_data.T_habitat,
         )
 
     def _compute_ingestion(self):
-        fish_mod.compute_ingestion(
+        process.compute_ingestion(
             self.tendency_data.ingestion_rate,
             self.food_web,
         )
 
     def _compute_predation(self):
-        fish_mod.compute_predation(
+        process.compute_predation(
             self.tendency_data.predation_flux,
             self.food_web,
             self.biomass,
@@ -272,21 +272,21 @@ class feisty_instance_type(object):
         )
 
     def _compute_mortality(self):
-        fish_mod.natural_mortality(
+        process.natural_mortality(
             self.tendency_data.mortality_rate,
             self.fish,
             self.tendency_data.T_habitat,
         )
 
     def _compute_fish_catch(self):
-        fish_mod.compute_fish_catch(
+        process.compute_fish_catch(
             self.tendency_data.fish_catch_rate,
             self.fishing.fishing_rate,
             self.fish,
         )
 
     def _compute_energy_avail(self):
-        fish_mod.compute_energy_avail(
+        process.compute_energy_avail(
             self.tendency_data.energy_avail_rate,
             self.tendency_data.ingestion_rate,
             self.tendency_data.metabolism_rate,
@@ -294,7 +294,7 @@ class feisty_instance_type(object):
         )
 
     def _compute_growth(self):
-        fish_mod.compute_growth(
+        process.compute_growth(
             self.tendency_data.growth_rate,
             self.tendency_data.energy_avail_rate,
             self.tendency_data.predation_rate,
@@ -304,7 +304,7 @@ class feisty_instance_type(object):
         )
 
     def _compute_reproduction(self):
-        fish_mod.compute_reproduction(
+        process.compute_reproduction(
             self.tendency_data.reproduction_rate,
             self.tendency_data.growth_rate,
             self.tendency_data.energy_avail_rate,
@@ -312,7 +312,7 @@ class feisty_instance_type(object):
         )
 
     def _compute_recruitment(self):
-        fish_mod.compute_recruitment(
+        process.compute_recruitment(
             self.tendency_data.recruitment_flux,
             self.tendency_data.reproduction_rate,
             self.tendency_data.growth_rate,
@@ -321,7 +321,7 @@ class feisty_instance_type(object):
         )
 
     def _compute_total_tendency(self):
-        fish_mod.compute_total_tendency(
+        process.compute_total_tendency(
             self.tendency_data.total_tendency,
             self.tendency_data.recruitment_flux,
             self.tendency_data.energy_avail_rate,

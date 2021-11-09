@@ -299,7 +299,7 @@ def test_get_prey_biomass():
             assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
         # check that pelagic functional type sums work
-        prey_functional_type_keys = model_settings['pelagic_functional_types']
+        prey_functional_type_keys = model_settings['pelagic_functional_type_keys']
         prey_list_check_filt = [
             p for p in prey_list_check if fish_func_type[p] in prey_functional_type_keys
         ]
@@ -311,7 +311,7 @@ def test_get_prey_biomass():
         assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
         # check that demersal functional type sums work
-        prey_functional_type_keys = model_settings['demersal_functional_types']
+        prey_functional_type_keys = model_settings['demersal_functional_type_keys']
         prey_list_check_filt = [
             p for p in prey_list_check if fish_func_type[p] in prey_functional_type_keys
         ]

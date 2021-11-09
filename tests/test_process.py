@@ -4,6 +4,7 @@ import xarray as xr
 
 import feisty
 import feisty.fish_mod as fish_mod
+import feisty.process as process
 import feisty.settings as settings
 
 from . import conftest
@@ -54,7 +55,7 @@ fish_func_type = conftest.get_fish_func_type(settings_dict_def)
     ],
 )
 def test_t_weighted_mean_temp(Tp, Tb, t_frac_pelagic, expected):
-    assert fish_mod.t_weighted_mean_temp(Tp, Tb, t_frac_pelagic) == expected
+    assert process.t_weighted_mean_temp(Tp, Tb, t_frac_pelagic) == expected
 
 
 def test_t_frac_pelagic():
@@ -72,10 +73,10 @@ def test_t_frac_pelagic():
 
     F._compute_t_frac_pelagic()
 
-    pelagic_functional_types = model_settings['pelagic_functional_types']
-    demersal_functional_types = model_settings['demersal_functional_types']
+    pelagic_functional_types = model_settings['pelagic_functional_type_keys']
+    demersal_functional_types = model_settings['demersal_functional_type_keys']
     ocean_depth = domain_dict['depth_of_seafloor']
-    PI_be_cutoff = model_settings['PI_be_cutoff']
+    PI_be_cutoff = model_settings['benthic_pelagic_depth_cutoff']
 
     for i, fish in enumerate(F.fish):
         pred = fish.name
@@ -97,7 +98,7 @@ def test_t_frac_pelagic():
                     prey_list_check_demersal.append(p)
                     preference_check_demersal.append(preference[pred][j])
 
-            if fish._pdc_apply_pref:
+            if fish.pdc_apply_pref:
                 prey_pelagic = (
                     data.sel(group=prey_list_check_pelagic)
                     * xr.DataArray(preference_check_pelagic, dims=('group'))
