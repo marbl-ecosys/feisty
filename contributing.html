@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contributing &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script>
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Internal API" href="api-internal.html" />
+    <link rel="prev" title="Public API" href="api.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Fisheries Size and Functional Type model (FEISTY)</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs..." aria-label="Search the docs..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption" role="heading">
+ <span class="caption-text">
+  Scientific documentation
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="scientific-background.html">
+   Scientific Background
+  </a>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  User guide
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="usage.html">
+   Usage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api.html">
+   Public API
+  </a>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Developer guide
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Contributing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-internal.html">
+   Internal API
+  </a>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="references.html">
+   References
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/contributing.rst"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/marbl-ecosys/feisty"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fcontributing.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/marbl-ecosys/feisty/edit/master/contributing.rst"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#developing-feisty">
+   Developing FEISTY
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#write-documentation">
+   Write documentation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#feature-requests-and-feedback">
+   Feature requests and feedback
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<p>Contributions are highly welcomed and appreciated.</p>
+<p>The following sections cover some general guidelines
+regarding development in feisty for maintainers and contributors.
+Nothing here is set in stone and can’t be changed.
+Feel free to suggest improvements or changes in the workflow.</p>
+<div class="section" id="developing-feisty">
+<span id="pull-requests"></span><h2>Developing FEISTY<a class="headerlink" href="#developing-feisty" title="Permalink to this headline">¶</a></h2>
+<p>The best approach to contributing to the FEISTY code or documentation is to fork the repository, clone your fork locally, apply your edits, push back to your fork, then submit a pull request on GitHub.</p>
+<p>Here are some detailed instructions describing these steps.</p>
+<ol class="arabic">
+<li><p>Fork the
+<a class="reference external" href="https://github.com/marbl-ecosys/feisty">feisty GitHub repository</a>.  It’s
+fine to use <code class="docutils literal notranslate"><span class="pre">feisty</span></code> as your fork repository name because it will live
+under your user.</p></li>
+<li><p>Clone your fork locally using <a class="reference external" href="https://git-scm.com/">git</a> and create a branch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:YOUR_GITHUB_USERNAME/feisty.git
+$ cd feisty
+</pre></div>
+</div>
+</li>
+<li><p>Consider creating your own branch off “main”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout -b your-bugfix-feature-branch-name main
+</pre></div>
+</div>
+</li>
+<li><p>Install <a class="reference external" href="https://pre-commit.com">pre-commit</a> and its hook on the feisty repo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install --user pre-commit
+$ pre-commit install
+</pre></div>
+</div>
+<p>Afterwards <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> will run whenever you commit.</p>
+<p><a class="reference external" href="https://pre-commit.com/">https://pre-commit.com/</a> is a framework for managing and maintaining multi-language pre-commit hooks
+to ensure code-style and code formatting is consistent.</p>
+</li>
+<li><p>Install dependencies into a new conda environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda env update -f ci/environment.yml
+</pre></div>
+</div>
+</li>
+<li><p>Run all the tests</p>
+<p>Now running tests is as simple as issuing this command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda activate sandbox-devel
+$ pytest --junitxml=test-reports/junit.xml --cov=./ --verbose
+</pre></div>
+</div>
+<p>This command will run tests via the “pytest” tool against the latest Python version.</p>
+</li>
+<li><p>You can now edit your local working copy and run the tests again as necessary. Please follow PEP-8 for naming.</p>
+<p>When committing, <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> will re-format the files if necessary.</p>
+</li>
+<li><p>Commit and push once your tests pass and you are happy with your change(s):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git commit -a -m &quot;&lt;commit message&gt;&quot;
+$ git push -u
+</pre></div>
+</div>
+</li>
+<li><p>Finally, submit a pull request through the GitHub website using this data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">head</span><span class="o">-</span><span class="n">fork</span><span class="p">:</span> <span class="n">YOUR_GITHUB_USERNAME</span><span class="o">/</span><span class="n">feisty</span>
+<span class="n">compare</span><span class="p">:</span> <span class="n">your</span><span class="o">-</span><span class="n">branch</span><span class="o">-</span><span class="n">name</span>
+
+<span class="n">base</span><span class="o">-</span><span class="n">fork</span><span class="p">:</span> <span class="n">NCAR</span><span class="o">/</span><span class="n">feisty</span>
+<span class="n">base</span><span class="p">:</span> <span class="n">master</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="write-documentation">
+<span id="documentation"></span><h2>Write documentation<a class="headerlink" href="#write-documentation" title="Permalink to this headline">¶</a></h2>
+<p>Documentation is critical to enabling a robust, usable code base. Documentation files are is in the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> directory and are built with the <a class="reference external" href="https://jupyterbook.org/intro.html">Jupyter Book</a> utility. Documentation files can be Jupyter Notebooks, <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/">MyST Markdown</a>, or <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reStructuredText</a>. The layout of the documentation is expressed in <code class="docutils literal notranslate"><span class="pre">docs/_toc.yml</span></code>.</p>
+<p>Documentation is built automatically using GitHub Actions.</p>
+<p>You can edit documentation files directly in the GitHub web interface,
+without using a local copy.  This can be convenient for small fixes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Build the documentation locally with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda env update -f ci/environment.yml
+$  jupyter-book build docs/ --all
+</pre></div>
+</div>
+<p>The built documentation should be available in the <code class="docutils literal notranslate"><span class="pre">docs/_build/</span></code> and can be viewed using a local browser at:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">feisty</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="feature-requests-and-feedback">
+<span id="submitfeedback"></span><h2>Feature requests and feedback<a class="headerlink" href="#feature-requests-and-feedback" title="Permalink to this headline">¶</a></h2>
+<p>Feature requests, bug reports and questions can be submitted via the GitHub <a class="reference external" href="https://github.com/marbl-ecosys/feisty/issues">issue tracker</a>.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="api.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Public API</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="api-internal.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Internal API</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Colleen Petrik and Matthew C. Long<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
