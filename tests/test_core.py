@@ -1,8 +1,43 @@
 import numpy as np
-
 import pytest
 
-from .conftest import *
+import feisty
+import feisty.settings as settings
+
+from . import conftest
+
+settings_dict_def = settings.get_defaults()
+model_settings = settings_dict_def['model_settings']
+food_web_settings = settings_dict_def['food_web']
+zoo_settings = settings_dict_def['zooplankton']
+fish_settings = settings_dict_def['fish']
+benthic_prey_settings = settings_dict_def['benthic_prey']
+reproduction_routing = settings_dict_def['reproduction_routing']
+
+for i in range(len(settings_dict_def['food_web'])):
+    settings_dict_def['food_web'][i]['encounter_parameters']['preference'] = np.random.rand()
+
+
+fish_ic_data = 1e-5
+benthic_prey_ic_data = 1e-4
+
+n_zoo = len(settings_dict_def['zooplankton'])
+n_fish = len(settings_dict_def['fish'])
+n_benthic_prey = 1
+
+NX = 10
+NX_2 = 5
+domain_dict = {
+    'NX': NX,
+    'depth_of_seafloor': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
+}
+
+F = feisty.feisty_instance_type(
+    settings_dict=settings_dict_def,
+    domain_dict=domain_dict,
+    fish_ic_data=fish_ic_data,
+    benthic_prey_ic_data=benthic_prey_ic_data,
+)
 
 
 def test_set_zoo_biomass():

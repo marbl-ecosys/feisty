@@ -7,7 +7,7 @@ repos:
         - id: check-docstring-first
         - id: check-json
         - id: check-yaml
-        - id: double-quote-string-fixer
+#        - id: double-quote-string-fixer
 
     - repo: https://github.com/ambv/black
       rev: 20.8b1

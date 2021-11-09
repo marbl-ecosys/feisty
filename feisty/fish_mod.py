@@ -1,10 +1,7 @@
 import numpy as np
 import xarray as xr
 
-from . import constants
-from . import domain
-from . import process
-
+from . import constants, domain
 
 functional_types = {}
 
@@ -20,14 +17,14 @@ _size_class_bnds_ratio = {}
 _PI_be_cutoff = None
 
 _mortality_type_keys = [
-    "none",
-    "constant",
-    "Hartvig",
-    "Mizer",
-    "Jennings & Collingridge",
-    "Peterson & Wrob",
-    "temperature-dependent",
-    "weight-dependent",
+    'none',
+    'constant',
+    'Hartvig',
+    'Mizer',
+    'Jennings & Collingridge',
+    'Peterson & Wrob',
+    'temperature-dependent',
+    'weight-dependent',
 ]
 _mortality_types = {k: i for i, k in enumerate(_mortality_type_keys)}
 
@@ -62,27 +59,27 @@ def init_module_variables(
     # check inputs
     assert not set(pelagic_demersal_coupling_types) - set(
         functional_types.keys()
-    ), f"unknown functional type specified in `pelagic_demersal_coupling_types` list: {pelagic_demersal_coupling_types}"
+    ), f'unknown functional type specified in `pelagic_demersal_coupling_types` list: {pelagic_demersal_coupling_types}'
 
     assert not set(pelagic_demersal_coupling_apply_pref_types) - set(
         functional_types.keys()
-    ), f"unknown functional type specified in `pelagic_demersal_coupling_apply_pref_types` list: {pelagic_demersal_coupling_apply_pref_types}"
+    ), f'unknown functional type specified in `pelagic_demersal_coupling_apply_pref_types` list: {pelagic_demersal_coupling_apply_pref_types}'
 
     assert not set(pelagic_demersal_coupling_apply_pref_types) - set(
         pelagic_demersal_coupling_types
-    ), f"pelagic_demersal_coupling_apply_pref_types specifies types not found in pelagic_demersal_coupling_types: {pelagic_demersal_coupling_apply_pref_types}"
+    ), f'pelagic_demersal_coupling_apply_pref_types specifies types not found in pelagic_demersal_coupling_types: {pelagic_demersal_coupling_apply_pref_types}'
 
     assert not set(pelagic_functional_types) - set(
         functional_types.keys()
-    ), f"unknown functional type specified in `pelagic_functional_types` list: {pelagic_functional_types}"
+    ), f'unknown functional type specified in `pelagic_functional_types` list: {pelagic_functional_types}'
 
     assert not set(demersal_functional_types) - set(
         functional_types.keys()
-    ), f"unknown functional type specified in `demersal_functional_types` list: {demersal_functional_types}"
+    ), f'unknown functional type specified in `demersal_functional_types` list: {demersal_functional_types}'
 
     assert not set(demersal_functional_types).intersection(
         set(pelagic_functional_types)
-    ), f"unknown functional type specified in `demersal_functional_types` list: {demersal_functional_types}"
+    ), f'unknown functional type specified in `demersal_functional_types` list: {demersal_functional_types}'
 
     # make assignments
     _pdc_type_keys = list(pelagic_demersal_coupling_types)
@@ -110,7 +107,7 @@ class fish_type(object):
         kt=0.0855,
         amet=4.0,
         bpow=0.175,
-        mortality_type="constant",
+        mortality_type='constant',
         mortality_coeff=0.1 / 365.0,
         assim_efficiency=0.7,
     ):
@@ -137,19 +134,19 @@ class fish_type(object):
           power on metab fn
 
         """
-        assert size_class in _size_class_masses, f"Unknown size class {size_class}"
-        assert functional_type in functional_types, f"Unknown functional type: {functional_type}"
-        assert mortality_type in _mortality_type_keys, f"Unknown mortality type: {mortality_type}"
+        assert size_class in _size_class_masses, f'Unknown size class {size_class}'
+        assert functional_type in functional_types, f'Unknown functional type: {functional_type}'
+        assert mortality_type in _mortality_type_keys, f'Unknown mortality type: {mortality_type}'
 
         assert (0.0 <= harvest_selectivity) and (
             harvest_selectivity <= 1.0
-        ), f"harvest_selectivity must be between 0. and 1."
+        ), 'harvest_selectivity must be between 0. and 1.'
         assert (0.0 <= energy_frac_somatic_growth) and (
             energy_frac_somatic_growth <= 1.0
-        ), f"energy_frac_somatic_growth must be between 0. and 1."
+        ), 'energy_frac_somatic_growth must be between 0. and 1.'
         assert (0.0 <= assim_efficiency) and (
             assim_efficiency <= 1.0
-        ), f"assim_efficiency must be between 0. and 1."
+        ), 'assim_efficiency must be between 0. and 1.'
 
         self.name = name
         self.functional_type_key = functional_type
@@ -171,7 +168,7 @@ class fish_type(object):
 
         # initialize memory for result
         self.t_frac_pelagic = domain.init_array(
-            name=f"{self.name}_t_frac_pelagic",
+            name=f'{self.name}_t_frac_pelagic',
             constant=self.t_frac_pelagic_static,
         )
 
@@ -182,7 +179,7 @@ class fish_type(object):
         self.assim_efficiency = assim_efficiency
 
     def __repr__(self):
-        return f"{self.name}: {self.size_class} {self.functional_type_key}"
+        return f'{self.name}: {self.size_class} {self.functional_type_key}'
 
     @property
     def _pdc_apply_pref(self):
@@ -194,8 +191,8 @@ class zooplankton_type(object):
 
     def __init__(self, name):
         self.name = name
-        self.functional_type_key = "zooplankton"
-        self.functional_type = functional_types["zooplankton"]
+        self.functional_type_key = 'zooplankton'
+        self.functional_type = functional_types['zooplankton']
 
 
 class benthic_prey_type(object):
@@ -208,8 +205,8 @@ class benthic_prey_type(object):
         carrying_capacity=0.0,
     ):
         self.name = name
-        self.functional_type_key = "benthic_prey"
-        self.functional_type = functional_types["benthic_prey"]
+        self.functional_type_key = 'benthic_prey'
+        self.functional_type = functional_types['benthic_prey']
         self.benthic_efficiency = benthic_efficiency
 
         self.carrying_capacity = carrying_capacity
@@ -221,20 +218,15 @@ class fishing(object):
 
     def __init__(self, fishing_rate_per_year):
         self.fishing_rate = domain.init_array(
-            name="fishing_rate",
+            name='fishing_rate',
             constant=fishing_rate_per_year / 365.0,
-            attrs={"long_name": "Imposed fishing rate", "units": "1/d"},
+            attrs={'long_name': 'Imposed fishing rate', 'units': '1/d'},
         )
 
 
 def is_demersal(key):
     """Return `True` if key is a demersal functional type"""
     return key in _demersal_functional_type_keys
-
-
-def is_benthic(key):
-    """Return `True` if key is a demersal functional type"""
-    return key in _benthic_functional_type_keys
 
 
 def t_weighted_mean_temp(Tp, Tb, t_frac_pelagic):
@@ -292,7 +284,7 @@ def compute_metabolism(metabolism_rate, fish_list, T_habitat):
 def compute_ingestion(ingestion_rate, food_web):
     """Compute ingestion"""
     for i, name in enumerate(food_web.fish_names):
-        ingestion_rate[i, :] = food_web.get_consumption(predator=name).sum("group")
+        ingestion_rate[i, :] = food_web.get_consumption(predator=name).sum('group')
 
 
 def compute_predation(predation_flux, food_web, biomass):
@@ -303,7 +295,7 @@ def compute_predation(predation_flux, food_web, biomass):
             continue
 
         ndx = food_web.prey_ndx_pred[name]
-        predation_flux[i, :] = (food_web.get_consumption(prey=name) * biomass[ndx, :]).sum("group")
+        predation_flux[i, :] = (food_web.get_consumption(prey=name) * biomass[ndx, :]).sum('group')
 
 
 def compute_benthic_biomass_update(da, benthic_prey_list, biomass, food_web, poc_flux):
@@ -321,7 +313,7 @@ def compute_benthic_biomass_update(da, benthic_prey_list, biomass, food_web, poc
         predation = (
             biomass.isel(group=food_web.prey_ndx_pred[benthic_prey.name])
             * food_web.get_consumption(prey=benthic_prey.name)
-        ).sum("group")
+        ).sum('group')
 
         # Needs to be in units of per time (g/m2/d) * (g/m2)
         growth = benthic_prey.benthic_efficiency * poc_flux
@@ -349,23 +341,23 @@ def natural_mortality(mortality_rate, fish_list, T_habitat):
 
     for i, fish in enumerate(fish_list):
 
-        if fish.mortality_type == _mortality_types["none"]:
+        if fish.mortality_type == _mortality_types['none']:
             mortality_rate[i, :] = 0.0
 
-        elif fish.mortality_type == _mortality_types["constant"]:
+        elif fish.mortality_type == _mortality_types['constant']:
             mortality_rate[i, :] = fish.mortality_coeff
 
-        elif fish.mortality_type == _mortality_types["Hartvig"]:
+        elif fish.mortality_type == _mortality_types['Hartvig']:
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 0.84 * fish.mass ** (-0.25) / 365.0
             )
 
-        elif fish.mortality_type == _mortality_types["Mizer"]:
+        elif fish.mortality_type == _mortality_types['Mizer']:
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 3.0 * fish.mass ** (-0.25) / 365.0
             )
 
-        elif fish.mortality_type == _mortality_types["Jennings & Collingridge"]:
+        elif fish.mortality_type == _mortality_types['Jennings & Collingridge']:
             # TODO: clean up here
             temp2 = T_habitat[i, :] + 273.0
             Tref = 283.0
@@ -374,20 +366,20 @@ def natural_mortality(mortality_rate, fish_list, T_habitat):
             tfact = np.exp((-1 * E / k) * ((1.0 / temp2) - (1.0 / Tref)))
             mortality_rate[i, :] = tfact * 0.5 * fish.mass ** (-0.33) / 365.0
 
-        elif fish.mortality_type == _mortality_types["Peterson & Wrob"]:
+        elif fish.mortality_type == _mortality_types['Peterson & Wrob']:
             # Peterson & Wroblewski (daily & uses dry weight)
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 15.0)) * 5.26e-3 * (fish.mass / 9.0) ** (-0.25)
             )
 
-        elif fish.mortality_type == _mortality_types["temperature-dependent"]:
+        elif fish.mortality_type == _mortality_types['temperature-dependent']:
             mortality_rate[i, :] = np.exp(0.063 * (T_habitat[i, :] - 10.0)) * fish.mortality_coeff
 
-        elif fish.mortality_type == _mortality_types["weight-dependent"]:
+        elif fish.mortality_type == _mortality_types['weight-dependent']:
             mortality_rate[i, :] = 0.5 * fish.mass ** (-0.25) / 365.0
 
         else:
-            raise ValueError(f"unknown mortality type {fish.mortality_type}")
+            raise ValueError(f'unknown mortality type {fish.mortality_type}')
 
 
 def compute_energy_avail(energy_avail_rate, ingestion_rate, metabolism_rate, fish_list):
@@ -460,26 +452,26 @@ class reproduction_routing(object):
         self._n_links = len(routing_settings)
         self._index = 0
 
-        self.ndx_from = [np.where(link["from"] == all_groups)[0][0] for link in routing_settings]
+        self.ndx_from = [np.where(link['from'] == all_groups)[0][0] for link in routing_settings]
 
         fish_names = np.array([f.name for f in fish_list], dtype=object)
-        self.i_fish = [np.where(link["to"] == fish_names)[0][0] for link in routing_settings]
+        self.i_fish = [np.where(link['to'] == fish_names)[0][0] for link in routing_settings]
 
         self.is_larval = []
         self.efficiency = []
         for link in routing_settings:
-            if "is_larval" in link:
-                self.is_larval.append(link["is_larval"])
+            if 'is_larval' in link:
+                self.is_larval.append(link['is_larval'])
             else:
                 self.is_larval.append(False)
 
-            if "efficiency" in link:
-                self.efficiency.append(link["efficiency"])
+            if 'efficiency' in link:
+                self.efficiency.append(link['efficiency'])
             else:
                 self.efficiency.append(None)
         assert not any(
-            [l and e is None for l, e in zip(self.is_larval, self.efficiency)]
-        ), f"reproduction routing with 'is_larval = True' requires 'efficiency' parameter to be set."
+            [il and e is None for il, e in zip(self.is_larval, self.efficiency)]
+        ), "reproduction routing with 'is_larval = True' requires 'efficiency' parameter to be set."
 
     def __len__(self):
         return self._n_links

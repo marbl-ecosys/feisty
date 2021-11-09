@@ -11,7 +11,7 @@ with open('README.rst') as f:
     long_description = f.read()
 
 setup(
-    maintainer="Matthew Long",
+    maintainer='Matthew Long',
     maintainer_email='mclong@ucar.edu',
     python_requires='>=3.6',
     classifiers=[
@@ -35,10 +35,10 @@ setup(
     name='feisty',
     packages=find_packages(include=['feisty', 'feisty.*']),
     url='https://github.com/NCAR/feisty',
-      project_urls={
+    project_urls={
         'Documentation': 'https://github.com/NCAR/feisty',
         'Source': 'https://github.com/NCAR/feisty',
-        'Tracker': 'https://github.com/NCAR/feisty/issues'
+        'Tracker': 'https://github.com/NCAR/feisty/issues',
     },
     zip_safe=False,
 )

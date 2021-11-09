@@ -1,23 +1,68 @@
 import numpy as np
 import pandas as pd
+import pytest
 import xarray as xr
 
-import pytest
-
-import feisty.fish_mod as fish_mod
+import feisty
 import feisty.feeding as feeding
-from .conftest import *
+import feisty.fish_mod as fish_mod
+import feisty.settings as settings
 
+from . import conftest
+
+settings_dict_def = settings.get_defaults()
+model_settings = settings_dict_def['model_settings']
+food_web_settings = settings_dict_def['food_web']
+zoo_settings = settings_dict_def['zooplankton']
+fish_settings = settings_dict_def['fish']
+benthic_prey_settings = settings_dict_def['benthic_prey']
+reproduction_routing = settings_dict_def['reproduction_routing']
+
+for i in range(len(settings_dict_def['food_web'])):
+    settings_dict_def['food_web'][i]['encounter_parameters']['preference'] = np.random.rand()
+
+
+fish_ic_data = 1e-5
+benthic_prey_ic_data = 1e-4
+
+n_zoo = len(settings_dict_def['zooplankton'])
+n_fish = len(settings_dict_def['fish'])
+n_benthic_prey = 1
+
+NX = 10
+NX_2 = 5
+domain_dict = {
+    'NX': NX,
+    'depth_of_seafloor': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
+}
+
+F = feisty.feisty_instance_type(
+    settings_dict=settings_dict_def,
+    domain_dict=domain_dict,
+    fish_ic_data=fish_ic_data,
+    benthic_prey_ic_data=benthic_prey_ic_data,
+)
+
+all_prey, preference = conftest.get_all_prey_and_preference(settings_dict_def)
+fish_func_type = conftest.get_fish_func_type(settings_dict_def)
+
+
+zoo_names = [z['name'] for z in settings_dict_def['zooplankton']]
+
+zoo_predators = []
+for i, link in enumerate(food_web_settings):
+    if link['prey'] in zoo_names:
+        zoo_predators.append(link['predator'])
 
 n_links = len(food_web_settings)
 coord = [f"{link['predator']}_{link['prey']}" for link in food_web_settings]
 coord_zoo = [
-    f"{link['predator']}_{link['prey']}" for link in food_web_settings if link["prey"] in zoo_names
+    f"{link['predator']}_{link['prey']}" for link in food_web_settings if link['prey'] in zoo_names
 ]
 masses = {f.name: f.mass for f in F.fish}
 
-predator_list = [link["predator"] for link in food_web_settings]
-prey_list = [link["prey"] for link in food_web_settings]
+predator_list = [link['predator'] for link in food_web_settings]
+prey_list = [link['prey'] for link in food_web_settings]
 
 pred_list_prey = {
     pred: [prey for i, prey in enumerate(prey_list) if predator_list[i] == pred]
@@ -35,26 +80,26 @@ def test_food_web_init_1():
 
     assert set(F.food_web.__dict__.keys()) == set(
         [
-            "n_links",
-            "link_predator",
-            "link_prey",
-            "fish_names",
-            "pred_link_ndx",
-            "prey_link_ndx",
-            "pred_ndx_prey",
-            "prey_ndx_pred",
-            "pred_prey_func_type",
-            "pred_prey_preference",
-            "encounter_obj",
-            "consumption_obj",
-            "feeding_link_coord",
-            "encounter",
-            "consumption",
-            "consumption_max",
-            "zoo_names",
-            "consumption_zoo_frac_mort",
-            "consumption_zoo_scaled",
-            "consumption_zoo_raw",
+            'n_links',
+            'link_predator',
+            'link_prey',
+            'fish_names',
+            'pred_link_ndx',
+            'prey_link_ndx',
+            'pred_ndx_prey',
+            'prey_ndx_pred',
+            'pred_prey_func_type',
+            'pred_prey_preference',
+            'encounter_obj',
+            'consumption_obj',
+            'feeding_link_coord',
+            'encounter',
+            'consumption',
+            'consumption_max',
+            'zoo_names',
+            'consumption_zoo_frac_mort',
+            'consumption_zoo_scaled',
+            'consumption_zoo_raw',
         ]
     )
 
@@ -63,30 +108,30 @@ def test_food_web_init_1():
     assert F.food_web.link_predator == predator_list
     assert F.food_web.link_prey == prey_list
 
-    for key in ["link_predator", "link_prey"]:
+    for key in ['link_predator', 'link_prey']:
         assert isinstance(F.food_web.__dict__[key], list)
         assert len(F.food_web.__dict__[key]) == len(food_web_settings)
 
-    for key in ["encounter", "consumption", "consumption_max"]:
+    for key in ['encounter', 'consumption', 'consumption_max']:
         assert isinstance(F.food_web.__dict__[key], xr.DataArray)
-        assert F.food_web.__dict__[key].dims == ("feeding_link", "X")
+        assert F.food_web.__dict__[key].dims == ('feeding_link', 'X')
         assert (F.food_web.__dict__[key].feeding_link.values == coord).all()
         assert (F.food_web.__dict__[key] == 0.0).all()
 
-    for key in ["consumption_zoo_frac_mort", "consumption_zoo_scaled", "consumption_zoo_raw"]:
+    for key in ['consumption_zoo_frac_mort', 'consumption_zoo_scaled', 'consumption_zoo_raw']:
         assert set(F.food_web.__dict__[key].keys()) == set(zoo_names)
         for zoo_i in zoo_names:
             assert isinstance(F.food_web.__dict__[key][zoo_i], xr.DataArray)
-            assert F.food_web.__dict__[key][zoo_i].dims == ("feeding_link_zoo", "X")
+            assert F.food_web.__dict__[key][zoo_i].dims == ('feeding_link_zoo', 'X')
             assert (F.food_web.__dict__[key][zoo_i].feeding_link_zoo.values == coord_zoo).all()
             assert (F.food_web.__dict__[key][zoo_i] == 0.0).all()
 
     for link in food_web_settings:
-        pred = link["predator"]
-        prey = link["prey"]
+        pred = link['predator']
+        prey = link['prey']
         assert (
             F.food_web.pred_prey_preference.sel(predator=pred, prey=prey)
-            == link["encounter_parameters"]["preference"]
+            == link['encounter_parameters']['preference']
         )
 
 
@@ -98,7 +143,7 @@ def test_food_web_init_2():
         assert isinstance(F.food_web.consumption_obj[i], feeding.consumption_type)
 
     for i in range(F.food_web.n_links):
-        for key in ["predator", "prey", "preference", "ke", "gam", "benc"]:
+        for key in ['predator', 'prey', 'preference', 'ke', 'gam', 'benc']:
             if key in food_web_settings[i]:
                 assert F.food_web.encounter_obj[i].__dict__[key] == food_web_settings[i][key]
         assert (
@@ -106,7 +151,7 @@ def test_food_web_init_2():
             == masses[F.food_web.link_predator[i]]
         )
 
-        for key in ["predator", "prey", "kc", "h", "bcmx"]:
+        for key in ['predator', 'prey', 'kc', 'h', 'bcmx']:
             if key in food_web_settings[i]:
                 assert F.food_web.consumption_obj[i].__dict__[key] == food_web_settings[i][key]
         assert (
@@ -157,7 +202,7 @@ def test_food_web_init_data():
 
 def test_missing_fish():
     settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad["food_web"] = [d for d in food_web_settings if d["predator"] != "Md"]
+    settings_dict_def_bad['food_web'] = [d for d in food_web_settings if d['predator'] != 'Md']
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
@@ -192,7 +237,7 @@ def test_pred_ndx_prey_filt():
 
 def test_duplicated_link_fails():
     settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad["food_web"].append(settings_dict_def_bad["food_web"][0])
+    settings_dict_def_bad['food_web'].append(settings_dict_def_bad['food_web'][0])
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
@@ -223,7 +268,7 @@ def test_get_prey_biomass():
         prey_list_check = all_prey[pred]
 
         da = F.food_web.get_prey_biomass(F.biomass, pred)
-        check_value = data.sel(group=prey_list_check).sum("group")
+        check_value = data.sel(group=prey_list_check).sum('group')
         assert (check_value == da).all()
 
         # ensure that if *all* functional types are passed in, that the sum is equivalent
@@ -236,8 +281,8 @@ def test_get_prey_biomass():
 
         da = F.food_web.get_prey_biomass(F.biomass, pred, apply_preference=True)
         check_value = (
-            data.sel(group=prey_list_check) * xr.DataArray(preference[pred], dims=("group"))
-        ).sum("group")
+            data.sel(group=prey_list_check) * xr.DataArray(preference[pred], dims=('group'))
+        ).sum('group')
         assert (check_value == da).all()
 
         # ensure that this works for a restricted functional type
@@ -253,10 +298,10 @@ def test_get_prey_biomass():
                 pred,
                 prey_functional_type=set([prey_functional_type]),
             )
-            assert (data.sel(group=prey_list_check_filt).sum("group") == da).all()
+            assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
         # check that pelagic functional type sums work
-        prey_functional_type_keys = model_settings["pelagic_functional_types"]
+        prey_functional_type_keys = model_settings['pelagic_functional_types']
         prey_list_check_filt = [
             p for p in prey_list_check if fish_func_type[p] in prey_functional_type_keys
         ]
@@ -265,10 +310,10 @@ def test_get_prey_biomass():
             pred,
             prey_functional_type=[fish_mod.functional_types[p] for p in prey_functional_type_keys],
         )
-        assert (data.sel(group=prey_list_check_filt).sum("group") == da).all()
+        assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
         # check that demersal functional type sums work
-        prey_functional_type_keys = model_settings["demersal_functional_types"]
+        prey_functional_type_keys = model_settings['demersal_functional_types']
         prey_list_check_filt = [
             p for p in prey_list_check if fish_func_type[p] in prey_functional_type_keys
         ]
@@ -277,7 +322,7 @@ def test_get_prey_biomass():
             pred,
             prey_functional_type=[fish_mod.functional_types[p] for p in prey_functional_type_keys],
         )
-        assert (data.sel(group=prey_list_check_filt).sum("group") == da).all()
+        assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
     # put it back
     F.set_zoo_biomass(zoo_data_prior)
@@ -290,8 +335,8 @@ def test_get_prey_biomass_dne():
     with pytest.raises(AssertionError):
         F.food_web.get_prey_biomass(
             F.biomass,
-            settings_dict_def["food_web"][0]["predator"],
-            prey_functional_type=["this-is-not-a-valid-functional-type"],
+            settings_dict_def['food_web'][0]['predator'],
+            prey_functional_type=['this-is-not-a-valid-functional-type'],
         )
 
 
@@ -306,9 +351,9 @@ def test_get_consumption():
     F.food_web.consumption.data[:, :] = data.data
 
     for pred in predator_list:
-        pred_link_ndx = [i for i, link in enumerate(food_web_settings) if link["predator"] == pred]
+        pred_link_ndx = [i for i, link in enumerate(food_web_settings) if link['predator'] == pred]
         pred_prey_list = [
-            prey_list[i] for i, link in enumerate(food_web_settings) if link["predator"] == pred
+            prey_list[i] for i, link in enumerate(food_web_settings) if link['predator'] == pred
         ]
         print(pred)
         print(pred_prey_list)
@@ -316,7 +361,7 @@ def test_get_consumption():
         da = F.food_web.get_consumption(predator=pred)
 
         assert (da.data == data.isel(feeding_link=pred_link_ndx).data).all()
-        assert da.dims == ("group", "X")
+        assert da.dims == ('group', 'X')
         assert (da.group == pred_prey_list).all()
         assert da.shape == (len(pred_link_ndx), NX)
         print()
@@ -325,21 +370,21 @@ def test_get_consumption():
             pred_link_ndx = [
                 i
                 for i, link in enumerate(food_web_settings)
-                if link["predator"] == pred and link["prey"] == prey
+                if link['predator'] == pred and link['prey'] == prey
             ]
             da = F.food_web.get_consumption(predator=pred, prey=prey)
             print(da)
             assert (da.data == data.isel(feeding_link=pred_link_ndx).data).all()
-            assert da.dims == ("feeding_link", "X")
+            assert da.dims == ('feeding_link', 'X')
             assert da.shape == (len(pred_link_ndx), NX)
 
     for prey in prey_list:
-        prey_link_ndx = [i for i, link in enumerate(food_web_settings) if link["prey"] == prey]
+        prey_link_ndx = [i for i, link in enumerate(food_web_settings) if link['prey'] == prey]
 
-        pred_list = [link["predator"] for link in food_web_settings if link["prey"] == prey]
+        pred_list = [link['predator'] for link in food_web_settings if link['prey'] == prey]
         da = F.food_web.get_consumption(prey=prey)
         assert (da.data == data.isel(feeding_link=prey_link_ndx).data).all()
-        assert da.dims == ("group", "X")
+        assert da.dims == ('group', 'X')
         assert (da.group == pred_list).all()
         assert da.shape == (len(prey_link_ndx), NX)
 
@@ -377,14 +422,13 @@ def test_compute_feeding_1():
     )
 
     # check that array's conform
-    predator = [link["predator"] for link in food_web_settings]
-    prey = [link["prey"] for link in food_web_settings]
+    predator = [link['predator'] for link in food_web_settings]
 
     for pred in predator:
-        pred_link_ndx = [i for i, link in enumerate(food_web_settings) if link["predator"] == pred]
+        pred_link_ndx = [i for i, link in enumerate(food_web_settings) if link['predator'] == pred]
         assert (
             F.food_web._get_total_encounter(pred)
-            == ds.encounter.isel(feeding_link=pred_link_ndx).sum("feeding_link")
+            == ds.encounter.isel(feeding_link=pred_link_ndx).sum('feeding_link')
         ).all()
 
     # regression test (not working yet as preferences are random)
@@ -400,13 +444,13 @@ def test_compute_feeding_1():
         )
 
         # ensure that zoo consumption is zoo consumption
-        ndx = [i for i, link in enumerate(food_web_settings) if link["prey"] == zoo_i]
+        ndx = [i for i, link in enumerate(food_web_settings) if link['prey'] == zoo_i]
         consumption_zoo = F.food_web.get_consumption(prey=zoo_i)
         np.array_equal(consumption_zoo.data, F.food_web.consumption.isel(feeding_link=ndx).data)
 
-    assert "group" in consumption_zoo.coords
-    assert "group" in consumption_zoo.indexes
-    assert "feeding_link" not in consumption_zoo.coords
+    assert 'group' in consumption_zoo.coords
+    assert 'group' in consumption_zoo.indexes
+    assert 'feeding_link' not in consumption_zoo.coords
     assert (consumption_zoo.group == zoo_predators).all()
 
     F.food_web._rescale_consumption(F.biomass, zoo_mortality=F.zoo_mortality)

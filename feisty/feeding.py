@@ -2,9 +2,8 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from . import constants
+from . import constants, fish_mod
 from .domain import init_array, init_array_2d
-from . import fish_mod
 
 
 class food_web(object):
@@ -23,24 +22,24 @@ class food_web(object):
             all_groups_func_type = np.array(all_groups_func_type, dtype=object)
 
         # ensure that predator-prey entries are unique
-        pred_prey = [(p["predator"], p["prey"]) for p in feeding_settings]
-        assert len(set(pred_prey)) == len(pred_prey), "non-unique predator-prey relationships"
+        pred_prey = [(p['predator'], p['prey']) for p in feeding_settings]
+        assert len(set(pred_prey)) == len(pred_prey), 'non-unique predator-prey relationships'
 
         # store functional types
         # set up food web DataFrame
         masses = {f.name: f.mass for f in fish_list}
 
         self.n_links = len(feeding_settings)
-        self.link_predator = [link["predator"] for link in feeding_settings]
-        self.link_prey = [link["prey"] for link in feeding_settings]
-        preference = [link["encounter_parameters"]["preference"] for link in feeding_settings]
+        self.link_predator = [link['predator'] for link in feeding_settings]
+        self.link_prey = [link['prey'] for link in feeding_settings]
+        preference = [link['encounter_parameters']['preference'] for link in feeding_settings]
 
         self.fish_names = [f.name for f in fish_list]
 
         for f in self.fish_names:
             assert (
                 f in self.link_predator
-            ), f"{f} is not listed as a predator in the food web; all fish must eat."
+            ), f'{f} is not listed as a predator in the food web; all fish must eat.'
 
         # link into food_web list for each predator
         self.pred_link_ndx = {
@@ -93,8 +92,8 @@ class food_web(object):
 
         self.pred_prey_preference = xr.DataArray(
             np.zeros((len(np.unique(self.link_predator)), len(np.unique(self.link_prey)))),
-            dims=("predator", "prey"),
-            coords={"predator": np.unique(self.link_predator), "prey": np.unique(self.link_prey)},
+            dims=('predator', 'prey'),
+            coords={'predator': np.unique(self.link_predator), 'prey': np.unique(self.link_prey)},
         )
         for i, pred in enumerate(np.unique(self.link_predator)):
             for j, prey in enumerate(np.unique(self.link_prey)):
@@ -103,54 +102,54 @@ class food_web(object):
 
         self.encounter_obj = [
             encounter_type(
-                predator=link["predator"],
-                prey=link["prey"],
-                predator_size_class_mass=masses[link["predator"]],
-                **link["encounter_parameters"],
+                predator=link['predator'],
+                prey=link['prey'],
+                predator_size_class_mass=masses[link['predator']],
+                **link['encounter_parameters'],
             )
             for link in feeding_settings
         ]
         self.consumption_obj = [
             consumption_type(
-                predator=link["predator"],
-                prey=link["prey"],
-                predator_size_class_mass=masses[link["predator"]],
-                **link["consumption_parameters"],
+                predator=link['predator'],
+                prey=link['prey'],
+                predator_size_class_mass=masses[link['predator']],
+                **link['consumption_parameters'],
             )
             for link in feeding_settings
         ]
 
         self.feeding_link_coord = xr.DataArray(
-            [f"{link['predator']}_{link['prey']}" for link in feeding_settings], dims="feeding_link"
+            [f"{link['predator']}_{link['prey']}" for link in feeding_settings], dims='feeding_link'
         )
 
         add_coords = dict(
-            predator=xr.DataArray(self.link_predator, dims="feeding_link"),
-            prey=xr.DataArray(self.link_prey, dims="feeding_link"),
+            predator=xr.DataArray(self.link_predator, dims='feeding_link'),
+            prey=xr.DataArray(self.link_prey, dims='feeding_link'),
         )
         self.encounter = init_array_2d(
-            coord_name="feeding_link",
+            coord_name='feeding_link',
             coord_values=self.feeding_link_coord,
-            name="encouter_rate",
+            name='encouter_rate',
         ).assign_coords(add_coords)
 
         self.consumption = init_array_2d(
-            coord_name="feeding_link",
+            coord_name='feeding_link',
             coord_values=self.feeding_link_coord,
-            name="consumption_rate",
+            name='consumption_rate',
         ).assign_coords(add_coords)
 
         self.consumption_max = init_array_2d(
-            coord_name="feeding_link",
+            coord_name='feeding_link',
             coord_values=self.feeding_link_coord,
-            name="consumption_max",
+            name='consumption_max',
         ).assign_coords(add_coords)
 
         # index into food_web links list for zooplankton prey
         self.zoo_names = [
             g
             for g, ft in zip(all_groups, all_groups_func_type)
-            if ft == fish_mod.functional_types["zooplankton"]
+            if ft == fish_mod.functional_types['zooplankton']
         ]
 
         self.consumption_zoo_frac_mort = {}
@@ -161,19 +160,19 @@ class food_web(object):
                 feeding_link=self.prey_link_ndx[zoo_i]
             )
             self.consumption_zoo_frac_mort[zoo_i] = init_array_2d(
-                coord_name="feeding_link_zoo",
+                coord_name='feeding_link_zoo',
                 coord_values=feeding_link_coord_zoo_i,
-                name="consumption_zoo_frac_mort",
+                name='consumption_zoo_frac_mort',
             )
             self.consumption_zoo_scaled[zoo_i] = init_array_2d(
-                coord_name="feeding_link_zoo",
+                coord_name='feeding_link_zoo',
                 coord_values=feeding_link_coord_zoo_i,
-                name="consumption_zoo_scaled",
+                name='consumption_zoo_scaled',
             )
             self.consumption_zoo_raw[zoo_i] = init_array_2d(
-                coord_name="feeding_link_zoo",
+                coord_name='feeding_link_zoo',
                 coord_values=feeding_link_coord_zoo_i,
-                name="consumption_zoo_raw",
+                name='consumption_zoo_raw',
             )
 
     def _pred_ndx_prey_filt(self, predator, prey_functional_type=None):
@@ -194,7 +193,7 @@ class food_web(object):
         if prey_functional_type is not None:
             assert not set(prey_functional_type) - set(
                 fish_mod.functional_types.values()
-            ), f"unrecognized functional type requested: {prey_functional_type}"
+            ), f'unrecognized functional type requested: {prey_functional_type}'
             ndx_prey = [
                 ix
                 for i, ix in enumerate(ndx_prey)
@@ -240,10 +239,10 @@ class food_web(object):
         if apply_preference:
             preference = self.pred_prey_preference.sel(
                 predator=predator, prey=biomass_prey.group.values
-            ).rename({"prey": "group"})
+            ).rename({'prey': 'group'})
             biomass_prey *= preference
 
-        return biomass_prey.sum("group")
+        return biomass_prey.sum('group')
 
     def _compute_encounter(self, biomass, T_habitat, t_frac_pelagic):
         """compute encounter rate"""
@@ -304,13 +303,13 @@ class food_web(object):
 
     def _get_total_encounter(self, predator):
         """get the total encouter rate across all prey"""
-        return self.encounter.isel(feeding_link=self.pred_link_ndx[predator]).sum("feeding_link")
+        return self.encounter.isel(feeding_link=self.pred_link_ndx[predator]).sum('feeding_link')
 
     def get_consumption(self, predator=None, prey=None):
         """get the total consumption rate across all prey"""
         assert (predator is not None) or (
             prey is not None
-        ), "arguments `predator` and `prey` cannot both be None"
+        ), 'arguments `predator` and `prey` cannot both be None'
 
         ndx_pred = []
         ndx_prey = []
@@ -332,19 +331,19 @@ class food_web(object):
             return (
                 self.consumption.isel(feeding_link=ndx)
                 .reset_index(
-                    ["feeding_link"],
+                    ['feeding_link'],
                     drop=True,
                 )
-                .set_index(feeding_link="prey")
-                .rename(feeding_link="group")
+                .set_index(feeding_link='prey')
+                .rename(feeding_link='group')
             )
 
         elif predator is None and prey is not None:
             return (
                 self.consumption.isel(feeding_link=ndx)
-                .reset_index("feeding_link", drop=True)
-                .set_index(feeding_link="predator")
-                .rename(feeding_link="group")
+                .reset_index('feeding_link', drop=True)
+                .set_index(feeding_link='predator')
+                .rename(feeding_link='group')
             )
 
         else:
@@ -360,7 +359,7 @@ class food_web(object):
             biomass_zoo_pred = self._get_biomass_zoo_pred(biomass, zoo_i)
 
             bio_con_zoo = biomass_zoo_pred * self.get_consumption(prey=zoo_i)
-            bio_con_zoo_sum = bio_con_zoo.sum("group")
+            bio_con_zoo_sum = bio_con_zoo.sum('group')
 
             zoo_mortality_i = zoo_mortality.sel(zooplankton=zoo_i)
 
@@ -423,7 +422,7 @@ class encounter_type(object):
         self.preference = preference
 
     def __repr__(self):
-        return f"enc_{self.predator}_{self.prey}"
+        return f'enc_{self.predator}_{self.prey}'
 
     def compute(self, da, biomass_prey, T_habitat, t_frac_prey):
         """
@@ -458,7 +457,7 @@ class encounter_type(object):
 
         da[:] = xr.where(
             t_frac_prey > 0,
-            biomass_prey * A * preference,
+            biomass_prey * A * self.preference,
             0.0,
         )
 
@@ -486,7 +485,7 @@ class consumption_type(object):
         self.result = init_array(name=self.__repr__)
 
     def __repr__(self):
-        return f"con_{self.predator}_{self.prey}"
+        return f'con_{self.predator}_{self.prey}'
 
     def compute(self, consumption_max, consumption, encounter, encounter_total, T_habitat):
         """

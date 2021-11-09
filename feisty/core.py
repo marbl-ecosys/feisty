@@ -1,10 +1,7 @@
 import numpy as np
 import xarray as xr
 
-from . import domain
-from . import feeding
-from . import fish_mod
-from . import settings
+from . import domain, feeding, fish_mod, settings
 
 
 class feisty_instance_type(object):
@@ -28,24 +25,24 @@ class feisty_instance_type(object):
 
         self._init_domain(self.domain_dict)
 
-        self._init_coupling(self.settings_dict["coupling"])
+        self._init_coupling(self.settings_dict['coupling'])
 
-        self._init_model_settings(self.settings_dict["model_settings"])
+        self._init_model_settings(self.settings_dict['model_settings'])
 
-        self._init_zooplankton(self.settings_dict["zooplankton"])
-        self._init_fish_settings(self.settings_dict["fish"])
-        self._init_benthic_prey_settings(self.settings_dict["benthic_prey"])
+        self._init_zooplankton(self.settings_dict['zooplankton'])
+        self._init_fish_settings(self.settings_dict['fish'])
+        self._init_benthic_prey_settings(self.settings_dict['benthic_prey'])
         self._init_biomass(fish_ic_data, benthic_prey_ic_data)
 
-        self._init_food_web(self.settings_dict["food_web"])
-        self._init_reproduction_routing(self.settings_dict["reproduction_routing"])
-        self._init_fishing(self.settings_dict["fishing"])
+        self._init_food_web(self.settings_dict['food_web'])
+        self._init_reproduction_routing(self.settings_dict['reproduction_routing'])
+        self._init_fishing(self.settings_dict['fishing'])
         self._init_tendency_arrays()
 
         self.gcm_state = gcm_state_type()
 
     def _init_coupling(self, coupling_settings):
-        self.loffline = coupling_settings["loffline"]
+        self.loffline = coupling_settings['loffline']
 
     def _init_domain(self, domain_dict):
         """initialize domain"""
@@ -58,8 +55,8 @@ class feisty_instance_type(object):
     def _init_zooplankton(self, zooplankton_settings):
         self.zooplankton = []
         self.zoo_names = []
-        for settings in zooplankton_settings:
-            zoo_i = fish_mod.zooplankton_type(**settings)
+        for z_settings in zooplankton_settings:
+            zoo_i = fish_mod.zooplankton_type(**z_settings)
             self.zooplankton.append(zoo_i)
             self.zoo_names.append(zoo_i.name)
 
@@ -67,9 +64,9 @@ class feisty_instance_type(object):
 
         if self.loffline:
             self.zoo_mortality = domain.init_array_2d(
-                coord_name="zooplankton",
+                coord_name='zooplankton',
                 coord_values=self.zoo_names,
-                name="zoo_mortality",
+                name='zoo_mortality',
             )
         else:
             self.zoo_mortality = None
@@ -84,15 +81,15 @@ class feisty_instance_type(object):
             self.fish.append(fish_i)
             self.fish_names.append(fish_i.name)
 
-        assert len(set(self.fish_names)) == len(self.fish_names), "fish are not unique"
+        assert len(set(self.fish_names)) == len(self.fish_names), 'fish are not unique'
 
         self.n_fish = len(self.fish)
 
     def _init_benthic_prey_settings(self, benthic_prey_settings):
         self.benthic_prey = []
         self.benthic_prey_names = []
-        for settings in benthic_prey_settings:
-            bprey_i = fish_mod.benthic_prey_type(**settings)
+        for b_settings in benthic_prey_settings:
+            bprey_i = fish_mod.benthic_prey_type(**b_settings)
             self.benthic_prey.append(bprey_i)
             self.benthic_prey_names.append(bprey_i.name)
 
@@ -112,11 +109,11 @@ class feisty_instance_type(object):
         self.ndx_fish = np.arange(self.n_zoo, self.n_zoo + self.n_fish)
         self.ndx_benthic_prey = np.arange(n - 1, n)
 
-        self.biomass = domain.init_array_2d("group", group_coord)
+        self.biomass = domain.init_array_2d('group', group_coord)
         self.group_func_type = xr.DataArray(
             [functional_type_dict[f] for f in group_coord],
-            dims="group",
-            coords={"group": self.biomass.group},
+            dims='group',
+            coords={'group': self.biomass.group},
         )
         self.set_fish_biomass(fish_ic_data)
         self.set_benthic_prey_biomass(benthic_prey_ic_data)
@@ -164,7 +161,7 @@ class feisty_instance_type(object):
             assert data.shape == (
                 self.n_fish,
                 self.biomass.shape[1],
-            ), "data has the wrong dimensions"
+            ), 'data has the wrong dimensions'
 
         self.biomass.data[self.ndx_fish, :] = data
 
@@ -181,7 +178,7 @@ class feisty_instance_type(object):
             assert data.shape == (
                 self.n_zoo,
                 self.biomass.shape[1],
-            ), "data has the wrong dimensions"
+            ), 'data has the wrong dimensions'
 
         self.biomass.data[self.ndx_zoo, :] = data
 
@@ -195,7 +192,7 @@ class feisty_instance_type(object):
           Zooplankton mortality. Must have shape = (n_zoo, NX).
         """
         if np.ndim(data) != 0:
-            assert data.shape == self.zoo_mortality.shape, "data has the wrong dimensions"
+            assert data.shape == self.zoo_mortality.shape, 'data has the wrong dimensions'
 
         self.zoo_mortality.data[:, :] = data
 
@@ -212,7 +209,7 @@ class feisty_instance_type(object):
             assert data.shape == (
                 self.n_benthic_prey,
                 self.biomass.shape[1],
-            ), "data has the wrong dimensions"
+            ), 'data has the wrong dimensions'
 
         self.biomass.data[self.ndx_benthic_prey, :] = data
 
@@ -412,91 +409,91 @@ def _init_tendency_data(zoo_list, fish_list, benthic_prey_list):
         ),
     )
 
-    ds["t_frac_pelagic"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['t_frac_pelagic'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="t_frac_pelagic",
+        name='t_frac_pelagic',
         attrs={
-            "long_name": "Fraction of time spent in pelagic zone",
-            "units": "",
+            'long_name': 'Fraction of time spent in pelagic zone',
+            'units': '',
         },
     )
 
     for i, fish_i in enumerate(fish_list):
-        ds["t_frac_pelagic"].data[i, :] = fish_i.t_frac_pelagic_static
+        ds['t_frac_pelagic'].data[i, :] = fish_i.t_frac_pelagic_static
 
-    ds["T_habitat"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['T_habitat'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="T_habitat",
+        name='T_habitat',
         attrs={
-            "long_name": "Temperature experienced (time-weighted mean)",
-            "units": "degC",
+            'long_name': 'Temperature experienced (time-weighted mean)',
+            'units': 'degC',
         },
     )
-    ds["ingestion_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['ingestion_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="ingestion_rate",
+        name='ingestion_rate',
     )
-    ds["predation_flux"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['predation_flux'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="predation_flux",
+        name='predation_flux',
     )
-    ds["predation_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['predation_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="predation_rate",
+        name='predation_rate',
     )
-    ds["metabolism_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['metabolism_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="metabolism_rate",
+        name='metabolism_rate',
     )
-    ds["mortality_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['mortality_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="mortality_rate",
+        name='mortality_rate',
     )
-    ds["energy_avail_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['energy_avail_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="energy_avail",
-        attrs={"long_name": "Energy available for growth or reproduction (nu)"},
+        name='energy_avail',
+        attrs={'long_name': 'Energy available for growth or reproduction (nu)'},
     )
-    ds["growth_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['growth_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="growth_rate",
-        attrs={"long_name": "Energy to somatic growth (gamma)"},
+        name='growth_rate',
+        attrs={'long_name': 'Energy to somatic growth (gamma)'},
     )
-    ds["reproduction_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['reproduction_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="reproduction",
-        attrs={"long_name": "Reproduction"},
+        name='reproduction',
+        attrs={'long_name': 'Reproduction'},
     )
-    ds["recruitment_flux"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['recruitment_flux'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="recruitment_flux",
-        attrs={"long_name": "Recruitment from smaller size classes or reproduction"},
+        name='recruitment_flux',
+        attrs={'long_name': 'Recruitment from smaller size classes or reproduction'},
     )
-    ds["total_tendency"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['total_tendency'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="total_tendency",
-        attrs={"long_name": "Total time tendency"},
+        name='total_tendency',
+        attrs={'long_name': 'Total time tendency'},
     )
-    ds["fish_catch_rate"] = domain.init_array_2d(
-        coord_name="fish",
+    ds['fish_catch_rate'] = domain.init_array_2d(
+        coord_name='fish',
         coord_values=fish_names,
-        name="fish_catch_rate",
-        attrs={"long_name": "Specific fishing rate"},
+        name='fish_catch_rate',
+        attrs={'long_name': 'Specific fishing rate'},
     )
-    ds["benthic_biomass_new"] = domain.init_array_2d(
-        coord_name="benthic_prey",
+    ds['benthic_biomass_new'] = domain.init_array_2d(
+        coord_name='benthic_prey',
         coord_values=benthic_prey_names,
     )
 
@@ -507,9 +504,9 @@ class gcm_state_type(object):
     """GCM state"""
 
     def __init__(self):
-        self.T_pelagic = domain.init_array(name="T_pelagic")
-        self.T_bottom = domain.init_array(name="T_bottom")
-        self.poc_flux = domain.init_array(name="poc_flux")
+        self.T_pelagic = domain.init_array(name='T_pelagic')
+        self.T_bottom = domain.init_array(name='T_bottom')
+        self.poc_flux = domain.init_array(name='poc_flux')
 
     def update(self, T_pelagic, T_bottom, poc_flux):
         """Update the GCM state data"""
