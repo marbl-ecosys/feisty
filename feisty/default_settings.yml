@@ -1,0 +1,269 @@
+# Default settings for FEISTY
+coupling:
+  loffline: True
+
+
+model_settings:
+  size_class_bounds:
+    small: [0.001, 0.5]
+    medium: [0.5, 250.]
+    large: [250., 125000.]
+  functional_type_names:
+    - zooplankton
+    - forage
+    - piscivore
+    - demersal
+    - benthic_prey
+  pelagic_demersal_coupling_types:
+    - piscivore
+    - demersal
+  pelagic_demersal_coupling_apply_pref_types:
+    - demersal
+  pelagic_functional_types:
+    - forage
+    - piscivore
+  demersal_functional_types:
+    - demersal
+    - benthic_prey
+  PI_be_cutoff: 200.
+
+
+zooplankton:
+  - name: Zoo
+
+
+fish:
+  # small
+  - name: Sf
+    size_class: small
+    functional_type: forage
+    t_frac_pelagic_static: 1.
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.
+    energy_frac_somatic_growth: 1.
+
+  - name: Sp
+    size_class: small
+    functional_type: piscivore
+    t_frac_pelagic_static: 1.
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.
+    energy_frac_somatic_growth: 1.
+
+  - name: Sd
+    size_class: small
+    functional_type: demersal
+    t_frac_pelagic_static: 1.
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.
+    energy_frac_somatic_growth: 1.
+
+  # medium
+  - name: Mf
+    size_class: medium
+    functional_type: forage
+    t_frac_pelagic_static: 1.
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 1.
+    energy_frac_somatic_growth: 0.5
+
+  - name: Mp
+    size_class: medium
+    functional_type: piscivore
+    t_frac_pelagic_static: 1.
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 1.
+    energy_frac_somatic_growth: 1.
+
+  - name: Md
+    size_class: medium
+    functional_type: demersal
+    t_frac_pelagic_static: 0.
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 1.
+    energy_frac_somatic_growth: 1.
+
+  # large
+  - name: Lp
+    size_class: large
+    functional_type: piscivore
+    t_frac_pelagic_static: 1.
+    pelagic_demersal_coupling: true
+    harvest_selectivity: 1.
+    energy_frac_somatic_growth: 0.5
+
+  - name: Ld
+    size_class: large
+    functional_type: demersal
+    t_frac_pelagic_static: 0.
+    pelagic_demersal_coupling: true
+    harvest_selectivity: 1.
+    energy_frac_somatic_growth: 0.5
+
+
+benthic_prey:
+  - name: benthic_prey
+    benthic_efficiency: 0.075 # transfer efficiency of detritus to benthic prey
+    carrying_capacity: 0.
+
+
+food_web:
+  # small forage
+  - predator: Sf
+    prey: Zoo
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  # small piscivore
+  - predator: Sp
+    prey: Zoo
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  # small demersal
+  - predator: Sd
+    prey: Zoo
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  # medium forage
+  - predator: Mf
+    prey: Zoo
+    encounter_parameters:
+      preference: 0.45
+    consumption_parameters: {}
+
+  - predator: Mf
+    prey: Sf
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Mf
+    prey: Sp
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Mf
+    prey: Sd
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  # medium piscivore
+  - predator: Mp
+    prey: Zoo
+    encounter_parameters:
+      preference: 0.45
+    consumption_parameters: {}
+
+  - predator: Mp
+    prey: Sf
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Mp
+    prey: Sp
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Mp
+    prey: Sd
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Md
+    prey: benthic_prey
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  # large piscivore
+  - predator: Lp
+    prey: Mf
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Lp
+    prey: Mp
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Lp
+    prey: Md
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  # large demersal
+  - predator: Ld
+    prey: Mf
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Ld
+    prey: Mp
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Ld
+    prey: Md
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+  - predator: Ld
+    prey: benthic_prey
+    encounter_parameters:
+      preference: 1.
+    consumption_parameters: {}
+
+reproduction_routing:
+  # larval recruitment
+  - from: Mf
+    to: Sf
+    efficiency: 0.01
+    is_larval: true
+
+  - from: Lp
+    to: Sp
+    efficiency: 0.01
+    is_larval: true
+
+  - from: Ld
+    to: Sd
+    efficiency: 0.01
+    is_larval: true
+
+  # small fishes growing
+  - from: Sf
+    to: Mf
+
+  - from: Sp
+    to: Mp
+
+  - from: Sd
+    to: Md
+
+  # medium fishes growing
+  - from: Mp
+    to: Lp
+
+  - from: Md
+    to: Ld
+
+
+
+fishing:
+  fishing_rate_per_year: 0.3

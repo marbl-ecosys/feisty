@@ -9,4 +9,4 @@ except DistributionNotFound:
     # package is not installed
     _version__ = '0.0.0'
 
-from . import process
+from .core import *

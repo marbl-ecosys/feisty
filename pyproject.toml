@@ -2,3 +2,8 @@
 line-length = 100
 target-version = ['py38']
 skip-string-normalization = true
+
+[tool.pytest.ini_options]
+markers = [
+    "weak: this test is insufficient",
+]
