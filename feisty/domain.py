@@ -18,11 +18,6 @@ def init_module_variables(NX, depth_of_seafloor):
     ocean_depth = depth_of_seafloor
 
 
-def get_NX():
-    """return the number of points in the domain"""
-    return _N_points
-
-
 def init_array(name=None, constant=None, attrs={}):
     """return initialized array"""
     x = constant if constant is not None else 0.0

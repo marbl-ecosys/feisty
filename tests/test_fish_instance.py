@@ -61,6 +61,10 @@ def test_fish_init():
         assert (fish.t_frac_pelagic == fish_settings[i]['t_frac_pelagic_static']).all()
         assert fish.harvest_selectivity == fish_settings[i]['harvest_selectivity']
         assert fish.energy_frac_somatic_growth == fish_settings[i]['energy_frac_somatic_growth']
+        assert (
+            fish.__repr__()
+            == f"{fish_settings[i]['name']}: {fish_settings[i]['size_class']} {fish_settings[i]['functional_type']}"
+        )
 
 
 def test_fish_init_duplicate_fish():

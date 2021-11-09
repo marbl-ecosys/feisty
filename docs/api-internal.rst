@@ -4,10 +4,10 @@ Internal API
 This page provides an auto-generated summary of the `feisty` API.
 
 
-.. currentmodule:: feisty
+.. currentmodule:: feisty.fish_mod
 
-Process
-~~~~~~~
+Model components
+~~~~~~~~~~~~~~~~
 
-.. autosummary::
-   feisty_instance_type
+.. autoclass::
+   fish_type

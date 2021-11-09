@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-# flake8: noqa
-"""Top-level module for feisty ."""
+"""Top-level module for feisty"""
 from pkg_resources import DistributionNotFound, get_distribution
 
 try:
     __version__ = get_distribution(__name__).version
 except DistributionNotFound:
     # package is not installed
-    _version__ = '0.0.0'
+    __version__ = '0.0.0'
 
-from .core import *
+from .core import feisty_instance_type

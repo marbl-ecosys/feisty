@@ -143,21 +143,19 @@ def test_food_web_init_2():
         assert isinstance(F.food_web.consumption_obj[i], feeding.consumption_type)
 
     for i in range(F.food_web.n_links):
+        obj = F.food_web.encounter_obj[i]
         for key in ['predator', 'prey', 'preference', 'ke', 'gam', 'benc']:
             if key in food_web_settings[i]:
-                assert F.food_web.encounter_obj[i].__dict__[key] == food_web_settings[i][key]
-        assert (
-            F.food_web.encounter_obj[i].predator_size_class_mass
-            == masses[F.food_web.link_predator[i]]
-        )
+                assert obj.__dict__[key] == food_web_settings[i][key]
+        assert obj.predator_size_class_mass == masses[F.food_web.link_predator[i]]
+        assert obj.__repr__() == f'enc_{obj.predator}_{obj.prey}'
 
+        obj = F.food_web.consumption_obj[i]
         for key in ['predator', 'prey', 'kc', 'h', 'bcmx']:
             if key in food_web_settings[i]:
-                assert F.food_web.consumption_obj[i].__dict__[key] == food_web_settings[i][key]
-        assert (
-            F.food_web.consumption_obj[i].predator_size_class_mass
-            == masses[F.food_web.link_predator[i]]
-        )
+                assert obj.__dict__[key] == food_web_settings[i][key]
+        assert obj.predator_size_class_mass == masses[F.food_web.link_predator[i]]
+        assert obj.__repr__() == f'con_{obj.predator}_{obj.prey}'
 
 
 def test_food_web_init_3():
@@ -343,6 +341,20 @@ def test_get_prey_biomass_dne():
 def test_get_consumption_bad_args():
     with pytest.raises(AssertionError):
         F.food_web.get_consumption()
+
+
+def test_get_consumption_none_existent_predprey():
+    assert F.food_web.get_consumption(predator='big-fat-tuna') is None
+    assert F.food_web.get_consumption(prey='small-stinky-sardine') is None
+
+
+def test_compute_consumption_zero_preference():
+    sd = settings.get_defaults()
+    for i in range(len(sd['food_web'])):
+        sd['food_web'][i]['encounter_parameters']['preference'] = 0.0
+    fw = feisty.feeding.food_web(sd['food_web'], F.fish, F.biomass.group, F.group_func_type)
+    fw._compute_encounter(F.biomass, F.tendency_data.T_habitat, F.tendency_data.t_frac_pelagic)
+    assert (fw.encounter == 0.0).all()
 
 
 def test_get_consumption():

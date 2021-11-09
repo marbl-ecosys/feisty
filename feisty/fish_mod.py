@@ -108,7 +108,7 @@ class fish_type(object):
         amet=4.0,
         bpow=0.175,
         mortality_type='constant',
-        mortality_coeff=0.1 / 365.0,
+        mortality_coeff_per_yr=0.1,
         assim_efficiency=0.7,
     ):
         """
@@ -175,7 +175,7 @@ class fish_type(object):
         self.harvest_selectivity = harvest_selectivity
         self.energy_frac_somatic_growth = energy_frac_somatic_growth
         self.mortality_type = _mortality_types[mortality_type]
-        self.mortality_coeff = mortality_coeff
+        self.mortality_coeff = mortality_coeff_per_yr / 365.0
         self.assim_efficiency = assim_efficiency
 
     def __repr__(self):
