@@ -34,11 +34,11 @@ setup(
     keywords='feisty',
     name='feisty',
     packages=find_packages(include=['feisty', 'feisty.*']),
-    url='https://github.com/NCAR/feisty',
+    url='https://github.com/marbl-ecosys/feisty',
     project_urls={
-        'Documentation': 'https://github.com/NCAR/feisty',
-        'Source': 'https://github.com/NCAR/feisty',
-        'Tracker': 'https://github.com/NCAR/feisty/issues',
+        'Documentation': 'https://github.com/marbl-ecosys/feisty',
+        'Source': 'https://github.com/marbl-ecosys/feisty',
+        'Tracker': 'https://github.com/marbl-ecosys/feisty/issues',
     },
     zip_safe=False,
 )
