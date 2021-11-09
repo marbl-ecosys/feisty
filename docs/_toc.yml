@@ -1,0 +1,17 @@
+format: jb-book
+root: intro
+parts:
+- caption: Scientific documentation
+  chapters:
+  - file: scientific-background
+- caption: User guide
+  chapters:
+  - file: usage
+  - file: api
+- caption: Developer guide
+  chapters:
+  - file: contributing
+  - file: api-internal
+- caption: References
+  chapters:
+  - file: references

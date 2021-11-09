@@ -77,27 +77,42 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: false
 
-  docs-build:
-    name: Documentation build
-    runs-on: ubuntu-latest
+  build-docs:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        # python-version: [3.8]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-            python-version: 3.8
+    - uses: actions/checkout@v2
 
-      - name: Install package
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e .
+    # Install dependencies
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        channels: conda-forge
+        channel-priority: strict
+        mamba-version: '*'
+        activate-environment: dev-feisty
+        auto-update-conda: false
+        python-version: 3.8
+        use-only-tar-bz2: true
 
-      - name: Install documentation dependencies
-        run: |
-          python -m pip install -r docs/requirements-docs.txt
+    - name: Set up conda environment
+      run: |
+        mamba env update -f ci/environment.yml
+        conda list
 
-      - name: Build docs
-        run: |
-          cd docs
-          make html
+    # Build the book
+    - name: Build the book
+      run: |
+        jupyter-book build docs/ --all
+
+    # Deploy the book's HTML to gh-pages branch
+    - name: GitHub Pages action
+      uses: peaceiris/actions-gh-pages@v3.6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/_build/html

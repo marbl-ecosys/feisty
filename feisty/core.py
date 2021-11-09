@@ -347,10 +347,13 @@ class feisty_instance_type(object):
         Parameters
         ----------
 
-        feisty_state : array_like
-          Array of state variable data.
+        fish_biomass : array_like
+          Array of fish biomass data.
 
-        zooplankton : array_like
+        benthic_prey_biomass : array_like
+          Array of benthic prey biomass data.
+
+        zooplankton_biomass : array_like
           Zooplankton forcing data.
 
         zoo_mortality_data : array_like

@@ -4,7 +4,12 @@ channels:
 dependencies:
   - codecov
   - dask
+  - jupyter-book
+  - jupyter_client==6.1.12
   - jupyterlab
+  - matplotlib
+  - myst-nb
+  - nbformat
   - nbsphinx
   - netcdf4
   - numpydoc
@@ -13,3 +18,5 @@ dependencies:
   - pytest
   - pytest-cov
   - xarray
+  - pip:
+    - sphinx-click
