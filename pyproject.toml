@@ -7,3 +7,10 @@ skip-string-normalization = true
 markers = [
     "weak: this test is insufficient",
 ]
+
+[tool.nbqa.mutate]
+isort = 1
+pyupgrade = 1
+
+[tool.nbqa.addopts]
+pyupgrade = ["--py36-plus"]

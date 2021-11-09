@@ -7,7 +7,7 @@
 # Book settings
 title: Fisheries Size and Functional Type model (FEISTY)
 author: Colleen Petrik and Matthew C. Long
-copyright: "2021"
+copyright: '2021'
 logo: logo.png
 
 # Force re-execution of notebooks on each build.
@@ -32,8 +32,8 @@ sphinx:
     # apparently have to duplicate some settings here if this key is present:
     html_theme_options:
       repository_url: https://github.com/marbl-ecosys/feisty
-      search_bar_text: "Search the docs..."
-      extra_navbar: ""
+      search_bar_text: 'Search the docs...'
+      extra_navbar: ''
       use_issues_button: true
       use_repository_button: true
       use_edit_page_button: true
@@ -41,11 +41,11 @@ sphinx:
     add_book_to_path: ../
 
   extra_extensions:
-  - sphinx.ext.autodoc
-  - sphinx.ext.autosummary
-  - sphinx.ext.intersphinx
-  - sphinx.ext.napoleon
-  - sphinx_click
+    - sphinx.ext.autodoc
+    - sphinx.ext.autosummary
+    - sphinx.ext.intersphinx
+    - sphinx.ext.napoleon
+    - sphinx_click
 
 # Information about where the book exists on the web
 repository:
@@ -61,9 +61,7 @@ html:
   use_repository_button: true
   use_edit_page_button: true
   home_page_in_navbar: false
-  extra_navbar: ""
-
-
+  extra_navbar: ''
 
 parse:
   myst_enable_extensions:

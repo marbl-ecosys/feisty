@@ -2,7 +2,6 @@
 coupling:
   loffline: True
 
-
 model_settings:
   size_class_bounds:
     small: [0.001, 0.5]
@@ -27,10 +26,8 @@ model_settings:
     - benthic_prey
   PI_be_cutoff: 200.
 
-
 zooplankton:
   - name: Zoo
-
 
 fish:
   # small
@@ -100,12 +97,10 @@ fish:
     harvest_selectivity: 1.
     energy_frac_somatic_growth: 0.5
 
-
 benthic_prey:
   - name: benthic_prey
     benthic_efficiency: 0.075 # transfer efficiency of detritus to benthic prey
     carrying_capacity: 0.
-
 
 food_web:
   # small forage
@@ -262,8 +257,6 @@ reproduction_routing:
 
   - from: Md
     to: Ld
-
-
 
 fishing:
   fishing_rate_per_year: 0.3
