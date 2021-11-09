@@ -1,16 +1,14 @@
-.. image:: https://img.shields.io/github/workflow/status/NCAR/feisty/CI?logo=github&style=for-the-badge
+.. image:: https://img.shields.io/github/workflow/status/marbl-ecosys/feisty/CI?logo=github&style=for-the-badge
     :target: https://github.com/marbl-ecosys/feisty/actions
     :alt: GitHub Workflow CI Status
 
-.. image:: https://img.shields.io/github/workflow/status/NCAR/feisty/code-style?label=Code%20Style&style=for-the-badge
+.. image:: https://img.shields.io/github/workflow/status/marbl-ecosys/feisty/code-style?label=Code%20Style&style=for-the-badge
     :target: https://github.com/marbl-ecosys/feisty/actions
     :alt: GitHub Workflow Code Style Status
 
-.. image:: https://img.shields.io/codecov/c/github/NCAR/feisty.svg?style=for-the-badge
+.. image:: https://img.shields.io/codecov/c/github/marbl-ecosys/feisty.svg?style=for-the-badge
     :target: https://app.codecov.io/gh/marbl-ecosys/feisty
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://github.com/python/black
 
 .. If you want the following badges to be visible, please remove this line, and unindent the lines below
     .. image:: https://img.shields.io/readthedocs/feisty/latest.svg?style=for-the-badge
