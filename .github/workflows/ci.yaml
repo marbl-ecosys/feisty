@@ -48,7 +48,7 @@ jobs:
           channels: conda-forge
           channel-priority: strict
           mamba-version: "*"
-          activate-environment: sandbox-devel
+          activate-environment: dev-feisty
           auto-update-conda: false
           python-version: ${{ matrix.python-version }}
           use-only-tar-bz2: true
