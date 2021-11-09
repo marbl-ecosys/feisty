@@ -2,8 +2,6 @@
 
 FEISTY is a mechanistic model that includes multiple fish functional types and size-classes. {cite:t}`Petrik-Stock-etal-2019` introduced FEISTY and its underlying parameterization. This packaged provides a Python interface to FEISTY, using [xarray](http://xarray.pydata.org) and other packages.
 
-
-
 ```{figure} images/feisty-schematic.png
 ---
 height: 400px
