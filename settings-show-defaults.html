@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Internal API &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    <title>Default settings &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
     
   <link href="_static/css/theme.css" rel="stylesheet" />
   <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -52,8 +52,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="References" href="references.html" />
-    <link rel="prev" title="Contributing to the FEISTY model" href="contributing.html" />
+    <link rel="next" title="Contributing to the FEISTY model" href="contributing.html" />
+    <link rel="prev" title="FEISTY Settings" href="settings.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -104,7 +104,7 @@
   User guide
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="usage.html">
    Usage
@@ -115,18 +115,18 @@
    Public API
   </a>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="settings.html">
    FEISTY Settings
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="settings-show-defaults.html">
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      Default settings
     </a>
    </li>
@@ -138,14 +138,14 @@
   Developer guide
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="contributing.html">
    Contributing to the FEISTY model
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-internal.html">
    Internal API
   </a>
  </li>
@@ -198,9 +198,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/api-internal.rst"><button type="button"
+        <a class="dropdown-buttons" href="_sources/settings-show-defaults.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.rst</button></a>
+                data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -218,10 +218,10 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fapi-internal.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fsettings-show-defaults.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        <a class="edit-button" href="https://github.com/marbl-ecosys/feisty/edit/master/api-internal.rst"><button
+        <a class="edit-button" href="https://github.com/marbl-ecosys/feisty/edit/master/settings-show-defaults.ipynb"><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
@@ -241,24 +241,6 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#model-components">
-   Model components
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#process">
-   Process
-  </a>
- </li>
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -267,72 +249,238 @@
         
               <div>
                 
-  <div class="section" id="internal-api">
-<h1>Internal API<a class="headerlink" href="#internal-api" title="Permalink to this headline">¶</a></h1>
-<p>This page provides an auto-generated summary of the <cite>feisty</cite> API.</p>
-<div class="section" id="model-components">
-<h2>Model components<a class="headerlink" href="#model-components" title="Permalink to this headline">¶</a></h2>
-<table class="longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fish_type</span></code>(name, size_class, functional_type, …)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+  <div class="tex2jax_ignore mathjax_ignore section" id="default-settings">
+<h1>Default settings<a class="headerlink" href="#default-settings" title="Permalink to this headline">¶</a></h1>
+<p>Here are the default settings.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">import</span> <span class="nn">feisty.settings</span>
+
+<span class="n">defaults</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_defaults</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
 </div>
-<div class="section" id="process">
-<h2>Process<a class="headerlink" href="#process" title="Permalink to this headline">¶</a></h2>
-<table class="longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_t_frac_pelagic</span></code>(t_frac_pelagic, …)</p></td>
-<td><p>Return the fraction of time spent in the pelagic.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_weighted_mean_temp</span></code>(T_pelagic, T_bottom, …)</p></td>
-<td><p>Compute the time-weighted mean temperature.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_metabolism</span></code>(metabolism_rate, …)</p></td>
-<td><p>Compute metabolic rate.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_ingestion</span></code>(ingestion_rate, food_web)</p></td>
-<td><p>Compute ingestion.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_predation</span></code>(predation_flux, food_web, …)</p></td>
-<td><p>Compute predation.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">natural_mortality</span></code>(mortality_rate, fish_list, …)</p></td>
-<td><p>Compute natural mortality.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_benthic_biomass_update</span></code>(da, …)</p></td>
-<td><p>bio_in = benthic biomass det = poc_flux flux to bottom (g/m2/d) con = biomass specific consumption rate by MD &amp; LD bio = biomass of MD &amp; LD</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_energy_avail</span></code>(energy_avail_rate, …)</p></td>
-<td><p>Compute energy available for growth (nu).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_growth</span></code>(growth_rate, …)</p></td>
-<td><p>Compute energy available for somatic growth (gamma).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_reproduction</span></code>(reproduction_rate, …)</p></td>
-<td><p>Compute reproduction from energy available for growth and reproduction (nu) and energy available for somatic growth (gamma).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_recruitment</span></code>(recruitment_flux, …)</p></td>
-<td><p>Compute “recruitment” from reproduction (i.e., larval production) or growth.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_total_tendency</span></code>(total_tendency, …)</p></td>
-<td><p>Compute the total time tendency of fish.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_fish_catch</span></code>(fish_catch_rate, …)</p></td>
-<td><p>Compute fishing rate.</p></td>
-</tr>
-</tbody>
-</table>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loffline: true
+model_settings:
+  size_class_bounds:
+    small:
+    - 0.001
+    - 0.5
+    medium:
+    - 0.5
+    - 250.0
+    large:
+    - 250.0
+    - 125000.0
+  functional_type_keys:
+  - zooplankton
+  - forage
+  - piscivore
+  - demersal
+  - benthic_prey
+  pelagic_demersal_coupling_type_keys:
+  - piscivore
+  - demersal
+  pelagic_functional_type_keys:
+  - forage
+  - piscivore
+  demersal_functional_type_keys:
+  - demersal
+  - benthic_prey
+  pelagic_demersal_coupling_apply_pref_type_keys:
+  - demersal
+  benthic_pelagic_depth_cutoff: 200.0
+zooplankton:
+- name: Zoo
+fish:
+- name: Sf
+  size_class: small
+  functional_type: forage
+  t_frac_pelagic_static: 1.0
+  pelagic_demersal_coupling: false
+  harvest_selectivity: 0.0
+  energy_frac_somatic_growth: 1.0
+- name: Sp
+  size_class: small
+  functional_type: piscivore
+  t_frac_pelagic_static: 1.0
+  pelagic_demersal_coupling: false
+  harvest_selectivity: 0.0
+  energy_frac_somatic_growth: 1.0
+- name: Sd
+  size_class: small
+  functional_type: demersal
+  t_frac_pelagic_static: 1.0
+  pelagic_demersal_coupling: false
+  harvest_selectivity: 0.0
+  energy_frac_somatic_growth: 1.0
+- name: Mf
+  size_class: medium
+  functional_type: forage
+  t_frac_pelagic_static: 1.0
+  pelagic_demersal_coupling: false
+  harvest_selectivity: 1.0
+  energy_frac_somatic_growth: 0.5
+- name: Mp
+  size_class: medium
+  functional_type: piscivore
+  t_frac_pelagic_static: 1.0
+  pelagic_demersal_coupling: false
+  harvest_selectivity: 1.0
+  energy_frac_somatic_growth: 1.0
+- name: Md
+  size_class: medium
+  functional_type: demersal
+  t_frac_pelagic_static: 0.0
+  pelagic_demersal_coupling: false
+  harvest_selectivity: 1.0
+  energy_frac_somatic_growth: 1.0
+- name: Lp
+  size_class: large
+  functional_type: piscivore
+  t_frac_pelagic_static: 1.0
+  pelagic_demersal_coupling: true
+  harvest_selectivity: 1.0
+  energy_frac_somatic_growth: 0.5
+- name: Ld
+  size_class: large
+  functional_type: demersal
+  t_frac_pelagic_static: 0.0
+  pelagic_demersal_coupling: true
+  harvest_selectivity: 1.0
+  energy_frac_somatic_growth: 0.5
+benthic_prey:
+- name: benthic_prey
+  benthic_efficiency: 0.075
+  carrying_capacity: 0.0
+food_web:
+- predator: Sf
+  prey: Zoo
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Sp
+  prey: Zoo
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Sd
+  prey: Zoo
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Mf
+  prey: Zoo
+  encounter_parameters:
+    preference: 0.45
+  consumption_parameters: {}
+- predator: Mf
+  prey: Sf
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Mf
+  prey: Sp
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Mf
+  prey: Sd
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Mp
+  prey: Zoo
+  encounter_parameters:
+    preference: 0.45
+  consumption_parameters: {}
+- predator: Mp
+  prey: Sf
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Mp
+  prey: Sp
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Mp
+  prey: Sd
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Md
+  prey: benthic_prey
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Lp
+  prey: Mf
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Lp
+  prey: Mp
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Lp
+  prey: Md
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Ld
+  prey: Mf
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Ld
+  prey: Mp
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Ld
+  prey: Md
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+- predator: Ld
+  prey: benthic_prey
+  encounter_parameters:
+    preference: 1.0
+  consumption_parameters: {}
+reproduction_routing:
+- from: Mf
+  to: Sf
+  efficiency: 0.01
+  is_larval: true
+- from: Lp
+  to: Sp
+  efficiency: 0.01
+  is_larval: true
+- from: Ld
+  to: Sd
+  efficiency: 0.01
+  is_larval: true
+- from: Sf
+  to: Mf
+- from: Sp
+  to: Mp
+- from: Sd
+  to: Md
+- from: Mp
+  to: Lp
+- from: Md
+  to: Ld
+fishing:
+  fishing_rate_per_year: 0.3
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -345,16 +493,16 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "conda-env-dev-feisty-py"
         },
         kernelOptions: {
-            kernelName: "python3",
+            kernelName: "conda-env-dev-feisty-py",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'conda-env-dev-feisty-py'</script>
 
               </div>
               
@@ -366,19 +514,19 @@
 <div class='prev-next-bottom'>
     
     <div id="prev">
-        <a class="left-prev" href="contributing.html" title="previous page">
+        <a class="left-prev" href="settings.html" title="previous page">
             <i class="prevnext-label fas fa-angle-left"></i>
             <div class="prevnext-info">
                 <p class="prevnext-label">previous</p>
-                <p class="prevnext-title">Contributing to the FEISTY model</p>
+                <p class="prevnext-title">FEISTY Settings</p>
             </div>
         </a>
     </div>
      <div id="next">
-        <a class="right-next" href="references.html" title="next page">
+        <a class="right-next" href="contributing.html" title="next page">
             <div class="prevnext-info">
                 <p class="prevnext-label">next</p>
-                <p class="prevnext-title">References</p>
+                <p class="prevnext-title">Contributing to the FEISTY model</p>
             </div>
             <i class="prevnext-label fas fa-angle-right"></i>
         </a>

@@ -1,6 +1,6 @@
-=============================================
-Contributing
-=============================================
+================================
+Contributing to the FEISTY model
+================================
 
 Contributions are highly welcomed and appreciated.
 
