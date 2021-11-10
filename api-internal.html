@@ -362,28 +362,28 @@
 <td><p>Compute metabolic rate.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.process.compute_ingestion.html#feisty.process.compute_ingestion" title="feisty.process.compute_ingestion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_ingestion</span></code></a>(ingestion_rate, food_web)</p></td>
-<td><p>Compute ingestion</p></td>
+<td><p>Compute ingestion.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.process.compute_predation.html#feisty.process.compute_predation" title="feisty.process.compute_predation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_predation</span></code></a>(predation_flux, food_web, ...)</p></td>
-<td><p>Compute predation</p></td>
+<td><p>Compute predation.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.process.natural_mortality.html#feisty.process.natural_mortality" title="feisty.process.natural_mortality"><code class="xref py py-obj docutils literal notranslate"><span class="pre">natural_mortality</span></code></a>(mortality_rate, fish_list, ...)</p></td>
-<td><p>Temp-dep natural mortality Tp: pelagic temp Tb: bottom temp t_frac_pelagic: frac pelagic time</p></td>
+<td><p>Compute natural mortality.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.process.compute_benthic_biomass_update.html#feisty.process.compute_benthic_biomass_update" title="feisty.process.compute_benthic_biomass_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_benthic_biomass_update</span></code></a>(da, ...)</p></td>
 <td><p>bio_in = benthic biomass det = poc_flux flux to bottom (g/m2/d) con = biomass specific consumption rate by MD &amp; LD bio = biomass of MD &amp; LD</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.process.compute_energy_avail.html#feisty.process.compute_energy_avail" title="feisty.process.compute_energy_avail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_energy_avail</span></code></a>(energy_avail_rate, ...)</p></td>
-<td><p>Compute energy available for growth (nu)</p></td>
+<td><p>Compute energy available for growth (nu).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.process.compute_growth.html#feisty.process.compute_growth" title="feisty.process.compute_growth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_growth</span></code></a>(growth_rate, ...)</p></td>
-<td><p>Compute energy available for somatic growth.</p></td>
+<td><p>Compute energy available for somatic growth (gamma).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.process.compute_reproduction.html#feisty.process.compute_reproduction" title="feisty.process.compute_reproduction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_reproduction</span></code></a>(reproduction_rate, ...)</p></td>
-<td><p>%%% BIOMASS MADE FROM REPRODUCTION function [gamma, nu, rep] = sub_rep(NX,gamma,nu,K) %nu: energy for growth or spawning %K: proportion allocated to growth % NOTE: Still never going to accumulate biomass as muscle tissue</p></td>
+<td><p>Compute reproduction from energy available for growth and reproduction (nu) and energy available for somatic growth (gamma).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.process.compute_recruitment.html#feisty.process.compute_recruitment" title="feisty.process.compute_recruitment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_recruitment</span></code></a>(recruitment_flux, ...)</p></td>
-<td><p></p></td>
+<td><p>Compute &quot;recruitment&quot; from reproduction (i.e., larval production) or growth.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.process.compute_total_tendency.html#feisty.process.compute_total_tendency" title="feisty.process.compute_total_tendency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_total_tendency</span></code></a>(total_tendency, ...)</p></td>
 <td><p>Compute the total time tendency of fish.</p></td>

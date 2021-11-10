@@ -314,10 +314,16 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="feisty.process.natural_mortality">
 <span class="sig-prename descclassname"><span class="pre">feisty.process.</span></span><span class="sig-name descname"><span class="pre">natural_mortality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mortality_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fish_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_habitat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.process.natural_mortality" title="Permalink to this definition">¶</a></dt>
-<dd><p>Temp-dep natural mortality
-Tp: pelagic temp
-Tb: bottom temp
-t_frac_pelagic: frac pelagic time</p>
+<dd><p>Compute natural mortality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mortality_rate</strong> (<em>array_like</em>) – DataArray for storing the result of the computation.</p></li>
+<li><p><strong>fish_list</strong> (<em>list</em>) – List of feisty.fish_mod.fish object.</p></li>
+<li><p><strong>T_habitat</strong> (<em>numeric</em>) – The experienced temperature (weighted mean).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
