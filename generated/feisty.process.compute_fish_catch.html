@@ -5,55 +5,55 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Public API &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    <title>feisty.process.compute_fish_catch &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
     
-  <link href="_static/css/theme.css" rel="stylesheet" />
-  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
 
     
   <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
   <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
   <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
     
       
 
     
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
     <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
     <script >
         const thebe_selector = ".thebe"
         const thebe_selector_input = "pre"
         const thebe_selector_output = ".output"
     </script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="feisty.feisty_instance_type" href="generated/feisty.feisty_instance_type.html" />
-    <link rel="prev" title="Usage" href="usage.html" />
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="References" href="../references.html" />
+    <link rel="prev" title="feisty.process.compute_total_tendency" href="feisty.process.compute_total_tendency.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -70,19 +70,19 @@
 <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
     
         <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+    <a class="navbar-brand text-wrap" href="../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
         
       
       
-      <img src="_static/logo.png" class="logo" alt="logo">
+      <img src="../_static/logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Fisheries Size and Functional Type model (FEISTY)</h1>
       
     </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs..." aria-label="Search the docs..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -94,7 +94,7 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="scientific-background.html">
+  <a class="reference internal" href="../scientific-background.html">
    Scientific Background
   </a>
  </li>
@@ -104,56 +104,56 @@
   User guide
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="usage.html">
+  <a class="reference internal" href="../usage.html">
    Usage
   </a>
  </li>
- <li class="toctree-l1 current active has-children">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../api.html">
    Public API
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.feisty_instance_type.html">
+    <a class="reference internal" href="feisty.feisty_instance_type.html">
      feisty.feisty_instance_type
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.feisty_instance_type.compute_tendencies.html">
+    <a class="reference internal" href="feisty.feisty_instance_type.compute_tendencies.html">
      feisty.feisty_instance_type.compute_tendencies
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.feisty_instance_type.set_benthic_prey_biomass.html">
+    <a class="reference internal" href="feisty.feisty_instance_type.set_benthic_prey_biomass.html">
      feisty.feisty_instance_type.set_benthic_prey_biomass
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.feisty_instance_type.set_fish_biomass.html">
+    <a class="reference internal" href="feisty.feisty_instance_type.set_fish_biomass.html">
      feisty.feisty_instance_type.set_fish_biomass
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.feisty_instance_type.set_zoo_biomass.html">
+    <a class="reference internal" href="feisty.feisty_instance_type.set_zoo_biomass.html">
      feisty.feisty_instance_type.set_zoo_biomass
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.feisty_instance_type.set_zoo_mortality.html">
+    <a class="reference internal" href="feisty.feisty_instance_type.set_zoo_mortality.html">
      feisty.feisty_instance_type.set_zoo_mortality
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="settings.html">
+  <a class="reference internal" href="../settings.html">
    FEISTY Settings
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
@@ -163,7 +163,7 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="settings-show-defaults.html">
+    <a class="reference internal" href="../settings-show-defaults.html">
      Default settings
     </a>
    </li>
@@ -175,89 +175,89 @@
   Developer guide
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="contributing.html">
+  <a class="reference internal" href="../contributing.html">
    Contributing to the FEISTY model
   </a>
  </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="api-internal.html">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../api-internal.html">
    Internal API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
   <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.fish_mod.fish_type.html">
+    <a class="reference internal" href="feisty.fish_mod.fish_type.html">
      feisty.fish_mod.fish_type
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_t_frac_pelagic.html">
+    <a class="reference internal" href="feisty.process.compute_t_frac_pelagic.html">
      feisty.process.compute_t_frac_pelagic
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.t_weighted_mean_temp.html">
+    <a class="reference internal" href="feisty.process.t_weighted_mean_temp.html">
      feisty.process.t_weighted_mean_temp
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_metabolism.html">
+    <a class="reference internal" href="feisty.process.compute_metabolism.html">
      feisty.process.compute_metabolism
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_ingestion.html">
+    <a class="reference internal" href="feisty.process.compute_ingestion.html">
      feisty.process.compute_ingestion
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_predation.html">
+    <a class="reference internal" href="feisty.process.compute_predation.html">
      feisty.process.compute_predation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.natural_mortality.html">
+    <a class="reference internal" href="feisty.process.natural_mortality.html">
      feisty.process.natural_mortality
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_benthic_biomass_update.html">
+    <a class="reference internal" href="feisty.process.compute_benthic_biomass_update.html">
      feisty.process.compute_benthic_biomass_update
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_energy_avail.html">
+    <a class="reference internal" href="feisty.process.compute_energy_avail.html">
      feisty.process.compute_energy_avail
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_growth.html">
+    <a class="reference internal" href="feisty.process.compute_growth.html">
      feisty.process.compute_growth
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_reproduction.html">
+    <a class="reference internal" href="feisty.process.compute_reproduction.html">
      feisty.process.compute_reproduction
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_recruitment.html">
+    <a class="reference internal" href="feisty.process.compute_recruitment.html">
      feisty.process.compute_recruitment
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_total_tendency.html">
+    <a class="reference internal" href="feisty.process.compute_total_tendency.html">
      feisty.process.compute_total_tendency
     </a>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.process.compute_fish_catch.html">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      feisty.process.compute_fish_catch
     </a>
    </li>
@@ -271,7 +271,7 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="references.html">
+  <a class="reference internal" href="../references.html">
    References
   </a>
  </li>
@@ -312,7 +312,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/api.rst"><button type="button"
+        <a class="dropdown-buttons" href="../_sources/generated/feisty.process.compute_fish_catch.rst"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.rst</button></a>
         <!-- Download PDF via print -->
@@ -332,10 +332,10 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fapi.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fgenerated/feisty.process.compute_fish_catch.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        <a class="edit-button" href="https://github.com/marbl-ecosys/feisty/edit/master/api.rst"><button
+        <a class="edit-button" href="https://github.com/marbl-ecosys/feisty/edit/master/generated/feisty.process.compute_fish_catch.rst"><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
@@ -355,19 +355,6 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#primary-feisty-object">
-   Primary FEISTY object
-  </a>
- </li>
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -376,38 +363,16 @@
         
               <div>
                 
-  <div class="section" id="public-api">
-<h1>Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h1>
-<p>This page provides an auto-generated summary of the <cite>feisty</cite> API.</p>
-<div class="section" id="primary-feisty-object">
-<h2>Primary FEISTY object<a class="headerlink" href="#primary-feisty-object" title="Permalink to this headline">¶</a></h2>
-<table class="longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.feisty_instance_type.html#feisty.feisty_instance_type" title="feisty.feisty_instance_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feisty_instance_type</span></code></a>(domain_dict[, …])</p></td>
-<td><p>This is the primary interface to the FEISTY model.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.feisty_instance_type.compute_tendencies.html#feisty.feisty_instance_type.compute_tendencies" title="feisty.feisty_instance_type.compute_tendencies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feisty_instance_type.compute_tendencies</span></code></a>(…)</p></td>
-<td><p>Compute time tendency for FEISTY model.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.feisty_instance_type.set_benthic_prey_biomass.html#feisty.feisty_instance_type.set_benthic_prey_biomass" title="feisty.feisty_instance_type.set_benthic_prey_biomass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feisty_instance_type.set_benthic_prey_biomass</span></code></a>(data)</p></td>
-<td><p>Set the values of the benthic prey biomass data.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.feisty_instance_type.set_fish_biomass.html#feisty.feisty_instance_type.set_fish_biomass" title="feisty.feisty_instance_type.set_fish_biomass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feisty_instance_type.set_fish_biomass</span></code></a>(data)</p></td>
-<td><p>Set the values of the fish biomass data.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.feisty_instance_type.set_zoo_biomass.html#feisty.feisty_instance_type.set_zoo_biomass" title="feisty.feisty_instance_type.set_zoo_biomass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feisty_instance_type.set_zoo_biomass</span></code></a>(data)</p></td>
-<td><p>Set the values of the zooplankton biomass data.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.feisty_instance_type.set_zoo_mortality.html#feisty.feisty_instance_type.set_zoo_mortality" title="feisty.feisty_instance_type.set_zoo_mortality"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feisty_instance_type.set_zoo_mortality</span></code></a>(data)</p></td>
-<td><p>Set the values of the zooplankton mortality data.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+  <div class="section" id="feisty-process-compute-fish-catch">
+<h1>feisty.process.compute_fish_catch<a class="headerlink" href="#feisty-process-compute-fish-catch" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="feisty.process.compute_fish_catch">
+<code class="sig-prename descclassname"><span class="pre">feisty.process.</span></code><code class="sig-name descname"><span class="pre">compute_fish_catch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fish_catch_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fishing_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fish_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.process.compute_fish_catch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute fishing rate.
+%F = fishing rate per day
+%selec = fishery selectivity</p>
+</dd></dl>
+
 </div>
 
     <script type="text/x-thebe-config">
@@ -423,7 +388,7 @@
         },
         kernelOptions: {
             kernelName: "python3",
-            path: "./."
+            path: "./generated"
         },
         predefinedOutput: true
     }
@@ -440,19 +405,19 @@
 <div class='prev-next-bottom'>
     
     <div id="prev">
-        <a class="left-prev" href="usage.html" title="previous page">
+        <a class="left-prev" href="feisty.process.compute_total_tendency.html" title="previous page">
             <i class="prevnext-label fas fa-angle-left"></i>
             <div class="prevnext-info">
                 <p class="prevnext-label">previous</p>
-                <p class="prevnext-title">Usage</p>
+                <p class="prevnext-title">feisty.process.compute_total_tendency</p>
             </div>
         </a>
     </div>
      <div id="next">
-        <a class="right-next" href="generated/feisty.feisty_instance_type.html" title="next page">
+        <a class="right-next" href="../references.html" title="next page">
             <div class="prevnext-info">
                 <p class="prevnext-label">next</p>
-                <p class="prevnext-title">feisty.feisty_instance_type</p>
+                <p class="prevnext-title">References</p>
             </div>
             <i class="prevnext-label fas fa-angle-right"></i>
         </a>
@@ -478,7 +443,7 @@
       </div>
     </div>
   
-  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
 
   
   </body>
