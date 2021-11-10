@@ -70,15 +70,18 @@ def t_weighted_mean_temp(T_pelagic, T_bottom, t_frac_pelagic):
 
 
 def compute_metabolism(metabolism_rate, fish_list, T_habitat):
-    """
-    Compute metabolic rate.
-    Tp: pelagic temp
-    Tb: bottom temp
-    t_frac_pelagic: frac pelagic time
-    mass: ind weight of size class
-    fcrit: feeding level to meet resting respiration rate
-    cmax: max consumption rate
-    U: swimming speed
+    """Compute metabolic rate.
+
+    Parameters
+    ----------
+    metabolism_rate : array_like
+      DataArray for storing the result of the computation.
+
+    fish_list : list
+      List of feisty.fish_mod.fish object.
+
+    T_habitat : numeric
+      The experienced temperature (weighted mean).
     """
 
     for i, fish in enumerate(fish_list):
@@ -89,13 +92,36 @@ def compute_metabolism(metabolism_rate, fish_list, T_habitat):
 
 
 def compute_ingestion(ingestion_rate, food_web):
-    """Compute ingestion"""
+    """Compute ingestion.
+
+    Parameters
+    ----------
+
+    ingestion_rate : array_like
+      DataArray for storing the result of the computation.
+
+    food_web : feisty.food_web
+      Food web object.
+    """
     for i, name in enumerate(food_web.fish_names):
         ingestion_rate[i, :] = food_web.get_consumption(predator=name).sum('group')
 
 
 def compute_predation(predation_flux, food_web, biomass):
-    """Compute predation"""
+    """Compute predation.
+
+    Parameters
+    ----------
+
+    predation_flux : array_like
+      DataArray for storing the result of the computation.
+
+    food_web : feisty.food_web
+      Food web object.
+
+    biomass : xarray.DataArray
+      Biomass array.
+    """
     for i, name in enumerate(food_web.fish_names):
         # not eaten?
         if name not in food_web.prey_ndx_pred:
@@ -106,11 +132,18 @@ def compute_predation(predation_flux, food_web, biomass):
 
 
 def natural_mortality(mortality_rate, fish_list, T_habitat):
-    """
-    Temp-dep natural mortality
-    Tp: pelagic temp
-    Tb: bottom temp
-    t_frac_pelagic: frac pelagic time
+    """Compute natural mortality.
+
+    Parameters
+    ----------
+    mortality_rate : array_like
+      DataArray for storing the result of the computation.
+
+    fish_list : list
+      List of feisty.fish_mod.fish object.
+
+    T_habitat : numeric
+      The experienced temperature (weighted mean).
     """
 
     for i, fish in enumerate(fish_list):
@@ -190,7 +223,7 @@ def compute_benthic_biomass_update(da, benthic_prey_list, biomass, food_web, poc
 
 
 def compute_energy_avail(energy_avail_rate, ingestion_rate, metabolism_rate, fish_list):
-    """Compute energy available for growth (nu)"""
+    """Compute energy available for growth (nu)."""
 
     for i, fish in enumerate(fish_list):
         energy_avail_rate[i, :] = (ingestion_rate[i, :] * fish.assim_efficiency) - metabolism_rate[
@@ -201,7 +234,7 @@ def compute_energy_avail(energy_avail_rate, ingestion_rate, metabolism_rate, fis
 def compute_growth(
     growth_rate, energy_avail_rate, predation_rate, mortality_rate, fish_catch_rate, fish_list
 ):
-    """Compute energy available for somatic growth.
+    """Compute energy available for somatic growth (gamma).
     nmort = natural mortality rate
     Frate = fishing mortality rate
     d = predation loss
@@ -221,13 +254,7 @@ def compute_growth(
 
 
 def compute_reproduction(reproduction_rate, growth_rate, energy_avail_rate, fish_list):
-    """
-    %%% BIOMASS MADE FROM REPRODUCTION
-    function [gamma, nu, rep] = sub_rep(NX,gamma,nu,K)
-    %nu: energy for growth or spawning
-    %K: proportion allocated to growth
-    % NOTE: Still never going to accumulate biomass as muscle tissue
-    """
+    """Compute reproduction from energy available for growth and reproduction (nu) and energy available for somatic growth (gamma)."""
     for i, fish in enumerate(fish_list):
 
         if fish.energy_frac_somatic_growth == 1.0:
@@ -251,7 +278,7 @@ def compute_recruitment(
     biomass,
     reproduction_routing,
 ):
-
+    """Compute "recruitment" from reproduction (i.e., larval production) or growth."""
     for link in reproduction_routing:
         if link.is_larval:
             recruitment_flux[link.i_fish, :] = (
