@@ -131,7 +131,7 @@ def compute_predation(predation_flux, food_web, biomass):
         predation_flux[i, :] = (food_web.get_consumption(prey=name) * biomass[ndx, :]).sum('group')
 
 
-def natural_mortality(mortality_rate, fish_list, T_habitat):
+def compute_natural_mortality(mortality_rate, fish_list, T_habitat):
     """Compute natural mortality.
 
     Parameters

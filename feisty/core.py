@@ -303,7 +303,7 @@ class feisty_instance_type(object):
         )
 
     def _compute_mortality(self):
-        process.natural_mortality(
+        process.compute_natural_mortality(
             self.tendency_data.mortality_rate,
             self.fish,
             self.tendency_data.T_habitat,
