@@ -232,34 +232,6 @@ class fishing(object):
         )
 
 
-def compute_t_frac_pelagic(da, fish_list, biomass, food_web, reset=False):
-    """return the fraction of time spent in the pelagic"""
-
-    for i, fish in enumerate(fish_list):
-        if reset:
-            da.data[i, :] = fish.t_frac_pelagic_static
-
-        elif fish.pelagic_demersal_coupling:
-            prey_pelagic = food_web.get_prey_biomass(
-                biomass,
-                fish.name,
-                prey_functional_type=pelagic_functional_types,
-                apply_preference=fish.pdc_apply_pref,
-            )
-            prey_demersal = food_web.get_prey_biomass(
-                biomass,
-                fish.name,
-                prey_functional_type=demersal_functional_types,
-                apply_preference=fish.pdc_apply_pref,
-            )
-
-            da.data[i, :] = xr.where(
-                domain.ocean_depth < PI_be_cutoff,
-                prey_pelagic / (prey_pelagic + prey_demersal),
-                1.0,
-            )
-
-
 class reproduction_routing(object):
     """Data structure to store reproduction routing information."""
 

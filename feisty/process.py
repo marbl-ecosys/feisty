@@ -1,18 +1,72 @@
 import numpy as np
 import xarray as xr
 
-from . import constants
-from .fish_mod import (
-    PI_be_cutoff,
-    demersal_functional_types,
-    mortality_types,
-    pelagic_functional_types,
-)
+from . import constants, domain, fish_mod
 
 
-def t_weighted_mean_temp(Tp, Tb, t_frac_pelagic):
-    """compute weighted-mean temperature"""
-    return (Tp * t_frac_pelagic) + (Tb * (1.0 - t_frac_pelagic))
+def compute_t_frac_pelagic(t_frac_pelagic, fish_list, biomass, food_web, reset=False):
+    """Return the fraction of time spent in the pelagic.
+
+    Parameters
+    ----------
+
+    t_frac_pelagic : array_like
+      DataArray for storing the result of the computation.
+
+    fish_list : list
+      List of feisty.fish_mod.fish object.
+
+    biomass : xarray.DataArray
+      Biomass array.
+
+    food_web : feisty.food_web
+      Food web object.
+
+    reset : boolean, optional
+      If "True", reset `t_frac_pelagic` to `t_frac_pelagic_static`.
+    """
+
+    for i, fish in enumerate(fish_list):
+        if reset:
+            t_frac_pelagic[i, :] = fish.t_frac_pelagic_static
+
+        elif fish.pelagic_demersal_coupling:
+            prey_pelagic = food_web.get_prey_biomass(
+                biomass,
+                fish.name,
+                prey_functional_type=fish_mod.pelagic_functional_types,
+                apply_preference=fish.pdc_apply_pref,
+            )
+            prey_demersal = food_web.get_prey_biomass(
+                biomass,
+                fish.name,
+                prey_functional_type=fish_mod.demersal_functional_types,
+                apply_preference=fish.pdc_apply_pref,
+            )
+
+            t_frac_pelagic[i, :] = xr.where(
+                domain.ocean_depth < fish_mod.PI_be_cutoff,
+                prey_pelagic / (prey_pelagic + prey_demersal),
+                1.0,
+            )
+
+
+def t_weighted_mean_temp(T_pelagic, T_bottom, t_frac_pelagic):
+    """Compute the time-weighted mean temperature.
+
+    Parameters
+    ----------
+
+    T_pelagic : numeric
+      Pelagic temperature.
+
+    T_bottom : numeric
+      Bottom temperature.
+
+    t_frac_pelagic : numeric
+      Fraction of time spent in the pelagic.
+    """
+    return (T_pelagic * t_frac_pelagic) + (T_bottom * (1.0 - t_frac_pelagic))
 
 
 def compute_metabolism(metabolism_rate, fish_list, T_habitat):
@@ -61,23 +115,23 @@ def natural_mortality(mortality_rate, fish_list, T_habitat):
 
     for i, fish in enumerate(fish_list):
 
-        if fish.mortality_type == mortality_types['none']:
+        if fish.mortality_type == fish_mod.mortality_types['none']:
             mortality_rate[i, :] = 0.0
 
-        elif fish.mortality_type == mortality_types['constant']:
+        elif fish.mortality_type == fish_mod.mortality_types['constant']:
             mortality_rate[i, :] = fish.mortality_coeff
 
-        elif fish.mortality_type == mortality_types['Hartvig']:
+        elif fish.mortality_type == fish_mod.mortality_types['Hartvig']:
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 0.84 * fish.mass ** (-0.25) / 365.0
             )
 
-        elif fish.mortality_type == mortality_types['Mizer']:
+        elif fish.mortality_type == fish_mod.mortality_types['Mizer']:
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 3.0 * fish.mass ** (-0.25) / 365.0
             )
 
-        elif fish.mortality_type == mortality_types['Jennings & Collingridge']:
+        elif fish.mortality_type == fish_mod.mortality_types['Jennings & Collingridge']:
             # TODO: clean up here
             temp2 = T_habitat[i, :] + 273.0
             Tref = 283.0
@@ -86,16 +140,16 @@ def natural_mortality(mortality_rate, fish_list, T_habitat):
             tfact = np.exp((-1 * E / k) * ((1.0 / temp2) - (1.0 / Tref)))
             mortality_rate[i, :] = tfact * 0.5 * fish.mass ** (-0.33) / 365.0
 
-        elif fish.mortality_type == mortality_types['Peterson & Wrob']:
+        elif fish.mortality_type == fish_mod.mortality_types['Peterson & Wrob']:
             # Peterson & Wroblewski (daily & uses dry weight)
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 15.0)) * 5.26e-3 * (fish.mass / 9.0) ** (-0.25)
             )
 
-        elif fish.mortality_type == mortality_types['temperature-dependent']:
+        elif fish.mortality_type == fish_mod.mortality_types['temperature-dependent']:
             mortality_rate[i, :] = np.exp(0.063 * (T_habitat[i, :] - 10.0)) * fish.mortality_coeff
 
-        elif fish.mortality_type == mortality_types['weight-dependent']:
+        elif fish.mortality_type == fish_mod.mortality_types['weight-dependent']:
             mortality_rate[i, :] = 0.5 * fish.mass ** (-0.25) / 365.0
 
         else:
@@ -224,15 +278,32 @@ def compute_total_tendency(
     fish_list,
 ):
     """
-    function bio_out = sub_update_fi(bio_in,rec,nu,rep,gamma,die,nmort)
-    % all inputs except rec & die are in g g-1 d-1; rec & die are g d-1
-    % rec = rec from smaller size class = TOTAL biomass gained from
-            recruitment
-    % energy_avail = energy avail for growth or repro
-    % rep = energy lost to egg production
-    % gamma = energy lost to maturation to larger size class
-    % nmort = natural mortality rate
-    % predation = biomass lost to predation
+    Compute the total time tendency of fish.
+
+    Inputs with "_rate" suffix are specific rates (1/d); inputs with "_flux" suffix are actually mass fluxes (g/d).
+
+    Parameters
+    ----------
+    total_tendency : array_like
+
+    recruitment_flux : array_like
+
+    energy_avail_rate : array_like
+
+    growth_rate : array_like
+
+    reproduction_rate : array_like
+
+    mortality_rate : array_like
+
+    predation_flux : array_like
+
+    fish_catch_rate : array_like
+
+    biomass : array_like
+
+    fish_list : list
+      List of feisty.fish_mod.fish object.
     """
     for i, fish in enumerate(fish_list):
         total_tendency[i, :] = (

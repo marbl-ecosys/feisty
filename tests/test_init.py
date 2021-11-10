@@ -3,6 +3,7 @@ import pytest
 import xarray as xr
 
 import feisty
+import feisty.domain as domain
 import feisty.fish_mod as fish_mod
 import feisty.settings as settings
 
@@ -76,7 +77,6 @@ def test_reproduction_routing_bad_is_larval():
 
 def test_domain_values():
     """test domain module init"""
-    import feisty.domain as domain
 
     assert domain._N_points == domain_dict['NX']
     assert (domain.ocean_depth == domain_dict['depth_of_seafloor']).all()

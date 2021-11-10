@@ -214,7 +214,7 @@ class feisty_instance_type(object):
         self.biomass.data[self.ndx_benthic_prey, :] = data
 
     def _compute_t_frac_pelagic(self, reset=False):
-        fish_mod.compute_t_frac_pelagic(
+        process.compute_t_frac_pelagic(
             self.tendency_data.t_frac_pelagic,
             fish_list=self.fish,
             biomass=self.biomass,
