@@ -256,7 +256,7 @@ def test_zoo_init():
     """zooplankton init should set names and n_zoo"""
     assert F.zoo_names == [z['name'] for z in settings_dict_def['zooplankton']]
     assert F.n_zoo == len(settings_dict_def['zooplankton'])
-    assert settings_dict_def['coupling']['loffline']
+    assert settings_dict_def['loffline']
     assert F.zoo_mortality.dims == ('zooplankton', 'X')
     assert F.zoo_mortality.shape == (n_zoo, NX)
     assert (F.zoo_mortality.data == 0.0).all()
@@ -264,7 +264,7 @@ def test_zoo_init():
 
 def test_zoo_mortality_not_offline():
     settings_dict_def_loffline_false = feisty.settings.get_defaults()
-    settings_dict_def_loffline_false['coupling']['loffline'] = False
+    settings_dict_def_loffline_false['loffline'] = False
     Fprime = feisty.feisty_instance_type(
         domain_dict=domain_dict,
         settings_dict=settings_dict_def_loffline_false,

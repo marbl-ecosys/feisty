@@ -1,36 +1,90 @@
-# Default settings for FEISTY
-coupling:
-  loffline: True
+###
+# Run feisty in offline mode (cap fish ingestion of zooplankton using mortality term).
+loffline: True
 
+###
+# This section defines aspects of the model structure, including the size classes and names of the model functional types.
 model_settings:
+  ###
+  # Specify the names and bounds for the model size classes [grams].
+  #
+  # Example:
+  #
+  # .. code-block:: yaml
+  #
+  #    small: [0.001, 0.5]
+  #    medium: [0.5, 250.]
+  #    large: [250., 125000.]
   size_class_bounds:
     small: [0.001, 0.5]
     medium: [0.5, 250.]
     large: [250., 125000.]
+  ###
+  # Specify the list of functional types included in the model.
+  # (Zooplankton are listed here, but are really a forcing, not a prognostic component.)
   functional_type_keys:
     - zooplankton
     - forage
     - piscivore
     - demersal
     - benthic_prey
+  ###
+  # List the functional types that engage in pelagic-demersal coupling
+  # (if enabled in ``fish`` structure below.)
   pelagic_demersal_coupling_type_keys:
     - piscivore
     - demersal
-  pelagic_demersal_coupling_apply_pref_type_keys:
-    - demersal
+  ###
+  # Specify the functional types that inhabit the pelagic zone.
   pelagic_functional_type_keys:
     - forage
     - piscivore
+  ###
+  # Specify the "demersal" functional types.
   demersal_functional_type_keys:
     - demersal
     - benthic_prey
+  ###
+  # When computing pelagic-demersal coupling, apply prey preference-weighting to prey
+  # biomass sums.
+  pelagic_demersal_coupling_apply_pref_type_keys:
+    - demersal
+  ###
+  # Benthic-pelagic coupling cutoff [meters].
   benthic_pelagic_depth_cutoff: 200.
 
+###
+# Define the zooplankton groups used to force FEISTY. List of dictionaries with fields including:
+#
+# - name
 zooplankton:
   - name: Zoo
 
+###
+# Define the fish that are simulated by FEISTY.
+# List of dictionaries specify fish parameters.
+#
+# | **name**: The name of the fish.
+# | **size_class**: The size class (must be in ``size_class_bounds`` above).
+# | **functional_type**: The functional type (must be in ``functional_type_keys`` above).
+# | **t_frac_pelagic_static**:
+# | **pelagic_demersal_coupling**: Does this group do pelagic-demersal coupling (boolean).
+# | **harvest_selectivity**: Proportion of biomass subject to fishing rate (fraction).
+# | **energy_frac_somatic_growth**: Fraction of available energy routed to growth (fraction).
+#
+# Example:
+#
+# .. code-block:: yaml
+#
+#   - name: Sf
+#     size_class: small
+#     functional_type: forage
+#     t_frac_pelagic_static: 1.
+#     pelagic_demersal_coupling: false
+#     harvest_selectivity: 0.
+#     energy_frac_somatic_growth: 1.
+#
 fish:
-  # small
   - name: Sf
     size_class: small
     functional_type: forage
@@ -97,11 +151,24 @@ fish:
     harvest_selectivity: 1.
     energy_frac_somatic_growth: 0.5
 
+###
+# Define the benthic prey simulated by FEISTY.
 benthic_prey:
   - name: benthic_prey
     benthic_efficiency: 0.075 # transfer efficiency of detritus to benthic prey
     carrying_capacity: 0.
 
+###
+# Build a food web of predator-prey relationships as a list.
+# Here is an example entry:
+#
+# .. code-block:: yaml
+#
+#    - predator: Sf
+#      prey: Zoo
+#      encounter_parameters:
+#      preference: 1.
+#      consumption_parameters: {}
 food_web:
   # small forage
   - predator: Sf
@@ -224,6 +291,8 @@ food_web:
       preference: 1.
     consumption_parameters: {}
 
+###
+# Specify how growth and reproduction is routed among model constituents.
 reproduction_routing:
   # larval recruitment
   - from: Mf
@@ -258,5 +327,9 @@ reproduction_routing:
   - from: Md
     to: Ld
 
+###
+# Parameterize fishing.
 fishing:
+  ###
+  # Biomass harvest by fishing.
   fishing_rate_per_year: 0.3

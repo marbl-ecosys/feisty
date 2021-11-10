@@ -8,6 +8,9 @@ parts:
     chapters:
       - file: usage
       - file: api
+      - file: settings
+        sections:
+          - file: settings-show-defaults
   - caption: Developer guide
     chapters:
       - file: contributing

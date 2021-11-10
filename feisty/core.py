@@ -61,9 +61,8 @@ class feisty_instance_type(object):
         if settings_dict is not None:
             self.settings_dict.update(settings_dict)
 
+        self.loffline = self.settings_dict['loffline']
         self._init_domain(self.domain_dict)
-
-        self._init_coupling(self.settings_dict['coupling'])
 
         self._init_model_settings(self.settings_dict['model_settings'])
 
@@ -78,9 +77,6 @@ class feisty_instance_type(object):
         self._init_tendency_arrays()
 
         self.gcm_state = gcm_state_type()
-
-    def _init_coupling(self, coupling_settings):
-        self.loffline = coupling_settings['loffline']
 
     def _init_domain(self, domain_dict):
         """initialize domain"""

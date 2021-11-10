@@ -37,6 +37,7 @@ sphinx:
       use_issues_button: true
       use_repository_button: true
       use_edit_page_button: true
+    autoyaml_level: 2
   local_extensions:
     add_book_to_path: ../
 
@@ -46,6 +47,7 @@ sphinx:
     - sphinx.ext.intersphinx
     - sphinx.ext.extlinks
     - sphinx.ext.napoleon
+    - sphinxcontrib.autoyaml
     - sphinx_click
 
 # Information about where the book exists on the web
