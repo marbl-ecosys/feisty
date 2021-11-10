@@ -6,9 +6,45 @@ from . import domain, feeding, fish_mod, process, settings
 
 class feisty_instance_type(object):
     """
-    This is the primary interface to the feisty model.
+    This is the primary interface to the FEISTY model.
 
-    feisty_instance = feisty_instance_type(...)
+    Parameters
+    ----------
+
+    domain_dict : dict
+      Dictionary containing domain information, for example::
+
+          domain_dict = {
+              'NX': len(depth_of_seafloor_data),
+              'depth_of_seafloor': depth_of_seafloor_data)),
+          }
+
+    settings_dict : dict, optional
+        Dictionary of model settings.
+
+    fish_ic_data : numeric or array_like, optional
+      Initial conditions for fish biomass.
+
+    benthic_prey_ic_data : numeric or array_like
+      Initial conditions for benthic prey biomass.
+
+    Examples
+    --------
+
+    Initialize the FEISTY model and return a ``feisty_instance_type`` object::
+
+        import feisty
+        domain = get_model_domain()
+        feisty_instance = feisty_instance_type(domain_dict=domain)
+
+    In the context of time-stepping the model forward, the tendencies are computed as follows::
+
+        dXdt = feisty_instance.compute_tendencies(...)
+
+    Then information from the computation can be accessed as an `xarray.Dataset <http://xarray.pydata.org/en/stable/generated/xarray.Dataset.html>`_ via the ``tendency_data`` property::
+
+        ds_t = feisty_instance.tendency_data
+
     """
 
     def __init__(
@@ -18,6 +54,8 @@ class feisty_instance_type(object):
         fish_ic_data=1e-5,
         benthic_prey_ic_data=1e-5,
     ):
+        """Initialize the ``feisty_instance_type``."""
+
         self.domain_dict = domain_dict
         self.settings_dict = settings.get_defaults()
         if settings_dict is not None:
@@ -144,9 +182,6 @@ class feisty_instance_type(object):
             self.fish,
             self.benthic_prey,
         )
-
-    def get_fish_biomass(self):
-        return self.biomass.isel(group=self.ndx_fish)
 
     def set_fish_biomass(self, data):
         """Set the values of the fish biomass data.
@@ -393,9 +428,6 @@ class feisty_instance_type(object):
         self._compute_total_tendency()
 
         return self.tendency_data.total_tendency
-
-    def diagnostics(self):
-        pass
 
 
 def _init_tendency_data(zoo_list, fish_list, benthic_prey_list):
