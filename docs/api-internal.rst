@@ -28,7 +28,7 @@ Process
    compute_metabolism
    compute_ingestion
    compute_predation
-   natural_mortality
+   compute_natural_mortality
    compute_benthic_biomass_update
    compute_energy_avail
    compute_growth
