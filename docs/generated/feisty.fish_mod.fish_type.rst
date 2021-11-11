@@ -1,7 +1,7 @@
 ﻿feisty.fish\_mod.fish\_type
 ===========================
 
-.. currentmodule:: feisty.fish_mod
+.. currentmodule:: feisty.ecosystem
 
 .. autoclass:: fish_type
 

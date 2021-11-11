@@ -4,7 +4,7 @@ Internal API
 This page provides an auto-generated summary of the `feisty` API.
 
 
-.. currentmodule:: feisty.fish_mod
+.. currentmodule:: feisty.core.ecosystem
 
 Model components
 ~~~~~~~~~~~~~~~~

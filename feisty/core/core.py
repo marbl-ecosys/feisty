@@ -1,7 +1,7 @@
 import numpy as np
 import xarray as xr
 
-from . import domain, feeding, fish_mod, process, settings
+from . import domain, ecosystem, process, settings
 
 
 class feisty_instance_type(object):
@@ -84,13 +84,13 @@ class feisty_instance_type(object):
 
     def _init_model_settings(self, model_settings):
         """initialize model settings"""
-        fish_mod.init_module_variables(**model_settings)
+        ecosystem.init_module_variables(**model_settings)
 
     def _init_zooplankton(self, zooplankton_settings):
         self.zooplankton = []
         self.zoo_names = []
         for z_settings in zooplankton_settings:
-            zoo_i = fish_mod.zooplankton_type(**z_settings)
+            zoo_i = ecosystem.zooplankton_type(**z_settings)
             self.zooplankton.append(zoo_i)
             self.zoo_names.append(zoo_i.name)
 
@@ -111,7 +111,7 @@ class feisty_instance_type(object):
         self.fish = []
         self.fish_names = []
         for fish_parameters in fish_settings:
-            fish_i = fish_mod.fish_type(**fish_parameters)
+            fish_i = ecosystem.fish_type(**fish_parameters)
             self.fish.append(fish_i)
             self.fish_names.append(fish_i.name)
 
@@ -123,7 +123,7 @@ class feisty_instance_type(object):
         self.benthic_prey = []
         self.benthic_prey_names = []
         for b_settings in benthic_prey_settings:
-            bprey_i = fish_mod.benthic_prey_type(**b_settings)
+            bprey_i = ecosystem.benthic_prey_type(**b_settings)
             self.benthic_prey.append(bprey_i)
             self.benthic_prey_names.append(bprey_i.name)
 
@@ -154,7 +154,7 @@ class feisty_instance_type(object):
 
     def _init_food_web(self, feeding_settings):
         """initialize food_web"""
-        self.food_web = feeding.food_web(
+        self.food_web = ecosystem.food_web(
             feeding_settings,
             self.fish,
             self.biomass.group,
@@ -162,14 +162,14 @@ class feisty_instance_type(object):
         )
 
     def _init_reproduction_routing(self, routing_settings):
-        self.reproduction_routing = fish_mod.reproduction_routing(
+        self.reproduction_routing = ecosystem.reproduction_routing(
             routing_settings,
             self.fish,
             self.biomass.group,
         )
 
     def _init_fishing(self, fishing_settings):
-        self.fishing = fish_mod.fishing(**fishing_settings)
+        self.fishing = ecosystem.fishing(**fishing_settings)
 
     def _init_tendency_arrays(self):
         """initialize components of the computation"""

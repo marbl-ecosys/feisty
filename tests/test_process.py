@@ -3,7 +3,7 @@ import pytest
 import xarray as xr
 
 import feisty
-import feisty.core.fish_mod as fish_mod
+import feisty.core.ecosystem as ecosystem
 import feisty.core.process as process
 
 from . import conftest
@@ -114,7 +114,7 @@ def test_t_frac_pelagic():
                     F.biomass,
                     pred,
                     prey_functional_type=[
-                        fish_mod.functional_types[p] for p in pelagic_functional_types
+                        ecosystem.functional_types[p] for p in pelagic_functional_types
                     ],
                 )
                 assert (da.data == prey_pelagic).all()
@@ -123,7 +123,7 @@ def test_t_frac_pelagic():
                     F.biomass,
                     pred,
                     prey_functional_type=[
-                        fish_mod.functional_types[p] for p in demersal_functional_types
+                        ecosystem.functional_types[p] for p in demersal_functional_types
                     ],
                 )
                 assert (da.data == prey_demersal).all()
@@ -240,7 +240,7 @@ def test_compute_mortality():
 
     assert (F.tendency_data.mortality_rate == 0.1 / 365.0).all()
 
-    for mortality_type in fish_mod._mortality_type_keys:
+    for mortality_type in ecosystem._mortality_type_keys:
         print(f'testing {mortality_type}')
         sd_mort = feisty.settings.get_defaults()
         for i in range(len(sd_mort['fish'])):

@@ -1,29 +1,79 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="4" failures="0" skipped="0" tests="4" time="2.670" timestamp="2021-11-11T11:01:45.623790" hostname="cgdm-dine"><testcase classname="" name="tests.test_core" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_core.py'.
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="6" failures="0" skipped="0" tests="6" time="2.439" timestamp="2021-11-11T16:33:36.500856" hostname="cgdm-dine"><testcase classname="" name="tests.test_core" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_core.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 ../../miniconda3/envs/dev-feisty/lib/python3.9/importlib/__init__.py:127: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
-tests/test_core.py:5: in &lt;module&gt;
-    import feisty.settings as settings
-E   ModuleNotFoundError: No module named 'feisty.settings'</error></testcase><testcase classname="" name="tests.test_food_web" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_food_web.py'.
+tests/test_core.py:4: in &lt;module&gt;
+    import feisty
+feisty/__init__.py:10: in &lt;module&gt;
+    from . import driver
+feisty/driver.py:8: in &lt;module&gt;
+    from .core.core import feisty_instance_type
+feisty/core/core.py:4: in &lt;module&gt;
+    from . import domain, feeding, ecosystem, process, settings
+E   ImportError: cannot import name 'feeding' from 'feisty.core' (/Users/mclong/codes/feisty/feisty/core/__init__.py)</error></testcase><testcase classname="" name="tests.test_driver" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_driver.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 ../../miniconda3/envs/dev-feisty/lib/python3.9/importlib/__init__.py:127: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
-tests/test_food_web.py:7: in &lt;module&gt;
-    import feisty.feeding as feeding
-E   ModuleNotFoundError: No module named 'feisty.feeding'</error></testcase><testcase classname="" name="tests.test_init" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_init.py'.
+tests/test_driver.py:3: in &lt;module&gt;
+    import feisty.driver
+feisty/__init__.py:10: in &lt;module&gt;
+    from . import driver
+feisty/driver.py:8: in &lt;module&gt;
+    from .core.core import feisty_instance_type
+feisty/core/core.py:4: in &lt;module&gt;
+    from . import domain, feeding, ecosystem, process, settings
+E   ImportError: cannot import name 'feeding' from 'feisty.core' (/Users/mclong/codes/feisty/feisty/core/__init__.py)</error></testcase><testcase classname="" name="tests.test_fish_instance" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_fish_instance.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 ../../miniconda3/envs/dev-feisty/lib/python3.9/importlib/__init__.py:127: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
-tests/test_init.py:6: in &lt;module&gt;
-    import feisty.domain as domain
-E   ModuleNotFoundError: No module named 'feisty.domain'</error></testcase><testcase classname="" name="tests.test_process" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_process.py'.
+tests/test_fish_instance.py:5: in &lt;module&gt;
+    import feisty
+feisty/__init__.py:10: in &lt;module&gt;
+    from . import driver
+feisty/driver.py:8: in &lt;module&gt;
+    from .core.core import feisty_instance_type
+feisty/core/core.py:4: in &lt;module&gt;
+    from . import domain, feeding, ecosystem, process, settings
+E   ImportError: cannot import name 'feeding' from 'feisty.core' (/Users/mclong/codes/feisty/feisty/core/__init__.py)</error></testcase><testcase classname="" name="tests.test_food_web" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_food_web.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 ../../miniconda3/envs/dev-feisty/lib/python3.9/importlib/__init__.py:127: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
-tests/test_process.py:6: in &lt;module&gt;
-    import feisty.fish_mod as fish_mod
-E   ModuleNotFoundError: No module named 'feisty.fish_mod'</error></testcase></testsuite></testsuites>
+tests/test_food_web.py:6: in &lt;module&gt;
+    import feisty
+feisty/__init__.py:10: in &lt;module&gt;
+    from . import driver
+feisty/driver.py:8: in &lt;module&gt;
+    from .core.core import feisty_instance_type
+feisty/core/core.py:4: in &lt;module&gt;
+    from . import domain, feeding, ecosystem, process, settings
+E   ImportError: cannot import name 'feeding' from 'feisty.core' (/Users/mclong/codes/feisty/feisty/core/__init__.py)</error></testcase><testcase classname="" name="tests.test_init" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_init.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/envs/dev-feisty/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_init.py:5: in &lt;module&gt;
+    import feisty
+feisty/__init__.py:10: in &lt;module&gt;
+    from . import driver
+feisty/driver.py:8: in &lt;module&gt;
+    from .core.core import feisty_instance_type
+feisty/core/core.py:4: in &lt;module&gt;
+    from . import domain, feeding, ecosystem, process, settings
+E   ImportError: cannot import name 'feeding' from 'feisty.core' (/Users/mclong/codes/feisty/feisty/core/__init__.py)</error></testcase><testcase classname="" name="tests.test_process" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/mclong/codes/feisty/tests/test_process.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/envs/dev-feisty/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_process.py:5: in &lt;module&gt;
+    import feisty
+feisty/__init__.py:10: in &lt;module&gt;
+    from . import driver
+feisty/driver.py:8: in &lt;module&gt;
+    from .core.core import feisty_instance_type
+feisty/core/core.py:4: in &lt;module&gt;
+    from . import domain, feeding, ecosystem, process, settings
+E   ImportError: cannot import name 'feeding' from 'feisty.core' (/Users/mclong/codes/feisty/feisty/core/__init__.py)</error></testcase></testsuite></testsuites>

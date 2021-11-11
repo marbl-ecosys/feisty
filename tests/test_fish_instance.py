@@ -3,7 +3,7 @@ import pytest
 import xarray as xr
 
 import feisty
-import feisty.core.fish_mod as fish_mod
+import feisty.core.ecosystem as ecosystem
 import feisty.core.settings as settings
 
 from . import conftest
@@ -51,10 +51,10 @@ def test_fish_init():
         assert fish.name == fish_settings[i]['name']
         assert fish.size_class == fish_settings[i]['size_class']
         assert fish.functional_type_key == fish_settings[i]['functional_type']
-        assert fish.functional_type == fish_mod.functional_types[fish.functional_type_key]
+        assert fish.functional_type == ecosystem.functional_types[fish.functional_type_key]
         assert fish.t_frac_pelagic_static == fish_settings[i]['t_frac_pelagic_static']
         assert fish.pelagic_demersal_coupling == fish_settings[i]['pelagic_demersal_coupling']
-        assert fish.mass == fish_mod._size_class_masses[fish.size_class]
+        assert fish.mass == ecosystem._size_class_masses[fish.size_class]
 
         assert isinstance(fish.t_frac_pelagic, xr.DataArray)
         assert fish.t_frac_pelagic.name == f'{fish.name}_t_frac_pelagic'
@@ -130,4 +130,4 @@ def test_fish_apply_pref():
 def test_is_demersal():
     for fish in F.fish:
         is_demersal = fish.functional_type in model_settings['demersal_functional_type_keys']
-        assert is_demersal == fish_mod.is_demersal(fish.name)
+        assert is_demersal == ecosystem.is_demersal(fish.name)

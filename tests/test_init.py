@@ -4,7 +4,7 @@ import xarray as xr
 
 import feisty
 import feisty.core.domain as domain
-import feisty.core.fish_mod as fish_mod
+import feisty.core.ecosystem as ecosystem
 import feisty.core.settings as settings
 
 from . import conftest
@@ -45,7 +45,7 @@ F = feisty.feisty_instance_type(
 
 def test_reproduction_routing():
     obj = F.reproduction_routing
-    assert isinstance(obj, fish_mod.reproduction_routing)
+    assert isinstance(obj, ecosystem.reproduction_routing)
     for i, link in enumerate(obj):
         link_i_expected = reproduction_routing[i]
         if 'is_larval' in link_i_expected:
@@ -92,50 +92,51 @@ def test_domain_bad_depth_of_seafloor():
         )
 
 
-def test_fish_mod_init():
-    """ensure all fish_mod module vars are initialized"""
+def test_ecosystem_init():
+    """ensure all ecosystem module vars are initialized"""
 
     # make sure module variables have been initialized
-    assert fish_mod._size_class_masses
-    assert fish_mod._size_class_bnds_ratio
-    assert fish_mod.functional_types
-    assert fish_mod.mortality_types
+    assert ecosystem._size_class_masses
+    assert ecosystem._size_class_bnds_ratio
+    assert ecosystem.functional_types
+    assert ecosystem.mortality_types
 
     # check some 1:1 values
     assert (
-        fish_mod.PI_be_cutoff == settings_dict_def['model_settings']['benthic_pelagic_depth_cutoff']
+        ecosystem.PI_be_cutoff
+        == settings_dict_def['model_settings']['benthic_pelagic_depth_cutoff']
     )
-    assert set(fish_mod._pdc_type_keys) == set(
+    assert set(ecosystem._pdc_type_keys) == set(
         settings_dict_def['model_settings']['pelagic_demersal_coupling_type_keys']
     )
-    assert fish_mod._pelagic_functional_type_keys == set(
+    assert ecosystem._pelagic_functional_type_keys == set(
         settings_dict_def['model_settings']['pelagic_functional_type_keys']
     )
-    assert fish_mod._demersal_functional_type_keys == set(
+    assert ecosystem._demersal_functional_type_keys == set(
         settings_dict_def['model_settings']['demersal_functional_type_keys']
     )
 
 
-def test_fish_mod_size_class_bounds():
+def test_ecosystem_size_class_bounds():
     """ensure size_class_bounds are as expected"""
     size_class_bounds = settings_dict_def['model_settings']['size_class_bounds']
     # ensure size classes init
     for name, size_bounds in size_class_bounds.items():
-        assert fish_mod._size_class_masses[name] == np.power(10.0, np.log10(size_bounds).mean())
-        assert fish_mod._size_class_bnds_ratio[name] == size_bounds[0] / size_bounds[1]
+        assert ecosystem._size_class_masses[name] == np.power(10.0, np.log10(size_bounds).mean())
+        assert ecosystem._size_class_bnds_ratio[name] == size_bounds[0] / size_bounds[1]
 
 
 def test_func_type_init():
     func_types_expected = settings_dict_def['model_settings']['functional_type_keys']
 
     # ensure all are present
-    assert set(fish_mod.functional_types.keys()) == set(func_types_expected)
+    assert set(ecosystem.functional_types.keys()) == set(func_types_expected)
 
     # ensure no extras
-    assert len(fish_mod.functional_types.keys()) == len(func_types_expected)
+    assert len(ecosystem.functional_types.keys()) == len(func_types_expected)
 
     # ensure unique entries
-    assert len(set(fish_mod.functional_types.values())) == len(fish_mod.functional_types.values())
+    assert len(set(ecosystem.functional_types.values())) == len(ecosystem.functional_types.values())
 
 
 def test_bad_func_type_fails():
@@ -331,7 +332,7 @@ def test_gcm_state():
 
 
 def test_fishing():
-    assert isinstance(F.fishing, fish_mod.fishing)
+    assert isinstance(F.fishing, ecosystem.fishing)
     assert (
         F.fishing.fishing_rate == settings_dict_def['fishing']['fishing_rate_per_year'] / 365.0
     ).all()

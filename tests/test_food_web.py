@@ -4,8 +4,7 @@ import pytest
 import xarray as xr
 
 import feisty
-import feisty.core.feeding as feeding
-import feisty.core.fish_mod as fish_mod
+import feisty.core.ecosystem as ecosystem
 
 from . import conftest
 
@@ -138,8 +137,8 @@ def test_food_web_init_2():
     """test encounter and consumption objects"""
 
     for i in range(F.food_web.n_links):
-        assert isinstance(F.food_web.encounter_obj[i], feeding.encounter_type)
-        assert isinstance(F.food_web.consumption_obj[i], feeding.consumption_type)
+        assert isinstance(F.food_web.encounter_obj[i], ecosystem.encounter_type)
+        assert isinstance(F.food_web.consumption_obj[i], ecosystem.consumption_type)
 
     for i in range(F.food_web.n_links):
         obj = F.food_web.encounter_obj[i]
@@ -175,21 +174,21 @@ def test_food_web_init_3():
 
 def test_food_web_init_data():
     """should be able to init with DataArray, Numpy Array, or list"""
-    feeding.food_web(
+    ecosystem.food_web(
         food_web_settings,
         F.fish,
         F.biomass.group,
         F.group_func_type,
     )
 
-    feeding.food_web(
+    ecosystem.food_web(
         food_web_settings,
         F.fish,
         F.biomass.group.values,
         F.group_func_type.values,
     )
 
-    feeding.food_web(
+    ecosystem.food_web(
         food_web_settings,
         F.fish,
         [f for f in F.biomass.group.values],
@@ -220,7 +219,7 @@ def test_pred_ndx_prey_filt():
         for (
             prey_functional_type_key,
             prey_functional_type,
-        ) in fish_mod.functional_types.items():
+        ) in ecosystem.functional_types.items():
             ndx = F.food_web._pred_ndx_prey_filt(pred, set([prey_functional_type]))
 
             if not ndx:
@@ -272,7 +271,7 @@ def test_get_prey_biomass():
         da = F.food_web.get_prey_biomass(
             F.biomass,
             pred,
-            prey_functional_type=list(fish_mod.functional_types.values()),
+            prey_functional_type=list(ecosystem.functional_types.values()),
         )
         assert (check_value == da).all()
 
@@ -283,12 +282,12 @@ def test_get_prey_biomass():
         assert (check_value == da).all()
 
         # ensure that this works for a restricted functional type
-        for prey_functional_type in fish_mod.functional_types.values():
+        for prey_functional_type in ecosystem.functional_types.values():
 
             prey_list_check_filt = [
                 p
                 for p in prey_list_check
-                if fish_mod.functional_types[fish_func_type[p]] == prey_functional_type
+                if ecosystem.functional_types[fish_func_type[p]] == prey_functional_type
             ]
             da = F.food_web.get_prey_biomass(
                 F.biomass,
@@ -305,7 +304,7 @@ def test_get_prey_biomass():
         da = F.food_web.get_prey_biomass(
             F.biomass,
             pred,
-            prey_functional_type=[fish_mod.functional_types[p] for p in prey_functional_type_keys],
+            prey_functional_type=[ecosystem.functional_types[p] for p in prey_functional_type_keys],
         )
         assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
@@ -317,7 +316,7 @@ def test_get_prey_biomass():
         da = F.food_web.get_prey_biomass(
             F.biomass,
             pred,
-            prey_functional_type=[fish_mod.functional_types[p] for p in prey_functional_type_keys],
+            prey_functional_type=[ecosystem.functional_types[p] for p in prey_functional_type_keys],
         )
         assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
@@ -351,7 +350,7 @@ def test_compute_consumption_zero_preference():
     sd = feisty.settings.get_defaults()
     for i in range(len(sd['food_web'])):
         sd['food_web'][i]['encounter_parameters']['preference'] = 0.0
-    fw = feisty.core.feeding.food_web(sd['food_web'], F.fish, F.biomass.group, F.group_func_type)
+    fw = feisty.core.ecosystem.food_web(sd['food_web'], F.fish, F.biomass.group, F.group_func_type)
     fw._compute_encounter(F.biomass, F.tendency_data.T_habitat, F.tendency_data.t_frac_pelagic)
     assert (fw.encounter == 0.0).all()
 
