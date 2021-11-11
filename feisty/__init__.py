@@ -9,4 +9,4 @@ except DistributionNotFound:
 
 from . import driver
 from .core import settings
-from .core.core import feisty_instance_type
+from .core.interface import feisty_instance_type

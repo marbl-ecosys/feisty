@@ -15,7 +15,7 @@ Model components
    fish_type
 
 
-.. currentmodule:: feisty.process
+.. currentmodule:: feisty.core.process
 
 Process
 ~~~~~~~

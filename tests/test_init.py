@@ -325,7 +325,7 @@ def test_biomass_bad_shape_fish():
 
 def test_gcm_state():
     # ensure gcm_state conforms
-    assert isinstance(F.gcm_state, feisty.core.core.gcm_state_type)
+    assert isinstance(F.gcm_state, feisty.core.interface.gcm_state_type)
     assert isinstance(F.gcm_state.T_pelagic, xr.DataArray)
     assert isinstance(F.gcm_state.T_bottom, xr.DataArray)
     assert isinstance(F.gcm_state.poc_flux, xr.DataArray)
