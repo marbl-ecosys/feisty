@@ -3,9 +3,9 @@ import pytest
 import xarray as xr
 
 import feisty
-import feisty.domain as domain
-import feisty.fish_mod as fish_mod
-import feisty.settings as settings
+import feisty.core.domain as domain
+import feisty.core.fish_mod as fish_mod
+import feisty.core.settings as settings
 
 from . import conftest
 
@@ -118,8 +118,6 @@ def test_fish_mod_init():
 
 def test_fish_mod_size_class_bounds():
     """ensure size_class_bounds are as expected"""
-    import feisty.fish_mod as fish_mod
-
     size_class_bounds = settings_dict_def['model_settings']['size_class_bounds']
     # ensure size classes init
     for name, size_bounds in size_class_bounds.items():
@@ -128,8 +126,6 @@ def test_fish_mod_size_class_bounds():
 
 
 def test_func_type_init():
-    import feisty.fish_mod as fish_mod
-
     func_types_expected = settings_dict_def['model_settings']['functional_type_keys']
 
     # ensure all are present
@@ -275,8 +271,6 @@ def test_zoo_mortality_not_offline():
 def test_biomass_init():
     """test biomass fields"""
 
-    import feisty.fish_mod as fish_mod
-
     assert isinstance(F.biomass, xr.DataArray)
     assert F.biomass.dims == ('group', 'X')
     assert F.biomass.shape == (n_zoo + n_fish + 1, NX)
@@ -330,14 +324,14 @@ def test_biomass_bad_shape_fish():
 
 def test_gcm_state():
     # ensure gcm_state conforms
-    assert isinstance(F.gcm_state, feisty.core.gcm_state_type)
+    assert isinstance(F.gcm_state, feisty.core.core.gcm_state_type)
     assert isinstance(F.gcm_state.T_pelagic, xr.DataArray)
     assert isinstance(F.gcm_state.T_bottom, xr.DataArray)
     assert isinstance(F.gcm_state.poc_flux, xr.DataArray)
 
 
 def test_fishing():
-    assert isinstance(F.fishing, feisty.fish_mod.fishing)
+    assert isinstance(F.fishing, fish_mod.fishing)
     assert (
         F.fishing.fishing_rate == settings_dict_def['fishing']['fishing_rate_per_year'] / 365.0
     ).all()

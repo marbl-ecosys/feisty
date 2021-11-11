@@ -3,8 +3,8 @@ import pytest
 import xarray as xr
 
 import feisty
-import feisty.fish_mod as fish_mod
-import feisty.settings as settings
+import feisty.core.fish_mod as fish_mod
+import feisty.core.settings as settings
 
 from . import conftest
 

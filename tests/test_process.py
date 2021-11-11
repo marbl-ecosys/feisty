@@ -3,13 +3,12 @@ import pytest
 import xarray as xr
 
 import feisty
-import feisty.fish_mod as fish_mod
-import feisty.process as process
-import feisty.settings as settings
+import feisty.core.fish_mod as fish_mod
+import feisty.core.process as process
 
 from . import conftest
 
-settings_dict_def = settings.get_defaults()
+settings_dict_def = feisty.settings.get_defaults()
 model_settings = settings_dict_def['model_settings']
 food_web_settings = settings_dict_def['food_web']
 zoo_settings = settings_dict_def['zooplankton']

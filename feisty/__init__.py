@@ -7,5 +7,6 @@ except DistributionNotFound:
     # package is not installed
     __version__ = '0.0.0'
 
-from . import driver, settings
-from .core import feisty_instance_type
+from . import driver
+from .core import settings
+from .core.core import feisty_instance_type

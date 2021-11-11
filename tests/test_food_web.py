@@ -4,13 +4,12 @@ import pytest
 import xarray as xr
 
 import feisty
-import feisty.feeding as feeding
-import feisty.fish_mod as fish_mod
-import feisty.settings as settings
+import feisty.core.feeding as feeding
+import feisty.core.fish_mod as fish_mod
 
 from . import conftest
 
-settings_dict_def = settings.get_defaults()
+settings_dict_def = feisty.settings.get_defaults()
 model_settings = settings_dict_def['model_settings']
 food_web_settings = settings_dict_def['food_web']
 zoo_settings = settings_dict_def['zooplankton']
@@ -221,7 +220,7 @@ def test_pred_ndx_prey_filt():
         for (
             prey_functional_type_key,
             prey_functional_type,
-        ) in feisty.fish_mod.functional_types.items():
+        ) in fish_mod.functional_types.items():
             ndx = F.food_web._pred_ndx_prey_filt(pred, set([prey_functional_type]))
 
             if not ndx:
@@ -273,7 +272,7 @@ def test_get_prey_biomass():
         da = F.food_web.get_prey_biomass(
             F.biomass,
             pred,
-            prey_functional_type=list(feisty.fish_mod.functional_types.values()),
+            prey_functional_type=list(fish_mod.functional_types.values()),
         )
         assert (check_value == da).all()
 
@@ -284,7 +283,7 @@ def test_get_prey_biomass():
         assert (check_value == da).all()
 
         # ensure that this works for a restricted functional type
-        for prey_functional_type in feisty.fish_mod.functional_types.values():
+        for prey_functional_type in fish_mod.functional_types.values():
 
             prey_list_check_filt = [
                 p
@@ -349,10 +348,10 @@ def test_get_consumption_none_existent_predprey():
 
 
 def test_compute_consumption_zero_preference():
-    sd = settings.get_defaults()
+    sd = feisty.settings.get_defaults()
     for i in range(len(sd['food_web'])):
         sd['food_web'][i]['encounter_parameters']['preference'] = 0.0
-    fw = feisty.feeding.food_web(sd['food_web'], F.fish, F.biomass.group, F.group_func_type)
+    fw = feisty.core.feeding.food_web(sd['food_web'], F.fish, F.biomass.group, F.group_func_type)
     fw._compute_encounter(F.biomass, F.tendency_data.T_habitat, F.tendency_data.t_frac_pelagic)
     assert (fw.encounter == 0.0).all()
 
