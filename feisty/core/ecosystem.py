@@ -97,6 +97,10 @@ def init_module_variables(
     PI_be_cutoff = benthic_pelagic_depth_cutoff
 
 
+def compute_rate_T_mass_scaling(T, mass, k, a, b, T0=10.0):
+    return np.exp(k * (T - T0)) * a * mass ** (-b)
+
+
 # types
 class fish_type(object):
     def __init__(
@@ -790,10 +794,15 @@ class consumption_type(object):
 
         # Cmax rate
         consumption_max[:] = (
-            np.exp(self.kc * (T_habitat - 10.0))
-            * self.h
-            * self.predator_size_class_mass ** (-self.bcmx)
-        ) / 365.0
+            compute_rate_T_mass_scaling(
+                T_habitat,
+                self.predator_size_class_mass,
+                self.kc,
+                self.h,
+                self.bcmx,
+            )
+            / 365.0
+        )
 
         consumption[:] = (
             consumption_max[:] * encounter[:] / (consumption_max[:] + encounter_total[:])

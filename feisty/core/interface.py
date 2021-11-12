@@ -250,6 +250,9 @@ class feisty_instance_type(object):
             fish_list=self.fish,
             biomass=self.biomass,
             food_web=self.food_web,
+            pelagic_functional_types=ecosystem.pelagic_functional_types,
+            demersal_functional_types=ecosystem.demersal_functional_types,
+            PI_be_cutoff=ecosystem.PI_be_cutoff,
             reset=reset,
         )
 
@@ -307,6 +310,7 @@ class feisty_instance_type(object):
             self.tendency_data.mortality_rate,
             self.fish,
             self.tendency_data.T_habitat,
+            ecosystem.mortality_types,
         )
 
     def _compute_fish_catch(self):

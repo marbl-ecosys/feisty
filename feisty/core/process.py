@@ -4,7 +4,20 @@ import xarray as xr
 from . import constants, domain, ecosystem
 
 
-def compute_t_frac_pelagic(t_frac_pelagic, fish_list, biomass, food_web, reset=False):
+def compute_rate_T_mass_scaling(T, mass, k, a, b, T0=10.0):
+    return np.exp(k * (T - T0)) * a * mass ** (-b)
+
+
+def compute_t_frac_pelagic(
+    t_frac_pelagic,
+    fish_list,
+    biomass,
+    food_web,
+    pelagic_functional_types,
+    demersal_functional_types,
+    PI_be_cutoff,
+    reset=False,
+):
     """Return the fraction of time spent in the pelagic.
 
     Parameters
@@ -34,18 +47,18 @@ def compute_t_frac_pelagic(t_frac_pelagic, fish_list, biomass, food_web, reset=F
             prey_pelagic = food_web.get_prey_biomass(
                 biomass,
                 fish.name,
-                prey_functional_type=ecosystem.pelagic_functional_types,
+                prey_functional_type=pelagic_functional_types,
                 apply_preference=fish.pdc_apply_pref,
             )
             prey_demersal = food_web.get_prey_biomass(
                 biomass,
                 fish.name,
-                prey_functional_type=ecosystem.demersal_functional_types,
+                prey_functional_type=demersal_functional_types,
                 apply_preference=fish.pdc_apply_pref,
             )
 
             t_frac_pelagic[i, :] = xr.where(
-                domain.ocean_depth < ecosystem.PI_be_cutoff,
+                domain.ocean_depth < PI_be_cutoff,
                 prey_pelagic / (prey_pelagic + prey_demersal),
                 1.0,
             )
@@ -87,8 +100,9 @@ def compute_metabolism(metabolism_rate, fish_list, T_habitat):
     for i, fish in enumerate(fish_list):
         # Metabolism with its own coeff, temp-sens, mass-sens
         metabolism_rate[i, :] = (
-            np.exp(fish.kt * (T_habitat[i, :] - 10.0)) * fish.amet * fish.mass ** (-fish.bpow)
-        ) / 365.0
+            compute_rate_T_mass_scaling(T_habitat[i, :], fish.mass, fish.kt, fish.amet, fish.bpow)
+            / 365.0
+        )
 
 
 def compute_ingestion(ingestion_rate, food_web):
@@ -131,7 +145,7 @@ def compute_predation(predation_flux, food_web, biomass):
         predation_flux[i, :] = (food_web.get_consumption(prey=name) * biomass[ndx, :]).sum('group')
 
 
-def compute_natural_mortality(mortality_rate, fish_list, T_habitat):
+def compute_natural_mortality(mortality_rate, fish_list, T_habitat, mortality_types):
     """Compute natural mortality.
 
     Parameters
@@ -148,23 +162,23 @@ def compute_natural_mortality(mortality_rate, fish_list, T_habitat):
 
     for i, fish in enumerate(fish_list):
 
-        if fish.mortality_type == ecosystem.mortality_types['none']:
+        if fish.mortality_type == mortality_types['none']:
             mortality_rate[i, :] = 0.0
 
-        elif fish.mortality_type == ecosystem.mortality_types['constant']:
+        elif fish.mortality_type == mortality_types['constant']:
             mortality_rate[i, :] = fish.mortality_coeff
 
-        elif fish.mortality_type == ecosystem.mortality_types['Hartvig']:
+        elif fish.mortality_type == mortality_types['Hartvig']:
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 0.84 * fish.mass ** (-0.25) / 365.0
             )
 
-        elif fish.mortality_type == ecosystem.mortality_types['Mizer']:
+        elif fish.mortality_type == mortality_types['Mizer']:
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 3.0 * fish.mass ** (-0.25) / 365.0
             )
 
-        elif fish.mortality_type == ecosystem.mortality_types['Jennings & Collingridge']:
+        elif fish.mortality_type == mortality_types['Jennings & Collingridge']:
             # TODO: clean up here
             temp2 = T_habitat[i, :] + 273.0
             Tref = 283.0
@@ -173,16 +187,16 @@ def compute_natural_mortality(mortality_rate, fish_list, T_habitat):
             tfact = np.exp((-1 * E / k) * ((1.0 / temp2) - (1.0 / Tref)))
             mortality_rate[i, :] = tfact * 0.5 * fish.mass ** (-0.33) / 365.0
 
-        elif fish.mortality_type == ecosystem.mortality_types['Peterson & Wrob']:
+        elif fish.mortality_type == mortality_types['Peterson & Wrob']:
             # Peterson & Wroblewski (daily & uses dry weight)
             mortality_rate[i, :] = (
                 np.exp(0.063 * (T_habitat[i, :] - 15.0)) * 5.26e-3 * (fish.mass / 9.0) ** (-0.25)
             )
 
-        elif fish.mortality_type == ecosystem.mortality_types['temperature-dependent']:
+        elif fish.mortality_type == mortality_types['temperature-dependent']:
             mortality_rate[i, :] = np.exp(0.063 * (T_habitat[i, :] - 10.0)) * fish.mortality_coeff
 
-        elif fish.mortality_type == ecosystem.mortality_types['weight-dependent']:
+        elif fish.mortality_type == mortality_types['weight-dependent']:
             mortality_rate[i, :] = 0.5 * fish.mass ** (-0.25) / 365.0
 
         else:
