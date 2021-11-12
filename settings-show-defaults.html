@@ -439,220 +439,16 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loffline: true
-model_settings:
-  size_class_bounds:
-    small:
-    - 0.001
-    - 0.5
-    medium:
-    - 0.5
-    - 250.0
-    large:
-    - 250.0
-    - 125000.0
-  functional_type_keys:
-  - zooplankton
-  - forage
-  - piscivore
-  - demersal
-  - benthic_prey
-  pelagic_demersal_coupling_type_keys:
-  - piscivore
-  - demersal
-  pelagic_functional_type_keys:
-  - forage
-  - piscivore
-  demersal_functional_type_keys:
-  - demersal
-  - benthic_prey
-  pelagic_demersal_coupling_apply_pref_type_keys:
-  - demersal
-  benthic_pelagic_depth_cutoff: 200.0
-zooplankton:
-- name: Zoo
-fish:
-- name: Sf
-  size_class: small
-  functional_type: forage
-  t_frac_pelagic_static: 1.0
-  pelagic_demersal_coupling: false
-  harvest_selectivity: 0.0
-  energy_frac_somatic_growth: 1.0
-- name: Sp
-  size_class: small
-  functional_type: piscivore
-  t_frac_pelagic_static: 1.0
-  pelagic_demersal_coupling: false
-  harvest_selectivity: 0.0
-  energy_frac_somatic_growth: 1.0
-- name: Sd
-  size_class: small
-  functional_type: demersal
-  t_frac_pelagic_static: 1.0
-  pelagic_demersal_coupling: false
-  harvest_selectivity: 0.0
-  energy_frac_somatic_growth: 1.0
-- name: Mf
-  size_class: medium
-  functional_type: forage
-  t_frac_pelagic_static: 1.0
-  pelagic_demersal_coupling: false
-  harvest_selectivity: 1.0
-  energy_frac_somatic_growth: 0.5
-- name: Mp
-  size_class: medium
-  functional_type: piscivore
-  t_frac_pelagic_static: 1.0
-  pelagic_demersal_coupling: false
-  harvest_selectivity: 1.0
-  energy_frac_somatic_growth: 1.0
-- name: Md
-  size_class: medium
-  functional_type: demersal
-  t_frac_pelagic_static: 0.0
-  pelagic_demersal_coupling: false
-  harvest_selectivity: 1.0
-  energy_frac_somatic_growth: 1.0
-- name: Lp
-  size_class: large
-  functional_type: piscivore
-  t_frac_pelagic_static: 1.0
-  pelagic_demersal_coupling: true
-  harvest_selectivity: 1.0
-  energy_frac_somatic_growth: 0.5
-- name: Ld
-  size_class: large
-  functional_type: demersal
-  t_frac_pelagic_static: 0.0
-  pelagic_demersal_coupling: true
-  harvest_selectivity: 1.0
-  energy_frac_somatic_growth: 0.5
-benthic_prey:
-- name: benthic_prey
-  benthic_efficiency: 0.075
-  carrying_capacity: 0.0
-food_web:
-- predator: Sf
-  prey: Zoo
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Sp
-  prey: Zoo
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Sd
-  prey: Zoo
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Mf
-  prey: Zoo
-  encounter_parameters:
-    preference: 0.45
-  consumption_parameters: {}
-- predator: Mf
-  prey: Sf
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Mf
-  prey: Sp
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Mf
-  prey: Sd
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Mp
-  prey: Zoo
-  encounter_parameters:
-    preference: 0.45
-  consumption_parameters: {}
-- predator: Mp
-  prey: Sf
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Mp
-  prey: Sp
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Mp
-  prey: Sd
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Md
-  prey: benthic_prey
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Lp
-  prey: Mf
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Lp
-  prey: Mp
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Lp
-  prey: Md
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Ld
-  prey: Mf
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Ld
-  prey: Mp
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Ld
-  prey: Md
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-- predator: Ld
-  prey: benthic_prey
-  encounter_parameters:
-    preference: 1.0
-  consumption_parameters: {}
-reproduction_routing:
-- from: Mf
-  to: Sf
-  efficiency: 0.01
-  is_larval: true
-- from: Lp
-  to: Sp
-  efficiency: 0.01
-  is_larval: true
-- from: Ld
-  to: Sd
-  efficiency: 0.01
-  is_larval: true
-- from: Sf
-  to: Mf
-- from: Sp
-  to: Mp
-- from: Sd
-  to: Md
-- from: Mp
-  to: Lp
-- from: Md
-  to: Ld
-fishing:
-  fishing_rate_per_year: 0.3
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_2727</span><span class="o">/</span><span class="mf">3604579929.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> 
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">feisty.settings</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> 
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">defaults</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_defaults</span><span class="p">()</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;feisty&#39;
 </pre></div>
 </div>
 </div>
@@ -668,16 +464,16 @@ fishing:
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "conda-env-dev-feisty-py"
+            mode: "python"
         },
         kernelOptions: {
-            kernelName: "conda-env-dev-feisty-py",
+            kernelName: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'conda-env-dev-feisty-py'</script>
+    <script>kernelName = 'python3'</script>
 
               </div>
               
