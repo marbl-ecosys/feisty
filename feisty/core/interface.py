@@ -171,6 +171,7 @@ class feisty_instance_type(object):
             self.zooplankton,
             self.fish,
             self.benthic_prey,
+            self.food_web,
         )
 
     def set_fish_biomass(self, data):
@@ -258,23 +259,56 @@ class feisty_instance_type(object):
                 self.tendency_data.t_frac_pelagic[i, :],
             )
 
-    def _compute_feeding(self):
-        self.food_web.compute(
-            biomass=self.biomass,
-            T_habitat=self.tendency_data.T_habitat,
-            t_frac_pelagic=self.tendency_data.t_frac_pelagic,
-            zoo_mortality=self.zoo_mortality,
-        )
-
     def _update_benthic_biomass(self):
         process.compute_benthic_biomass_update(
             self.tendency_data.benthic_biomass_new,
-            benthic_prey_list=self.benthic_prey,
-            biomass=self.biomass,
-            food_web=self.food_web,
-            poc_flux=self.gcm_state.poc_flux,
+            self.tendency_data.consumption_rate_link,
+            self.benthic_prey,
+            self.biomass,
+            self.food_web,
+            self.gcm_state.poc_flux,
         )
         self.set_benthic_prey_biomass(self.tendency_data.benthic_biomass_new)
+
+    def _compute_pred_encounter_consumption_max(self):
+        process.compute_pred_encounter_consumption_max(
+            self.tendency_data.encounter_rate_pred,
+            self.tendency_data.consumption_rate_max_pred,
+            self.tendency_data.T_habitat,
+            self.fish,
+        )
+
+    def _compute_encounter(self):
+        process.compute_encounter(
+            self.tendency_data.encounter_rate_link,
+            self.tendency_data.encounter_rate_total,
+            self.tendency_data.encounter_rate_pred,
+            self.biomass,
+            self.tendency_data.T_habitat,
+            self.tendency_data.t_frac_pelagic,
+            self.food_web,
+        )
+
+    def _compute_consumption(self):
+        process.compute_consumption(
+            self.tendency_data.consumption_rate_link,
+            self.tendency_data.consumption_rate_max_pred,
+            self.tendency_data.encounter_rate_link,
+            self.tendency_data.encounter_rate_total,
+            self.tendency_data.T_habitat,
+            self.food_web,
+        )
+
+    def _compute_rescale_zoo_consumption(self):
+        process.compute_rescale_zoo_consumption(
+            self.tendency_data.consumption_rate_link,
+            self.tendency_data.consumption_zoo_frac_mort,
+            self.tendency_data.consumption_zoo_scaled,
+            self.tendency_data.consumption_zoo_raw,
+            self.biomass,
+            self.zoo_mortality,
+            self.food_web,
+        )
 
     def _compute_metabolism(self):
         process.compute_metabolism(
@@ -286,14 +320,17 @@ class feisty_instance_type(object):
     def _compute_ingestion(self):
         process.compute_ingestion(
             self.tendency_data.ingestion_rate,
+            self.tendency_data.consumption_rate_link,
             self.food_web,
         )
 
     def _compute_predation(self):
         process.compute_predation(
             self.tendency_data.predation_flux,
-            self.food_web,
+            self.tendency_data.predation_zoo_flux,
+            self.tendency_data.consumption_rate_link,
             self.biomass,
+            self.food_web,
         )
         self.tendency_data.predation_rate[:, :] = (
             self.tendency_data.predation_flux.data / self.biomass.isel(group=self.ndx_fish).data
@@ -408,7 +445,10 @@ class feisty_instance_type(object):
 
         # compute tendency components (order matters)
         self._compute_metabolism()
-        self._compute_feeding()
+        self._compute_pred_encounter_consumption_max()
+        self._compute_encounter()
+        self._compute_consumption()
+        self._compute_rescale_zoo_consumption()
         self._compute_ingestion()
         self._compute_predation()
         self._compute_mortality()
@@ -424,17 +464,31 @@ class feisty_instance_type(object):
         return self.tendency_data.total_tendency
 
 
-def _init_tendency_data(zoo_list, fish_list, benthic_prey_list):
+def _init_tendency_data(zoo_list, fish_list, benthic_prey_list, food_web):
     """Return an xarray.Dataset with initialized tendency data arrays."""
+
     fish_names = [f.name for f in fish_list]
     zoo_names = [z.name for z in zoo_list]
     benthic_prey_names = [b.name for b in benthic_prey_list]
 
+    pred_names = [link.predator.name for link in food_web]
+    prey_names = [link.prey.name for link in food_web]
+    print(pred_names)
+    print(prey_names)
+    feeding_link_coord = xr.DataArray(
+        [f'{pred}_{prey}' for pred, prey in zip(pred_names, prey_names)], dims='feeding_link'
+    )
+    add_coords = dict(
+        predator=xr.DataArray(pred_names, dims='feeding_link'),
+        prey=xr.DataArray(prey_names, dims='feeding_link'),
+    )
     ds = xr.Dataset(
         coords=dict(
             zooplankton=zoo_names,
             fish=fish_names,
             benthic_prey=benthic_prey_names,
+            feeding_link=feeding_link_coord,
+            **add_coords,
         ),
     )
 
@@ -469,6 +523,11 @@ def _init_tendency_data(zoo_list, fish_list, benthic_prey_list):
         coord_name='fish',
         coord_values=fish_names,
         name='predation_flux',
+    )
+    ds['predation_zoo_flux'] = domain.init_array_2d(
+        coord_name='zooplankton',
+        coord_values=zoo_names,
+        name='predation_zoo_flux',
     )
     ds['predation_rate'] = domain.init_array_2d(
         coord_name='fish',
@@ -524,6 +583,51 @@ def _init_tendency_data(zoo_list, fish_list, benthic_prey_list):
     ds['benthic_biomass_new'] = domain.init_array_2d(
         coord_name='benthic_prey',
         coord_values=benthic_prey_names,
+    )
+
+    ds['encounter_rate_pred'] = domain.init_array_2d(
+        coord_name='fish',
+        coord_values=fish_names,
+        name='encounter_rate_pred',
+    )
+    ds['consumption_rate_max_pred'] = domain.init_array_2d(
+        coord_name='fish',
+        coord_values=fish_names,
+        name='consumption_rate_max_pred',
+    )
+
+    ds['encounter_rate_total'] = domain.init_array_2d(
+        coord_name='fish',
+        coord_values=fish_names,
+        name='encounter_rate_total',
+    )
+
+    ds['encounter_rate_link'] = domain.init_array_2d(
+        coord_name='feeding_link',
+        coord_values=feeding_link_coord,
+        name='encounter_rate_link',
+    ).assign_coords(add_coords)
+
+    ds['consumption_rate_link'] = domain.init_array_2d(
+        coord_name='feeding_link',
+        coord_values=feeding_link_coord,
+        name='consumption_rate_link',
+    ).assign_coords(add_coords)
+
+    ds['consumption_zoo_frac_mort'] = domain.init_array_2d(
+        coord_name='feeding_link',
+        coord_values=feeding_link_coord,
+        name='consumption_zoo_frac_mort',
+    )
+    ds['consumption_zoo_scaled'] = domain.init_array_2d(
+        coord_name='feeding_link',
+        coord_values=feeding_link_coord,
+        name='consumption_zoo_scaled',
+    )
+    ds['consumption_zoo_raw'] = domain.init_array_2d(
+        coord_name='feeding_link',
+        coord_values=feeding_link_coord,
+        name='consumption_zoo_raw',
     )
 
     return ds

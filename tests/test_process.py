@@ -171,9 +171,9 @@ def test_compute_metabolism():
 
 
 def test_compute_ingestion():
-    ingestion = xr.full_like(F.food_web.consumption, fill_value=0.0)
+    ingestion = xr.full_like(F.tendency_data.consumption_rate_link, fill_value=0.0)
     ingestion.data[:, :] = np.random.rand(*ingestion.shape)
-    F.food_web.consumption.data[:, :] = ingestion.data
+    F.tendency_data.consumption_rate_link.data[:, :] = ingestion.data
 
     F._compute_ingestion()
 
@@ -186,9 +186,9 @@ def test_compute_ingestion():
 
 
 def test_compute_predation():
-    ingestion = xr.full_like(F.food_web.consumption, fill_value=0.0)
+    ingestion = xr.full_like(F.tendency_data.consumption_rate_link, fill_value=0.0)
     ingestion.data[:, :] = np.random.rand(*ingestion.shape)
-    F.food_web.consumption.data[:, :] = ingestion.data
+    F.tendency_data.consumption_rate_link.data[:, :] = ingestion.data
 
     biomass = xr.full_like(F.biomass, fill_value=0.0)
     biomass.data[:, :] = np.random.rand(*biomass.shape)

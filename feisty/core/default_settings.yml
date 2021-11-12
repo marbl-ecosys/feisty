@@ -35,6 +35,10 @@ model_settings:
     - piscivore
     - demersal
   ###
+  # Specify the "zooplankton" functional types.
+  zooplankton_functional_type_keys:
+    - zooplankton
+  ###
   # Specify the functional types that inhabit the pelagic zone.
   pelagic_functional_type_keys:
     - forage

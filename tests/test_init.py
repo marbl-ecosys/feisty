@@ -115,6 +115,9 @@ def test_ecosystem_init():
     assert ecosystem._demersal_functional_type_keys == set(
         settings_dict_def['model_settings']['demersal_functional_type_keys']
     )
+    assert ecosystem._zooplankton_functional_type_keys == set(
+        settings_dict_def['model_settings']['zooplankton_functional_type_keys']
+    )
 
 
 def test_ecosystem_size_class_bounds():
@@ -347,31 +350,60 @@ def test_init_tendency_arrays():
     assert (ds.fish == [f['name'] for f in fish_settings['members']]).all()
     assert (ds.benthic_prey == [b['name'] for b in benthic_prey_settings]).all()
 
-    assert set(ds.coords.keys()) == {'zooplankton', 'fish', 'benthic_prey'}
+    assert set(ds.coords.keys()) == {
+        'zooplankton',
+        'fish',
+        'benthic_prey',
+        'feeding_link',
+        'prey',
+        'predator',
+    }
+
+    fish_coord_vars = [
+        't_frac_pelagic',
+        'T_habitat',
+        'ingestion_rate',
+        'predation_flux',
+        'predation_rate',
+        'metabolism_rate',
+        'mortality_rate',
+        'energy_avail_rate',
+        'growth_rate',
+        'reproduction_rate',
+        'recruitment_flux',
+        'total_tendency',
+        'fish_catch_rate',
+        'encounter_rate_pred',
+        'consumption_rate_max_pred',
+        'encounter_rate_total',
+    ]
+
+    zooplankton_coord_vars = ['predation_zoo_flux']
+    benthic_prey_coord_vars = ['benthic_biomass_new']
+    feeding_link_coord_vars = [
+        'encounter_rate_link',
+        'consumption_rate_link',
+        'consumption_zoo_frac_mort',
+        'consumption_zoo_scaled',
+        'consumption_zoo_raw',
+    ]
 
     checked = []
     for key, da in ds.data_vars.items():
-        if key in [
-            't_frac_pelagic',
-            'T_habitat',
-            'ingestion_rate',
-            'predation_flux',
-            'predation_rate',
-            'metabolism_rate',
-            'mortality_rate',
-            'energy_avail_rate',
-            'growth_rate',
-            'reproduction_rate',
-            'recruitment_flux',
-            'total_tendency',
-            'fish_catch_rate',
-        ]:
+        if key in fish_coord_vars:
             assert da.dims == ('fish', 'X')
             assert da.shape == (n_fish, NX)
             checked.append(key)
-        elif key in ['benthic_biomass_new']:
+        elif key in benthic_prey_coord_vars:
             assert da.dims == ('benthic_prey', 'X')
             assert da.shape == (n_benthic_prey, NX)
             checked.append(key)
-
+        elif key in zooplankton_coord_vars:
+            assert da.dims == ('zooplankton', 'X')
+            assert da.shape == (n_zoo, NX)
+            checked.append(key)
+        elif key in feeding_link_coord_vars:
+            assert da.dims == ('feeding_link', 'X')
+            assert da.shape == (F.food_web.n_links, NX)
+            checked.append(key)
     assert set(checked) == set(ds.data_vars)

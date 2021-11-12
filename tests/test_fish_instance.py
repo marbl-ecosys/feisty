@@ -162,6 +162,11 @@ def test_fish_apply_pref():
 
 
 def test_is_demersal():
-    for fish in F.fish:
-        is_demersal = fish.functional_type in model_settings['demersal_functional_type_keys']
-        assert is_demersal == ecosystem.is_demersal(fish.name)
+    for obj in F.member_obj_list:
+        is_demersal = obj.functional_type_key in model_settings['demersal_functional_type_keys']
+        assert is_demersal == obj.is_demersal
+
+        is_zooplankton = (
+            obj.functional_type_key in model_settings['zooplankton_functional_type_keys']
+        )
+        assert is_zooplankton == obj.is_zooplankton
