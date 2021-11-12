@@ -29,6 +29,9 @@ _mortality_type_keys = [
 mortality_types = {k: i for i, k in enumerate(_mortality_type_keys)}
 
 
+fish_defaults = {}
+
+
 def init_module_variables(
     size_class_bounds,
     functional_type_keys,
@@ -97,6 +100,36 @@ def init_module_variables(
     PI_be_cutoff = benthic_pelagic_depth_cutoff
 
 
+def init_fish_defaults(
+    k_metabolism,
+    a_metabolism,
+    b_metabolism,
+    k_encounter,
+    a_encounter,
+    b_encounter,
+    k_consumption,
+    a_consumption,
+    b_consumption,
+    mortality_type,
+    mortality_coeff_per_yr,
+    assim_efficiency,
+):
+    global fish_defaults
+
+    fish_defaults['k_metabolism'] = k_metabolism
+    fish_defaults['a_metabolism'] = a_metabolism
+    fish_defaults['b_metabolism'] = b_metabolism
+    fish_defaults['k_encounter'] = k_encounter
+    fish_defaults['a_encounter'] = a_encounter
+    fish_defaults['b_encounter'] = b_encounter
+    fish_defaults['k_consumption'] = k_consumption
+    fish_defaults['a_consumption'] = a_consumption
+    fish_defaults['b_consumption'] = b_consumption
+    fish_defaults['mortality_type'] = mortality_type
+    fish_defaults['mortality_coeff_per_yr'] = mortality_coeff_per_yr
+    fish_defaults['assim_efficiency'] = assim_efficiency
+
+
 def compute_rate_T_mass_scaling(T, mass, k, a, b, T0=10.0):
     return np.exp(k * (T - T0)) * a * mass ** (-b)
 
@@ -112,12 +145,7 @@ class fish_type(object):
         pelagic_demersal_coupling,
         harvest_selectivity,
         energy_frac_somatic_growth,
-        kt=0.0855,
-        amet=4.0,
-        bpow=0.175,
-        mortality_type='constant',
-        mortality_coeff_per_yr=0.1,
-        assim_efficiency=0.7,
+        **kwargs,
     ):
         """
         Paramterization of fish functional types.
@@ -144,48 +172,55 @@ class fish_type(object):
         """
         assert size_class in _size_class_masses, f'Unknown size class {size_class}'
         assert functional_type in functional_types, f'Unknown functional type: {functional_type}'
-        assert mortality_type in _mortality_type_keys, f'Unknown mortality type: {mortality_type}'
-
         assert (0.0 <= harvest_selectivity) and (
             harvest_selectivity <= 1.0
         ), 'harvest_selectivity must be between 0. and 1.'
         assert (0.0 <= energy_frac_somatic_growth) and (
             energy_frac_somatic_growth <= 1.0
         ), 'energy_frac_somatic_growth must be between 0. and 1.'
-        assert (0.0 <= assim_efficiency) and (
-            assim_efficiency <= 1.0
-        ), 'assim_efficiency must be between 0. and 1.'
 
         self.name = name
         self.functional_type_key = functional_type
         self.functional_type = functional_types[functional_type]
         self.size_class = size_class
         self.size_class_bnds_ratio = _size_class_bnds_ratio[size_class]
-
         self.mass = _size_class_masses[size_class]
-
-        self.kt = kt
-        self.amet = amet
-        self.bpow = bpow
-
+        self.harvest_selectivity = harvest_selectivity
         self.t_frac_pelagic_static = t_frac_pelagic_static
+        self.energy_frac_somatic_growth = energy_frac_somatic_growth
         self.pelagic_demersal_coupling = pelagic_demersal_coupling
         if self.pelagic_demersal_coupling:
             assert self.functional_type in [
                 functional_types[t] for t in _pdc_type_keys
             ], f"pelagic-demersal coupling not defined for '{functional_type}' functional type"
 
+        # assign defaults
+        for key, default_value in fish_defaults.items():
+            assign_key = key
+            assign_value = kwargs.pop(key) if key in kwargs else default_value
+            if key == 'mortality_coeff_per_yr':
+                assign_key = 'mortality_coeff'
+                assign_value = assign_value / 365.0
+
+            elif key == 'mortality_type':
+                assert (
+                    assign_value in _mortality_type_keys
+                ), f'Unknown mortality type: {assign_value}'
+                assign_value = mortality_types[assign_value]
+            self.__dict__[assign_key] = assign_value
+
+        if kwargs:
+            raise ValueError(f'unknown parameters: {kwargs}')
+
+        assert (0.0 <= self.assim_efficiency) and (
+            self.assim_efficiency <= 1.0
+        ), 'assim_efficiency must be between 0. and 1.'
+
         # initialize memory for result
         self.t_frac_pelagic = domain.init_array(
             name=f'{self.name}_t_frac_pelagic',
             constant=self.t_frac_pelagic_static,
         )
-
-        self.harvest_selectivity = harvest_selectivity
-        self.energy_frac_somatic_growth = energy_frac_somatic_growth
-        self.mortality_type = mortality_types[mortality_type]
-        self.mortality_coeff = mortality_coeff_per_yr / 365.0
-        self.assim_efficiency = assim_efficiency
 
         self.pdc_apply_pref = self.functional_type in _pdc_apply_pref_func_types
 
@@ -304,114 +339,114 @@ class reproduction_link(object):
 class food_web(object):
     """define feeding relationships"""
 
-    def __init__(self, feeding_settings, fish_list, all_groups, all_groups_func_type):
-
-        if isinstance(all_groups, xr.DataArray):
-            all_groups = all_groups.values
-        elif isinstance(all_groups, list):
-            all_groups = np.array(all_groups, dtype=object)
-
-        if isinstance(all_groups_func_type, xr.DataArray):
-            all_groups_func_type = all_groups_func_type.values
-        elif isinstance(all_groups_func_type, list):
-            all_groups_func_type = np.array(all_groups_func_type, dtype=object)
+    def __init__(self, feeding_settings, member_obj_list):
 
         # ensure that predator-prey entries are unique
         pred_prey = [(p['predator'], p['prey']) for p in feeding_settings]
         assert len(set(pred_prey)) == len(pred_prey), 'non-unique predator-prey relationships'
 
         # store functional types
-        # set up food web DataFrame
-        masses = {f.name: f.mass for f in fish_list}
+        all_groups_name = [o.name for o in member_obj_list]
+        all_groups_func_type = [o.functional_type for o in member_obj_list]
 
+        # set up food web DataFrame
         self.n_links = len(feeding_settings)
-        self.link_predator = [link['predator'] for link in feeding_settings]
-        self.link_prey = [link['prey'] for link in feeding_settings]
+        link_predator = [link['predator'] for link in feeding_settings]
+        link_prey = [link['prey'] for link in feeding_settings]
         preference = [link['encounter_parameters']['preference'] for link in feeding_settings]
 
-        self.fish_names = [f.name for f in fish_list]
-
+        self.fish_names = [f.name for f in member_obj_list if isinstance(f, fish_type)]
         for f in self.fish_names:
             assert (
-                f in self.link_predator
+                f in link_predator
             ), f'{f} is not listed as a predator in the food web; all fish must eat.'
+
+        self.predator_obj = []
+        for pred in link_predator:
+            pred_i_obj = member_obj_list[all_groups_name.index(pred)]
+            assert isinstance(
+                pred_i_obj, fish_type
+            ), f'none but `fish_type` can be predators; {pred_i_obj.name} is not a fish!'
+            self.predator_obj.append(pred_i_obj)
+
+        self.prey_obj = []
+        for prey in link_prey:
+            prey_i_obj = member_obj_list[all_groups_name.index(prey)]
+            self.prey_obj.append(prey_i_obj)
 
         # link into food_web list for each predator
         self.pred_link_ndx = {
-            pred: [i for i in range(self.n_links) if self.link_predator[i] == pred]
-            for pred in np.unique(self.link_predator)
+            pred: [i for i in range(self.n_links) if link_predator[i] == pred]
+            for pred in np.unique(link_predator)
         }
 
         # link into food_web list for each prey
         self.prey_link_ndx = {
-            prey: [i for i in range(self.n_links) if self.link_prey[i] == prey]
-            for prey in np.unique(self.link_prey)
+            prey: [i for i in range(self.n_links) if link_prey[i] == prey]
+            for prey in np.unique(link_prey)
         }
 
         pred_list_prey = {
-            pred: [prey for i, prey in enumerate(self.link_prey) if self.link_predator[i] == pred]
-            for pred in np.unique(self.link_predator)
+            pred: [prey for i, prey in enumerate(link_prey) if link_predator[i] == pred]
+            for pred in np.unique(link_predator)
         }
 
         self.pred_ndx_prey = {}
         self.pred_prey_func_type = {}
         for pred, prey_list in pred_list_prey.items():
-            ndx = []
+            self.pred_ndx_prey[pred] = []
+            self.pred_prey_func_type[pred] = []
             for prey in prey_list:
-                assert len(np.where(all_groups == prey)[0]) == 1
-                ndx.append(np.where(all_groups == prey)[0][0])
-            self.pred_ndx_prey[pred] = ndx
-            self.pred_prey_func_type[pred] = all_groups_func_type[ndx]
+                i = all_groups_name.index(prey)
+                self.pred_ndx_prey[pred].append(i)
+                self.pred_prey_func_type[pred].append(all_groups_func_type[i])
 
         prey_list_pred = {
-            prey: [pred for i, pred in enumerate(self.link_predator) if self.link_prey[i] == prey]
-            for prey in np.unique(self.link_prey)
+            prey: [pred for i, pred in enumerate(link_predator) if link_prey[i] == prey]
+            for prey in np.unique(link_prey)
         }
 
         self.prey_ndx_pred = {}
         for prey, pred_list in prey_list_pred.items():
-            ndx = []
+            self.prey_ndx_pred[prey] = []
             for pred in pred_list:
-                assert len(np.where(all_groups == pred)[0]) == 1
-                ndx.append(np.where(all_groups == pred)[0][0])
-            self.prey_ndx_pred[prey] = ndx
+                i = all_groups_name.index(pred)
+                self.prey_ndx_pred[prey].append(i)
 
         pred_prey_preference = {
             pred: {
                 prey: pref
-                for pref, pred_i, prey in zip(preference, self.link_predator, self.link_prey)
+                for pref, pred_i, prey in zip(preference, link_predator, link_prey)
                 if pred_i == pred
             }
-            for pred in np.unique(self.link_predator)
+            for pred in np.unique(link_predator)
         }
 
         self.pred_prey_preference = xr.DataArray(
-            np.zeros((len(np.unique(self.link_predator)), len(np.unique(self.link_prey)))),
+            np.zeros((len(np.unique(link_predator)), len(np.unique(link_prey)))),
             dims=('predator', 'prey'),
-            coords={'predator': np.unique(self.link_predator), 'prey': np.unique(self.link_prey)},
+            coords={'predator': np.unique(link_predator), 'prey': np.unique(link_prey)},
         )
-        for i, pred in enumerate(np.unique(self.link_predator)):
-            for j, prey in enumerate(np.unique(self.link_prey)):
+        for i, pred in enumerate(np.unique(link_predator)):
+            for j, prey in enumerate(np.unique(link_prey)):
                 if prey in pred_prey_preference[pred]:
                     self.pred_prey_preference.data[i, j] = pred_prey_preference[pred][prey]
 
         self.encounter_obj = [
             encounter_type(
-                predator=link['predator'],
-                prey=link['prey'],
-                predator_size_class_mass=masses[link['predator']],
-                **link['encounter_parameters'],
+                predator_obj,
+                prey_obj,
+                **feeding_settings[i]['encounter_parameters'],
             )
-            for link in feeding_settings
+            for i, (predator_obj, prey_obj) in enumerate(zip(self.predator_obj, self.prey_obj))
         ]
         self.consumption_obj = [
             consumption_type(
-                predator=link['predator'],
-                prey=link['prey'],
-                predator_size_class_mass=masses[link['predator']],
-                **link['consumption_parameters'],
+                predator_obj,
+                prey_obj,
+                **feeding_settings[i]['consumption_parameters'],
             )
-            for link in feeding_settings
+            for i, (predator_obj, prey_obj) in enumerate(zip(self.predator_obj, self.prey_obj))
         ]
 
         self.feeding_link_coord = xr.DataArray(
@@ -419,8 +454,8 @@ class food_web(object):
         )
 
         add_coords = dict(
-            predator=xr.DataArray(self.link_predator, dims='feeding_link'),
-            prey=xr.DataArray(self.link_prey, dims='feeding_link'),
+            predator=xr.DataArray(link_predator, dims='feeding_link'),
+            prey=xr.DataArray(link_prey, dims='feeding_link'),
         )
         self.encounter = domain.init_array_2d(
             coord_name='feeding_link',
@@ -443,7 +478,7 @@ class food_web(object):
         # index into food_web links list for zooplankton prey
         self.zoo_names = [
             g
-            for g, ft in zip(all_groups, all_groups_func_type)
+            for g, ft in zip(all_groups_name, all_groups_func_type)
             if ft == functional_types['zooplankton']
         ]
 
@@ -543,10 +578,10 @@ class food_web(object):
         """compute encounter rate"""
 
         i = 0
-        for pred, prey, obj in zip(self.link_predator, self.link_prey, self.encounter_obj):
+        for pred, prey, obj in zip(self.predator_obj, self.prey_obj, self.encounter_obj):
 
-            biomass_prey = biomass.sel(group=prey)
-            t_frac_pelagic_pred = t_frac_pelagic.sel(fish=pred)
+            biomass_prey = biomass.sel(group=prey.name)
+            t_frac_pelagic_pred = t_frac_pelagic.sel(fish=pred.name)
             t_frac_prey_pred = t_frac_pelagic_pred
             if is_demersal(prey):
                 t_frac_prey_pred = 1.0 - t_frac_pelagic_pred
@@ -554,7 +589,7 @@ class food_web(object):
             obj.compute(
                 self.encounter[i, :],
                 biomass_prey,
-                T_habitat.sel(fish=pred),
+                T_habitat.sel(fish=pred.name),
                 t_frac_prey_pred,
             )
             i += 1
@@ -562,14 +597,14 @@ class food_web(object):
     def _compute_consumption(self, T_habitat):
         """compute consumption rate"""
 
-        zipped_iterator = zip(self.link_predator, self.link_prey, self.consumption_obj)
+        zipped_iterator = zip(self.predator_obj, self.prey_obj, self.consumption_obj)
         for i, (pred, prey, obj) in enumerate(zipped_iterator):
             obj.compute(
                 self.consumption_max[i, :],
                 self.consumption[i, :],
                 self.encounter[i, :],
-                self._get_total_encounter(pred),
-                T_habitat.sel(fish=pred),
+                self._get_total_encounter(pred.name),
+                T_habitat.sel(fish=pred.name),
             )
 
     def compute(self, biomass, T_habitat, t_frac_pelagic, zoo_mortality):
@@ -705,21 +740,24 @@ class encounter_type(object):
     """
 
     def __init__(
-        self, predator, prey, predator_size_class_mass, preference, ke=0.063, gam=70.0, benc=0.20
+        self,
+        predator_obj,
+        prey_obj,
+        preference,
     ):
-        self.predator = predator
-        self.prey = prey
-        self.ke = ke
-        self.gam = gam
-        self.benc = benc
+        self.predator = predator_obj
+        self.prey = prey_obj
+        self.k_encounter = predator_obj.k_encounter
+        self.a_encounter = predator_obj.a_encounter
+        self.b_encounter = predator_obj.b_encounter
 
-        self.predator_size_class_mass = predator_size_class_mass
+        self.predator_size_class_mass = predator_obj.mass
         self.preference = preference
 
     def __repr__(self):
-        return f'enc_{self.predator}_{self.prey}'
+        return f'enc_{self.predator.name}_{self.prey.name}'
 
-    def compute(self, da, biomass_prey, T_habitat, t_frac_prey):
+    def compute(self, encounter, biomass_prey, T_habitat, t_frac_prey):
         """
         Compute encounter rates.
 
@@ -745,14 +783,19 @@ class encounter_type(object):
 
         # encounter rate
         A = (
-            np.exp(self.ke * (T_habitat - 10.0))
-            * self.gam
-            * self.predator_size_class_mass ** (-self.benc)
-        ) / 365.0
+            compute_rate_T_mass_scaling(
+                T_habitat,
+                self.predator_size_class_mass,
+                self.k_encounter,
+                self.a_encounter,
+                self.b_encounter,
+            )
+            / 365.0
+        )
 
-        da[:] = xr.where(
+        encounter[:] = xr.where(
             t_frac_prey > 0,
-            biomass_prey * A * self.preference,
+            biomass_prey * self.preference * A,
             0.0,
         )
 
@@ -760,27 +803,21 @@ class encounter_type(object):
 class consumption_type(object):
     def __init__(
         self,
-        predator,
-        prey,
-        predator_size_class_mass,
-        kc=0.063,
-        h=20.0,
-        bcmx=0.25,
+        predator_obj,
+        prey_obj,
     ):
 
-        self.predator = predator
-        self.prey = prey
+        self.predator = predator_obj
+        self.prey = prey_obj
 
-        self.kc = kc
-        self.h = h
-        self.bcmx = bcmx
+        self.k_consumption = predator_obj.k_consumption
+        self.a_consumption = predator_obj.a_consumption
+        self.b_consumption = predator_obj.b_consumption
 
-        self.predator_size_class_mass = predator_size_class_mass
-
-        self.result = domain.init_array(name=self.__repr__)
+        self.predator_size_class_mass = predator_obj.mass
 
     def __repr__(self):
-        return f'con_{self.predator}_{self.prey}'
+        return f'con_{self.predator.name}_{self.prey.name}'
 
     def compute(self, consumption_max, consumption, encounter, encounter_total, T_habitat):
         """
@@ -797,9 +834,9 @@ class consumption_type(object):
             compute_rate_T_mass_scaling(
                 T_habitat,
                 self.predator_size_class_mass,
-                self.kc,
-                self.h,
-                self.bcmx,
+                self.k_consumption,
+                self.a_consumption,
+                self.b_consumption,
             )
             / 365.0
         )

@@ -24,7 +24,7 @@ def get_fish_func_type(settings_dict):
     """inspect input and generate dictionary of functional type of each group"""
 
     fish_func_type = {}
-    for f in settings_dict['fish']:
+    for f in settings_dict['fish']['members']:
         fish_func_type[f['name']] = f['functional_type']
 
     for b in settings_dict['benthic_prey']:

@@ -21,7 +21,7 @@ fish_ic_data = 1e-5
 benthic_prey_ic_data = 1e-4
 
 n_zoo = len(settings_dict_def['zooplankton'])
-n_fish = len(settings_dict_def['fish'])
+n_fish = len(settings_dict_def['fish']['members'])
 n_benthic_prey = 1
 
 NX = 10

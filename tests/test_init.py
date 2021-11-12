@@ -25,7 +25,7 @@ fish_ic_data = 1e-5
 benthic_prey_ic_data = 1e-4
 
 n_zoo = len(settings_dict_def['zooplankton'])
-n_fish = len(settings_dict_def['fish'])
+n_fish = len(settings_dict_def['fish']['members'])
 n_benthic_prey = 1
 
 NX = 10
@@ -141,12 +141,12 @@ def test_func_type_init():
 
 def test_bad_func_type_fails():
     """init should fail if there is an unknown type"""
-    settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['fish'][0]['functional_type'] = 'UnkownType'
+    sd_bad = feisty.settings.get_defaults()
+    sd_bad['fish']['members'][0]['functional_type'] = 'UnkownType'
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
-            settings_dict=settings_dict_def_bad,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
@@ -154,8 +154,8 @@ def test_bad_func_type_fails():
 def test_bad_mortality_type_fails():
     """init should fail if there is an unknown mortality type"""
     sd_mort = feisty.settings.get_defaults()
-    for i in range(len(sd_mort['fish'])):
-        sd_mort['fish'][i]['mortality_type'] = 'death by hanging'
+    for i in range(len(sd_mort['fish']['members'])):
+        sd_mort['fish']['members'][i]['mortality_type'] = 'death by hanging'
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
@@ -165,86 +165,84 @@ def test_bad_mortality_type_fails():
 
 def test_bad_pelagic_demersal_coupling_types_fails():
     """init should fail if there is an unknown pelagic_demersal_coupling_type_keys"""
-    settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_type_keys'].append(
-        'UnkownType'
-    )
+    sd_bad = feisty.settings.get_defaults()
+    sd_bad['model_settings']['pelagic_demersal_coupling_type_keys'].append('UnkownType')
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
-            settings_dict=settings_dict_def_bad,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
 
 def test_bad_pelagic_functional_types_fails():
     """init should fail if there is an unknown pelagic_functional_type_keys"""
-    settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['model_settings']['pelagic_functional_type_keys'].append('UnkownType')
+    sd_bad = feisty.settings.get_defaults()
+    sd_bad['model_settings']['pelagic_functional_type_keys'].append('UnkownType')
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
-            settings_dict=settings_dict_def_bad,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
 
 def test_bad_functional_types_apply_pref():
     """init should fail if type is in apply_preference but not in pelagic_demersal_coupling_types"""
-    settings_dict_def_bad = feisty.settings.get_defaults()
+    sd_bad = feisty.settings.get_defaults()
 
-    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_type_keys'] = [
+    sd_bad['model_settings']['pelagic_demersal_coupling_type_keys'] = [
         'demersal',
         'piscivore',
     ]
 
-    settings_dict_def_bad['model_settings']['pelagic_demersal_coupling_apply_pref_type_keys'] = [
+    sd_bad['model_settings']['pelagic_demersal_coupling_apply_pref_type_keys'] = [
         'forage',
         'demersal',
     ]
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
-            settings_dict=settings_dict_def_bad,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
 
 def test_bad_demersal_functional_types_fails():
     """init should fail if there is an unknown demersal_functional_type_keys"""
-    settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['model_settings']['demersal_functional_type_keys'].append('UnkownType')
+    sd_bad = feisty.settings.get_defaults()
+    sd_bad['model_settings']['demersal_functional_type_keys'].append('UnkownType')
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
-            settings_dict=settings_dict_def_bad,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
 
 def test_bad_size_class_fail():
     """init should fail if there is an unknown size class"""
-    settings_dict_def_bad = feisty.settings.get_defaults()
-    settings_dict_def_bad['fish'][0]['size_class'] = 'Eeeeenormous!'
+    sd_bad = feisty.settings.get_defaults()
+    sd_bad['fish']['members'][0]['size_class'] = 'Eeeeenormous!'
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
-            settings_dict=settings_dict_def_bad,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
 
 def test_duplicated_pelagic_demersal_type_keys():
-    settings_dict_def_bad = feisty.settings.get_defaults()
+    sd_bad = feisty.settings.get_defaults()
     combined_list = (
-        settings_dict_def_bad['model_settings']['pelagic_functional_type_keys']
-        + settings_dict_def_bad['model_settings']['demersal_functional_type_keys']
+        sd_bad['model_settings']['pelagic_functional_type_keys']
+        + sd_bad['model_settings']['demersal_functional_type_keys']
     )
-    settings_dict_def_bad['model_settings']['pelagic_functional_type_keys'] = combined_list
+    sd_bad['model_settings']['pelagic_functional_type_keys'] = combined_list
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
-            settings_dict=settings_dict_def_bad,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
@@ -280,22 +278,13 @@ def test_biomass_init():
         == [z['name'] for z in settings_dict_def['zooplankton']]
     ).all()
     assert (
-        F.biomass.group.isel(group=F.ndx_fish) == [f['name'] for f in settings_dict_def['fish']]
+        F.biomass.group.isel(group=F.ndx_fish)
+        == [f['name'] for f in settings_dict_def['fish']['members']]
     ).all()
     assert (
         F.biomass.group.isel(group=F.ndx_benthic_prey)
         == [b['name'] for b in settings_dict_def['benthic_prey']]
     ).all()
-
-    functional_type_dict = {
-        f.name: f.functional_type for f in F.fish + F.benthic_prey + F.zooplankton
-    }
-
-    assert isinstance(F.group_func_type, xr.DataArray)
-    xr.testing.assert_identical(F.group_func_type.group, F.biomass.group)
-
-    for i, group in enumerate(F.biomass.group.values):
-        assert functional_type_dict[group] == F.group_func_type[i]
 
 
 def test_biomass_init_values():
@@ -323,6 +312,17 @@ def test_biomass_bad_shape_fish():
         )
 
 
+def test_duplicate_names_across_groups():
+    sd_bad = feisty.settings.get_defaults()
+    sd_bad['zooplankton'][0]['name'] = sd_bad['fish']['members'][0]['name']
+    with pytest.raises(AssertionError):
+        feisty.feisty_instance_type(
+            domain_dict=domain_dict,
+            settings_dict=sd_bad,
+            fish_ic_data=fish_ic_data,
+        )
+
+
 def test_gcm_state():
     # ensure gcm_state conforms
     assert isinstance(F.gcm_state, feisty.core.interface.gcm_state_type)
@@ -344,7 +344,7 @@ def test_init_tendency_arrays():
     ds = F.tendency_data
     assert isinstance(ds, xr.Dataset)
     assert (ds.zooplankton == [f['name'] for f in zoo_settings]).all()
-    assert (ds.fish == [f['name'] for f in fish_settings]).all()
+    assert (ds.fish == [f['name'] for f in fish_settings['members']]).all()
     assert (ds.benthic_prey == [b['name'] for b in benthic_prey_settings]).all()
 
     assert set(ds.coords.keys()) == {'zooplankton', 'fish', 'benthic_prey'}

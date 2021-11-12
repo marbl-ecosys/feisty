@@ -108,9 +108,10 @@ class feisty_instance_type(object):
     def _init_fish_settings(self, fish_settings):
         """initialize fish"""
 
+        ecosystem.init_fish_defaults(**fish_settings['defaults'])
         self.fish = []
         self.fish_names = []
-        for fish_parameters in fish_settings:
+        for fish_parameters in fish_settings['members']:
             fish_i = ecosystem.fish_type(**fish_parameters)
             self.fish.append(fish_i)
             self.fish_names.append(fish_i.name)
@@ -133,10 +134,10 @@ class feisty_instance_type(object):
         """Initialize `biomass` array."""
 
         group_coord = self.zoo_names + self.fish_names + self.benthic_prey_names
-
-        functional_type_dict = {
-            o.name: o.functional_type for o in self.fish + self.benthic_prey + self.zooplankton
-        }
+        self.member_obj_list = self.zooplankton + self.fish + self.benthic_prey
+        assert len(set(group_coord)) == len(
+            group_coord
+        ), f'duplicate names across ecosystem member groups: {group_coord}'
 
         n = len(group_coord)
         self.ndx_zoo = np.arange(0, self.n_zoo)
@@ -144,11 +145,6 @@ class feisty_instance_type(object):
         self.ndx_benthic_prey = np.arange(n - 1, n)
 
         self.biomass = domain.init_array_2d('group', group_coord)
-        self.group_func_type = xr.DataArray(
-            [functional_type_dict[f] for f in group_coord],
-            dims='group',
-            coords={'group': self.biomass.group},
-        )
         self.set_fish_biomass(fish_ic_data)
         self.set_benthic_prey_biomass(benthic_prey_ic_data)
 
@@ -156,9 +152,7 @@ class feisty_instance_type(object):
         """initialize food_web"""
         self.food_web = ecosystem.food_web(
             feeding_settings,
-            self.fish,
-            self.biomass.group,
-            self.group_func_type,
+            self.member_obj_list,
         )
 
     def _init_reproduction_routing(self, routing_settings):

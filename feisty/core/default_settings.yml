@@ -85,71 +85,85 @@ zooplankton:
 #     energy_frac_somatic_growth: 1.
 #
 fish:
-  - name: Sf
-    size_class: small
-    functional_type: forage
-    t_frac_pelagic_static: 1.
-    pelagic_demersal_coupling: false
-    harvest_selectivity: 0.
-    energy_frac_somatic_growth: 1.
+  defaults:
+    k_metabolism: 0.0855
+    a_metabolism: 4.0
+    b_metabolism: 0.175
+    k_encounter: 0.063
+    a_encounter: 70.0
+    b_encounter: 0.2
+    k_consumption: 0.063
+    a_consumption: 20.0
+    b_consumption: 0.25
+    mortality_type: constant
+    mortality_coeff_per_yr: 0.1
+    assim_efficiency: 0.7
+  members:
+    - name: Sf
+      size_class: small
+      functional_type: forage
+      t_frac_pelagic_static: 1.
+      pelagic_demersal_coupling: false
+      harvest_selectivity: 0.
+      energy_frac_somatic_growth: 1.
 
-  - name: Sp
-    size_class: small
-    functional_type: piscivore
-    t_frac_pelagic_static: 1.
-    pelagic_demersal_coupling: false
-    harvest_selectivity: 0.
-    energy_frac_somatic_growth: 1.
+    - name: Sp
+      size_class: small
+      functional_type: piscivore
+      t_frac_pelagic_static: 1.
+      pelagic_demersal_coupling: false
+      harvest_selectivity: 0.
+      energy_frac_somatic_growth: 1.
 
-  - name: Sd
-    size_class: small
-    functional_type: demersal
-    t_frac_pelagic_static: 1.
-    pelagic_demersal_coupling: false
-    harvest_selectivity: 0.
-    energy_frac_somatic_growth: 1.
+    - name: Sd
+      size_class: small
+      functional_type: demersal
+      t_frac_pelagic_static: 1.
+      pelagic_demersal_coupling: false
+      harvest_selectivity: 0.
+      energy_frac_somatic_growth: 1.
 
-  # medium
-  - name: Mf
-    size_class: medium
-    functional_type: forage
-    t_frac_pelagic_static: 1.
-    pelagic_demersal_coupling: false
-    harvest_selectivity: 1.
-    energy_frac_somatic_growth: 0.5
+    # medium
+    - name: Mf
+      size_class: medium
+      functional_type: forage
+      t_frac_pelagic_static: 1.
+      pelagic_demersal_coupling: false
+      harvest_selectivity: 1.
+      energy_frac_somatic_growth: 0.5
 
-  - name: Mp
-    size_class: medium
-    functional_type: piscivore
-    t_frac_pelagic_static: 1.
-    pelagic_demersal_coupling: false
-    harvest_selectivity: 1.
-    energy_frac_somatic_growth: 1.
+    - name: Mp
+      size_class: medium
+      functional_type: piscivore
+      t_frac_pelagic_static: 1.
+      pelagic_demersal_coupling: false
+      harvest_selectivity: 1.
+      energy_frac_somatic_growth: 1.
 
-  - name: Md
-    size_class: medium
-    functional_type: demersal
-    t_frac_pelagic_static: 0.
-    pelagic_demersal_coupling: false
-    harvest_selectivity: 1.
-    energy_frac_somatic_growth: 1.
+    - name: Md
+      size_class: medium
+      functional_type: demersal
+      t_frac_pelagic_static: 0.
+      pelagic_demersal_coupling: false
+      harvest_selectivity: 1.
+      energy_frac_somatic_growth: 1.
 
-  # large
-  - name: Lp
-    size_class: large
-    functional_type: piscivore
-    t_frac_pelagic_static: 1.
-    pelagic_demersal_coupling: true
-    harvest_selectivity: 1.
-    energy_frac_somatic_growth: 0.5
+    # large
+    - name: Lp
+      size_class: large
+      functional_type: piscivore
+      t_frac_pelagic_static: 1.
+      pelagic_demersal_coupling: true
+      harvest_selectivity: 1.
+      energy_frac_somatic_growth: 0.5
 
-  - name: Ld
-    size_class: large
-    functional_type: demersal
-    t_frac_pelagic_static: 0.
-    pelagic_demersal_coupling: true
-    harvest_selectivity: 1.
-    energy_frac_somatic_growth: 0.5
+    - name: Ld
+      size_class: large
+      functional_type: demersal
+      t_frac_pelagic_static: 0.
+      pelagic_demersal_coupling: true
+      harvest_selectivity: 1.
+      energy_frac_somatic_growth: 0.5
 
 ###
 # Define the benthic prey simulated by FEISTY.

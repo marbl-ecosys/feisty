@@ -24,7 +24,7 @@ fish_ic_data = 1e-5
 benthic_prey_ic_data = 1e-4
 
 n_zoo = len(settings_dict_def['zooplankton'])
-n_fish = len(settings_dict_def['fish'])
+n_fish = len(settings_dict_def['fish']['members'])
 n_benthic_prey = 1
 
 NX = 10
@@ -143,7 +143,7 @@ def test_t_frac_pelagic():
 
     F._compute_t_frac_pelagic(reset=True)
     for i, fish in enumerate(F.fish):
-        assert (fish.t_frac_pelagic == fish_settings[i]['t_frac_pelagic_static']).all()
+        assert (fish.t_frac_pelagic == fish_settings['members'][i]['t_frac_pelagic_static']).all()
 
 
 @pytest.mark.weak
@@ -244,7 +244,7 @@ def test_compute_mortality():
         print(f'testing {mortality_type}')
         sd_mort = feisty.settings.get_defaults()
         for i in range(len(sd_mort['fish'])):
-            sd_mort['fish'][i]['mortality_type'] = mortality_type
+            sd_mort['fish']['members'][i]['mortality_type'] = mortality_type
 
         Fprime = feisty.feisty_instance_type(
             domain_dict=domain_dict,

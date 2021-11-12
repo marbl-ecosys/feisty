@@ -24,7 +24,7 @@ fish_ic_data = 1e-5
 benthic_prey_ic_data = 1e-4
 
 n_zoo = len(settings_dict_def['zooplankton'])
-n_fish = len(settings_dict_def['fish'])
+n_fish = len(settings_dict_def['fish']['members'])
 n_benthic_prey = 1
 
 NX = 10
@@ -79,8 +79,8 @@ def test_food_web_init_1():
     assert set(F.food_web.__dict__.keys()) == set(
         [
             'n_links',
-            'link_predator',
-            'link_prey',
+            'predator_obj',
+            'prey_obj',
             'fish_names',
             'pred_link_ndx',
             'prey_link_ndx',
@@ -88,6 +88,7 @@ def test_food_web_init_1():
             'prey_ndx_pred',
             'pred_prey_func_type',
             'pred_prey_preference',
+            'predator_obj',
             'encounter_obj',
             'consumption_obj',
             'feeding_link_coord',
@@ -103,12 +104,22 @@ def test_food_web_init_1():
 
     assert F.food_web.n_links == n_links
     assert (F.food_web.feeding_link_coord.data == coord).all()
-    assert F.food_web.link_predator == predator_list
-    assert F.food_web.link_prey == prey_list
+    assert [o.name for o in F.food_web.predator_obj] == predator_list
+    assert [o.name for o in F.food_web.prey_obj] == prey_list
 
-    for key in ['link_predator', 'link_prey']:
-        assert isinstance(F.food_web.__dict__[key], list)
+    for key in ['predator_obj', 'prey_obj']:
+        expected_types = (
+            [
+                ecosystem.fish_type,
+                ecosystem.zooplankton_type,
+                ecosystem.benthic_prey_type,
+            ]
+            if key == 'prey_obj'
+            else [ecosystem.fish_type]
+        )
         assert len(F.food_web.__dict__[key]) == len(food_web_settings)
+        for i in range(len(F.food_web.__dict__[key])):
+            assert any([isinstance(F.food_web.__dict__[key][i], t) for t in expected_types])
 
     for key in ['encounter', 'consumption', 'consumption_max']:
         assert isinstance(F.food_web.__dict__[key], xr.DataArray)
@@ -132,6 +143,9 @@ def test_food_web_init_1():
             == link['encounter_parameters']['preference']
         )
 
+    print(F.food_web.predator_obj)
+    assert all([isinstance(fish, ecosystem.fish_type) for fish in F.food_web.predator_obj])
+
 
 def test_food_web_init_2():
     """test encounter and consumption objects"""
@@ -142,26 +156,28 @@ def test_food_web_init_2():
 
     for i in range(F.food_web.n_links):
         obj = F.food_web.encounter_obj[i]
-        for key in ['predator', 'prey', 'preference', 'ke', 'gam', 'benc']:
-            if key in food_web_settings[i]:
-                assert obj.__dict__[key] == food_web_settings[i][key]
-        assert obj.predator_size_class_mass == masses[F.food_web.link_predator[i]]
-        assert obj.__repr__() == f'enc_{obj.predator}_{obj.prey}'
+        for key in ['predator', 'prey']:
+            assert obj.__dict__[key].name == food_web_settings[i][key]
+        assert obj.preference == food_web_settings[i]['encounter_parameters']['preference']
+
+        assert obj.predator_size_class_mass == F.food_web.predator_obj[i].mass
+        assert obj.__repr__() == f'enc_{obj.predator.name}_{obj.prey.name}'
 
         obj = F.food_web.consumption_obj[i]
-        for key in ['predator', 'prey', 'kc', 'h', 'bcmx']:
-            if key in food_web_settings[i]:
-                assert obj.__dict__[key] == food_web_settings[i][key]
-        assert obj.predator_size_class_mass == masses[F.food_web.link_predator[i]]
-        assert obj.__repr__() == f'con_{obj.predator}_{obj.prey}'
+        for key in ['predator', 'prey']:
+            assert obj.__dict__[key].name == food_web_settings[i][key]
+        assert obj.predator_size_class_mass == F.food_web.predator_obj[i].mass
+        assert obj.__repr__() == f'con_{obj.predator.name}_{obj.prey.name}'
 
 
 def test_food_web_init_3():
     """confirm the pred/prey indexes are correct"""
 
+    group_func_type = np.array([o.functional_type for o in F.member_obj_list], dtype=object)
     for pred, ndx in F.food_web.pred_ndx_prey.items():
         assert (F.biomass.group[ndx] == pred_list_prey[pred]).all()
-        assert (F.food_web.pred_prey_func_type[pred] == F.group_func_type[ndx]).all()
+
+        assert (F.food_web.pred_prey_func_type[pred] == group_func_type[ndx]).all()
 
         assert F.food_web.pred_link_ndx[pred] == [
             i for i in range(n_links) if predator_list[i] == pred
@@ -172,30 +188,6 @@ def test_food_web_init_3():
         assert F.food_web.prey_link_ndx[prey] == [i for i in range(n_links) if prey_list[i] == prey]
 
 
-def test_food_web_init_data():
-    """should be able to init with DataArray, Numpy Array, or list"""
-    ecosystem.food_web(
-        food_web_settings,
-        F.fish,
-        F.biomass.group,
-        F.group_func_type,
-    )
-
-    ecosystem.food_web(
-        food_web_settings,
-        F.fish,
-        F.biomass.group.values,
-        F.group_func_type.values,
-    )
-
-    ecosystem.food_web(
-        food_web_settings,
-        F.fish,
-        [f for f in F.biomass.group.values],
-        [f for f in F.group_func_type.values],
-    )
-
-
 def test_missing_fish():
     settings_dict_def_bad = feisty.settings.get_defaults()
     settings_dict_def_bad['food_web'] = [d for d in food_web_settings if d['predator'] != 'Md']
@@ -203,6 +195,17 @@ def test_missing_fish():
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
             settings_dict=settings_dict_def_bad,
+            fish_ic_data=fish_ic_data,
+        )
+
+
+def test_nonfish_predator():
+    sd_bad = feisty.settings.get_defaults()
+    sd_bad['food_web'][-1]['predator'] = zoo_names[0]
+    with pytest.raises(AssertionError):
+        feisty.feisty_instance_type(
+            domain_dict=domain_dict,
+            settings_dict=sd_bad,
             fish_ic_data=fish_ic_data,
         )
 
@@ -260,7 +263,8 @@ def test_get_prey_biomass():
     F.set_benthic_prey_biomass(data.isel(group=F.ndx_benthic_prey))
 
     # ensure that the prey biomass returned matchs that input
-    for pred, prey in zip(F.food_web.link_predator, F.food_web.link_prey):
+    for pred_obj, prey_obj in zip(F.food_web.predator_obj, F.food_web.prey_obj):
+        pred = pred_obj.name
         prey_list_check = all_prey[pred]
 
         da = F.food_web.get_prey_biomass(F.biomass, pred)
@@ -350,7 +354,7 @@ def test_compute_consumption_zero_preference():
     sd = feisty.settings.get_defaults()
     for i in range(len(sd['food_web'])):
         sd['food_web'][i]['encounter_parameters']['preference'] = 0.0
-    fw = feisty.core.ecosystem.food_web(sd['food_web'], F.fish, F.biomass.group, F.group_func_type)
+    fw = feisty.core.ecosystem.food_web(sd['food_web'], F.member_obj_list)
     fw._compute_encounter(F.biomass, F.tendency_data.T_habitat, F.tendency_data.t_frac_pelagic)
     assert (fw.encounter == 0.0).all()
 

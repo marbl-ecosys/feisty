@@ -100,7 +100,9 @@ def compute_metabolism(metabolism_rate, fish_list, T_habitat):
     for i, fish in enumerate(fish_list):
         # Metabolism with its own coeff, temp-sens, mass-sens
         metabolism_rate[i, :] = (
-            compute_rate_T_mass_scaling(T_habitat[i, :], fish.mass, fish.kt, fish.amet, fish.bpow)
+            compute_rate_T_mass_scaling(
+                T_habitat[i, :], fish.mass, fish.k_metabolism, fish.a_metabolism, fish.b_metabolism
+            )
             / 365.0
         )
 
