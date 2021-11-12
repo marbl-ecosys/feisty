@@ -19,4 +19,10 @@
 
    
    
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~fish_type.is_demersal
+   
    
