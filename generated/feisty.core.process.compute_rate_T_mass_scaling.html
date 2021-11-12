@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>feisty.core.process.compute_energy_avail &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    <title>feisty.core.process.compute_rate_T_mass_scaling &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -52,8 +52,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="feisty.core.process.compute_growth" href="feisty.core.process.compute_growth.html" />
-    <link rel="prev" title="feisty.core.process.compute_benthic_biomass_update" href="feisty.core.process.compute_benthic_biomass_update.html" />
+    <link rel="next" title="feisty.core.process.compute_t_frac_pelagic" href="feisty.core.process.compute_t_frac_pelagic.html" />
+    <link rel="prev" title="feisty.core.ecosystem.zooplankton_type" href="feisty.core.ecosystem.zooplankton_type.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -234,8 +234,8 @@
      feisty.core.ecosystem.zooplankton_type
     </a>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="feisty.core.process.compute_rate_T_mass_scaling.html">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      feisty.core.process.compute_rate_T_mass_scaling
     </a>
    </li>
@@ -294,8 +294,8 @@
      feisty.core.process.compute_benthic_biomass_update
     </a>
    </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
+   <li class="toctree-l2">
+    <a class="reference internal" href="feisty.core.process.compute_energy_avail.html">
      feisty.core.process.compute_energy_avail
     </a>
    </li>
@@ -375,7 +375,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/generated/feisty.core.process.compute_energy_avail.rst"><button type="button"
+        <a class="dropdown-buttons" href="../_sources/generated/feisty.core.process.compute_rate_T_mass_scaling.rst"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.rst</button></a>
         <!-- Download PDF via print -->
@@ -395,7 +395,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fgenerated/feisty.core.process.compute_energy_avail.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fgenerated/feisty.core.process.compute_rate_T_mass_scaling.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -424,13 +424,12 @@
         
               <div>
                 
-  <div class="section" id="feisty-core-process-compute-energy-avail">
-<h1>feisty.core.process.compute_energy_avail<a class="headerlink" href="#feisty-core-process-compute-energy-avail" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="feisty-core-process-compute-rate-t-mass-scaling">
+<h1>feisty.core.process.compute_rate_T_mass_scaling<a class="headerlink" href="#feisty-core-process-compute-rate-t-mass-scaling" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="feisty.core.process.compute_energy_avail">
-<code class="sig-prename descclassname"><span class="pre">feisty.core.process.</span></code><code class="sig-name descname"><span class="pre">compute_energy_avail</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy_avail_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingestion_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metabolism_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fish_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.process.compute_energy_avail" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute energy available for growth (nu).</p>
-</dd></dl>
+<dt id="feisty.core.process.compute_rate_T_mass_scaling">
+<code class="sig-prename descclassname"><span class="pre">feisty.core.process.</span></code><code class="sig-name descname"><span class="pre">compute_rate_T_mass_scaling</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.process.compute_rate_T_mass_scaling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 
@@ -459,17 +458,17 @@
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="feisty.core.process.compute_benthic_biomass_update.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="feisty.core.ecosystem.zooplankton_type.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">feisty.core.process.compute_benthic_biomass_update</p>
+            <p class="prev-next-title">feisty.core.ecosystem.zooplankton_type</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="feisty.core.process.compute_growth.html" title="next page">
+    <a class='right-next' id="next-link" href="feisty.core.process.compute_t_frac_pelagic.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">feisty.core.process.compute_growth</p>
+        <p class="prev-next-title">feisty.core.process.compute_t_frac_pelagic</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

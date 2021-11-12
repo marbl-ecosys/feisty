@@ -12,7 +12,14 @@ Model components
 .. autosummary::
    :toctree: generated/
 
+   benthic_prey_type
    fish_type
+   fishing
+   food_web
+   food_web_link
+   reproduction_link
+   reproduction_routing
+   zooplankton_type
 
 
 .. currentmodule:: feisty.core.process
@@ -23,11 +30,16 @@ Process
 .. autosummary::
    :toctree: generated/
 
+   compute_rate_T_mass_scaling
    compute_t_frac_pelagic
    t_weighted_mean_temp
    compute_metabolism
+   compute_pred_encounter_consumption_max
+   compute_encounter
+   compute_consumption
+   compute_rescale_zoo_consumption
    compute_ingestion
-   compute_predation
+   compute_predation biomass, food_web):
    compute_natural_mortality
    compute_benthic_biomass_update
    compute_energy_avail

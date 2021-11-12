@@ -195,8 +195,48 @@
   </label>
   <ul>
    <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.benthic_prey_type.html">
+     feisty.core.ecosystem.benthic_prey_type
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="generated/feisty.core.ecosystem.fish_type.html">
      feisty.core.ecosystem.fish_type
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.fishing.html">
+     feisty.core.ecosystem.fishing
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.food_web.html">
+     feisty.core.ecosystem.food_web
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.food_web_link.html">
+     feisty.core.ecosystem.food_web_link
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.reproduction_link.html">
+     feisty.core.ecosystem.reproduction_link
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.reproduction_routing.html">
+     feisty.core.ecosystem.reproduction_routing
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.zooplankton_type.html">
+     feisty.core.ecosystem.zooplankton_type
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_rate_T_mass_scaling.html">
+     feisty.core.process.compute_rate_T_mass_scaling
     </a>
    </li>
    <li class="toctree-l2">
@@ -212,6 +252,26 @@
    <li class="toctree-l2">
     <a class="reference internal" href="generated/feisty.core.process.compute_metabolism.html">
      feisty.core.process.compute_metabolism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_pred_encounter_consumption_max.html">
+     feisty.core.process.compute_pred_encounter_consumption_max
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_encounter.html">
+     feisty.core.process.compute_encounter
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_consumption.html">
+     feisty.core.process.compute_consumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_rescale_zoo_consumption.html">
+     feisty.core.process.compute_rescale_zoo_consumption
     </a>
    </li>
    <li class="toctree-l2">
@@ -374,6 +434,12 @@
 <p>This section defines aspects of the model structure, including the size classes and names of the model functional types.</p>
 <dt>size_class_bounds</dt><dd><p>Specify the names and bounds for the model size classes [grams].</p>
 <p>Example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">size_class_bounds</span><span class="p">:</span>
+  <span class="nt">small</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0.001</span><span class="p p-Indicator">,</span> <span class="nv">0.5</span><span class="p p-Indicator">]</span>
+  <span class="nt">medium</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0.5</span><span class="p p-Indicator">,</span> <span class="nv">250.</span><span class="p p-Indicator">]</span>
+  <span class="nt">large</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">250.</span><span class="p p-Indicator">,</span> <span class="nv">125000.</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
 </dd>
 <dt>functional_type_keys</dt><dd><p>Specify the list of functional types included in the model.
 (Zooplankton are listed here, but are really a forcing, not a prognostic component.)</p>
