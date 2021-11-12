@@ -110,7 +110,7 @@ def compute_metabolism(metabolism_rate, fish_list, T_habitat):
 def compute_pred_encounter_consumption_max(
     encounter_rate_pred, consumption_rate_max_pred, T_habitat, fish_list
 ):
-
+    """Compute predator encounter and maximum consumption rates."""
     for i, fish in enumerate(fish_list):
 
         encounter_rate_pred[i, :] = (
@@ -198,12 +198,7 @@ def compute_consumption(
     food_web,
 ):
     """
-    Tp: pelagic temp
-    Tb: bottom temp
-    tpel: frac pelagic time
-    wgt: ind weight of size class
-    enc: array of all encountered food
-    calculates consumption rate
+    Consumption rates.
     """
 
     for i, link in enumerate(food_web):
@@ -222,7 +217,7 @@ def compute_rescale_zoo_consumption(
     zoo_mortality,
     food_web,
 ):
-    """limit zooplankton consumption by mortality term"""
+    """Limit zooplankton consumption by mortality term."""
 
     for zoo_i in food_web.zoo_names:
 

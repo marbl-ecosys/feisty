@@ -11,7 +11,8 @@ model_settings:
   # Example:
   #
   # .. code-block:: yaml
-  #    size_class_bounds
+  #
+  #    size_class_bounds:
   #      small: [0.001, 0.5]
   #      medium: [0.5, 250.]
   #      large: [250., 125000.]

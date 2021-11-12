@@ -162,10 +162,6 @@ def init_benthic_prey_defaults(benthic_efficiency, carrying_capacity):
     _benthic_prey_defaults['carrying_capacity'] = carrying_capacity
 
 
-def compute_rate_T_mass_scaling(T, mass, k, a, b, T0=10.0):
-    return np.exp(k * (T - T0)) * a * mass ** (-b)
-
-
 # types
 class fish_type(object):
     def __init__(
@@ -385,7 +381,7 @@ class reproduction_link(object):
 
 
 class food_web(object):
-    """define feeding relationships"""
+    """Data structure defining feeding relationships."""
 
     def __init__(self, feeding_settings, member_obj_list):
 
@@ -626,6 +622,8 @@ class food_web(object):
 
 
 class food_web_link(object):
+    """Information describing an individual feeding link."""
+
     def __init__(self, food_web, i):
         self.predator = food_web.predator_obj[i]
         self.prey = food_web.prey_obj[i]
