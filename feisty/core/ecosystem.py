@@ -30,7 +30,9 @@ _mortality_type_keys = [
 mortality_types = {k: i for i, k in enumerate(_mortality_type_keys)}
 
 
-fish_defaults = {}
+_fish_defaults = {}
+_zooplankton_defaults = {}
+_benthic_prey_defaults = {}
 
 
 def init_module_variables(
@@ -131,20 +133,33 @@ def init_fish_defaults(
     mortality_coeff_per_yr,
     assim_efficiency,
 ):
-    global fish_defaults
+    """Initialize default parameters for fish"""
+    global _fish_defaults
 
-    fish_defaults['k_metabolism'] = k_metabolism
-    fish_defaults['a_metabolism'] = a_metabolism
-    fish_defaults['b_metabolism'] = b_metabolism
-    fish_defaults['k_encounter'] = k_encounter
-    fish_defaults['a_encounter'] = a_encounter
-    fish_defaults['b_encounter'] = b_encounter
-    fish_defaults['k_consumption'] = k_consumption
-    fish_defaults['a_consumption'] = a_consumption
-    fish_defaults['b_consumption'] = b_consumption
-    fish_defaults['mortality_type'] = mortality_type
-    fish_defaults['mortality_coeff_per_yr'] = mortality_coeff_per_yr
-    fish_defaults['assim_efficiency'] = assim_efficiency
+    _fish_defaults['k_metabolism'] = k_metabolism
+    _fish_defaults['a_metabolism'] = a_metabolism
+    _fish_defaults['b_metabolism'] = b_metabolism
+    _fish_defaults['k_encounter'] = k_encounter
+    _fish_defaults['a_encounter'] = a_encounter
+    _fish_defaults['b_encounter'] = b_encounter
+    _fish_defaults['k_consumption'] = k_consumption
+    _fish_defaults['a_consumption'] = a_consumption
+    _fish_defaults['b_consumption'] = b_consumption
+    _fish_defaults['mortality_type'] = mortality_type
+    _fish_defaults['mortality_coeff_per_yr'] = mortality_coeff_per_yr
+    _fish_defaults['assim_efficiency'] = assim_efficiency
+
+
+def init_zooplankton_defaults():
+    """Initialize default parameters for zooplankton"""
+    global _zooplankton_defaults
+
+
+def init_benthic_prey_defaults(benthic_efficiency, carrying_capacity):
+    """Initialize default parameters for benthic prey"""
+    global _benthic_prey_defaults
+    _benthic_prey_defaults['benthic_efficiency'] = benthic_efficiency
+    _benthic_prey_defaults['carrying_capacity'] = carrying_capacity
 
 
 def compute_rate_T_mass_scaling(T, mass, k, a, b, T0=10.0):
@@ -212,7 +227,7 @@ class fish_type(object):
             ], f"pelagic-demersal coupling not defined for '{functional_type}' functional type"
 
         # assign defaults
-        for key, default_value in fish_defaults.items():
+        for key, default_value in _fish_defaults.items():
             assign_key = key
             assign_value = kwargs.pop(key) if key in kwargs else default_value
             if key == 'mortality_coeff_per_yr':
@@ -254,31 +269,38 @@ class fish_type(object):
 class zooplankton_type(object):
     """Data structure containing zooplankton parameters."""
 
-    def __init__(self, name):
+    def __init__(self, name, **kwargs):
         self.name = name
         self.functional_type_key = 'zooplankton'
         self.functional_type = functional_types['zooplankton']
         self.is_demersal = False
         self.is_zooplankton = True
+        for key, default_value in _zooplankton_defaults.items():
+            assign_key = key
+            assign_value = kwargs.pop(key) if key in kwargs else default_value
+            self.__dict__[assign_key] = assign_value
+        if kwargs:
+            raise ValueError(f'unknown parameters: {kwargs}')
 
 
 class benthic_prey_type(object):
     """Data structure containing benthic prey parameters."""
 
-    def __init__(
-        self,
-        name,
-        benthic_efficiency,
-        carrying_capacity=0.0,
-    ):
+    def __init__(self, name, **kwargs):
         self.name = name
         self.functional_type_key = 'benthic_prey'
         self.functional_type = functional_types['benthic_prey']
-        self.benthic_efficiency = benthic_efficiency
-
-        self.carrying_capacity = carrying_capacity
-        self.lcarrying_capacity = carrying_capacity == 0.0
         self.is_zooplankton = False
+
+        for key, default_value in _benthic_prey_defaults.items():
+            assign_key = key
+            assign_value = kwargs.pop(key) if key in kwargs else default_value
+            self.__dict__[assign_key] = assign_value
+
+        if kwargs:
+            raise ValueError(f'unknown parameters: {kwargs}')
+
+        self.lcarrying_capacity = self.carrying_capacity == 0.0
 
     @property
     def is_demersal(self):
@@ -381,7 +403,7 @@ class food_web(object):
 
         link_predator = [link['predator'] for link in feeding_settings]
         link_prey = [link['prey'] for link in feeding_settings]
-        self.preference = [link['encounter_parameters']['preference'] for link in feeding_settings]
+        self.preference = [link['preference'] for link in feeding_settings]
 
         self.fish = [f for f in member_obj_list if isinstance(f, fish_type)]
         self.fish_names = [f.name for f in self.fish]
@@ -538,67 +560,6 @@ class food_web(object):
             biomass_prey *= preference
 
         return biomass_prey.sum('group')
-
-    # def _compute_encounter(self, biomass, T_habitat, t_frac_pelagic):
-    #     """compute encounter rate"""
-    #
-    #     i = 0
-    #     for pred, prey, obj in zip(self.predator_obj, self.prey_obj, self.encounter_obj):
-    #
-    #         biomass_prey = biomass.sel(group=prey.name)
-    #         t_frac_pelagic_pred = t_frac_pelagic.sel(fish=pred.name)
-    #         t_frac_prey_pred = t_frac_pelagic_pred
-    #         if is_demersal(prey):
-    #             t_frac_prey_pred = 1.0 - t_frac_pelagic_pred
-    #
-    #         obj.compute(
-    #             self.encounter[i, :],
-    #             biomass_prey,
-    #             T_habitat.sel(fish=pred.name),
-    #             t_frac_prey_pred,
-    #         )
-    #         i += 1
-    #
-    # def _compute_consumption(self, T_habitat):
-    #     """compute consumption rate"""
-    #
-    #     zipped_iterator = zip(self.predator_obj, self.prey_obj, self.consumption_obj)
-    #     for i, (pred, prey, obj) in enumerate(zipped_iterator):
-    #         obj.compute(
-    #             self.consumption_max[i, :],
-    #             self.consumption[i, :],
-    #             self.encounter[i, :],
-    #             self._get_total_encounter(pred.name),
-    #             T_habitat.sel(fish=pred.name),
-    #         )
-    #
-    # def compute(self, biomass, T_habitat, t_frac_pelagic, zoo_mortality):
-    #     """Compute feeding rates.
-    #
-    #     Parameters
-    #     ----------
-    #
-    #     biomass : xarray.DataArray
-    #       Biomass concentration for all groups (i.e., zooplankton, fish, benthic prey).
-    #
-    #     T_habitat : xarray.DataArray
-    #       The average temperature experienced by fish.
-    #
-    #     t_frac_pelagic : xarray.DataArray
-    #       Fraction of time spent in pelagic zone.
-    #
-    #     zoo_mortality : xarray.DataArray
-    #       Maximum consumption for each zooplankton group.
-    #     """
-    #
-    #     self._compute_encounter(biomass, T_habitat, t_frac_pelagic)
-    #     self._compute_consumption(T_habitat)
-    #     if zoo_mortality is not None:
-    #         self._rescale_consumption(biomass, zoo_mortality)
-    #
-    # def _get_total_encounter(self, predator):
-    #     """get the total encouter rate across all prey"""
-    #     return self.encounter.isel(feeding_link=self.pred_link_ndx[predator]).sum('feeding_link')
 
     def get_consumption(self, consumption, predator=None, prey=None):
         """get the total consumption rate across all prey"""

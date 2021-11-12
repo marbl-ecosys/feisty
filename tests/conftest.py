@@ -16,7 +16,7 @@ def get_all_prey_and_preference(settings_dict):
             all_prey[pred] = []
             preference[pred] = []
         all_prey[pred].append(settings['prey'])
-        preference[pred].append(settings['encounter_parameters']['preference'])
+        preference[pred].append(settings['preference'])
     return all_prey, preference
 
 
@@ -27,10 +27,10 @@ def get_fish_func_type(settings_dict):
     for f in settings_dict['fish']['members']:
         fish_func_type[f['name']] = f['functional_type']
 
-    for b in settings_dict['benthic_prey']:
+    for b in settings_dict['benthic_prey']['members']:
         fish_func_type[b['name']] = 'benthic_prey'
 
-    for z in settings_dict['zooplankton']:
+    for z in settings_dict['zooplankton']['members']:
         fish_func_type[z['name']] = 'zooplankton'
 
     return fish_func_type

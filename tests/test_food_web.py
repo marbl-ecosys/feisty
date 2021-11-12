@@ -17,13 +17,13 @@ benthic_prey_settings = settings_dict_def['benthic_prey']
 reproduction_routing = settings_dict_def['reproduction_routing']
 
 for i in range(len(settings_dict_def['food_web'])):
-    settings_dict_def['food_web'][i]['encounter_parameters']['preference'] = np.random.rand()
+    settings_dict_def['food_web'][i]['preference'] = np.random.rand()
 
 
 fish_ic_data = 1e-5
 benthic_prey_ic_data = 1e-4
 
-n_zoo = len(settings_dict_def['zooplankton'])
+n_zoo = len(settings_dict_def['zooplankton']['members'])
 n_fish = len(settings_dict_def['fish']['members'])
 n_benthic_prey = 1
 
@@ -45,7 +45,7 @@ all_prey, preference = conftest.get_all_prey_and_preference(settings_dict_def)
 fish_func_type = conftest.get_fish_func_type(settings_dict_def)
 
 
-zoo_names = [z['name'] for z in settings_dict_def['zooplankton']]
+zoo_names = [z['name'] for z in settings_dict_def['zooplankton']['members']]
 
 zoo_predators = []
 for i, link in enumerate(food_web_settings):
@@ -115,10 +115,7 @@ def test_food_web_init_1():
     for link in food_web_settings:
         pred = link['predator']
         prey = link['prey']
-        assert (
-            F.food_web.pred_prey_preference.sel(predator=pred, prey=prey)
-            == link['encounter_parameters']['preference']
-        )
+        assert F.food_web.pred_prey_preference.sel(predator=pred, prey=prey) == link['preference']
 
     print(F.food_web.predator_obj)
     assert all([isinstance(fish, ecosystem.fish_type) for fish in F.food_web.predator_obj])

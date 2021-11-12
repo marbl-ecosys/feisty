@@ -18,15 +18,15 @@ benthic_prey_settings = settings_dict_def['benthic_prey']
 reproduction_routing = settings_dict_def['reproduction_routing']
 
 for i in range(len(settings_dict_def['food_web'])):
-    settings_dict_def['food_web'][i]['encounter_parameters']['preference'] = np.random.rand()
+    settings_dict_def['food_web'][i]['preference'] = np.random.rand()
 
 
 fish_ic_data = 1e-5
 benthic_prey_ic_data = 1e-4
 
-n_zoo = len(settings_dict_def['zooplankton'])
+n_zoo = len(settings_dict_def['zooplankton']['members'])
 n_fish = len(settings_dict_def['fish']['members'])
-n_benthic_prey = 1
+n_benthic_prey = len(settings_dict_def['benthic_prey']['members'])
 
 NX = 10
 NX_2 = 5
@@ -252,8 +252,8 @@ def test_duplicated_pelagic_demersal_type_keys():
 
 def test_zoo_init():
     """zooplankton init should set names and n_zoo"""
-    assert F.zoo_names == [z['name'] for z in settings_dict_def['zooplankton']]
-    assert F.n_zoo == len(settings_dict_def['zooplankton'])
+    assert F.zoo_names == [z['name'] for z in settings_dict_def['zooplankton']['members']]
+    assert F.n_zoo == n_zoo
     assert settings_dict_def['loffline']
     assert F.zoo_mortality.dims == ('zooplankton', 'X')
     assert F.zoo_mortality.shape == (n_zoo, NX)
@@ -278,7 +278,7 @@ def test_biomass_init():
     assert F.biomass.shape == (n_zoo + n_fish + 1, NX)
     assert (
         F.biomass.group.isel(group=F.ndx_zoo)
-        == [z['name'] for z in settings_dict_def['zooplankton']]
+        == [z['name'] for z in settings_dict_def['zooplankton']['members']]
     ).all()
     assert (
         F.biomass.group.isel(group=F.ndx_fish)
@@ -286,7 +286,7 @@ def test_biomass_init():
     ).all()
     assert (
         F.biomass.group.isel(group=F.ndx_benthic_prey)
-        == [b['name'] for b in settings_dict_def['benthic_prey']]
+        == [b['name'] for b in settings_dict_def['benthic_prey']['members']]
     ).all()
 
 
@@ -317,7 +317,7 @@ def test_biomass_bad_shape_fish():
 
 def test_duplicate_names_across_groups():
     sd_bad = feisty.settings.get_defaults()
-    sd_bad['zooplankton'][0]['name'] = sd_bad['fish']['members'][0]['name']
+    sd_bad['zooplankton']['members'][0]['name'] = sd_bad['fish']['members'][0]['name']
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict,
@@ -346,9 +346,9 @@ def test_init_tendency_arrays():
 
     ds = F.tendency_data
     assert isinstance(ds, xr.Dataset)
-    assert (ds.zooplankton == [f['name'] for f in zoo_settings]).all()
+    assert (ds.zooplankton == [f['name'] for f in zoo_settings['members']]).all()
     assert (ds.fish == [f['name'] for f in fish_settings['members']]).all()
-    assert (ds.benthic_prey == [b['name'] for b in benthic_prey_settings]).all()
+    assert (ds.benthic_prey == [b['name'] for b in benthic_prey_settings['members']]).all()
 
     assert set(ds.coords.keys()) == {
         'zooplankton',

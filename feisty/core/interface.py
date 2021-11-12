@@ -87,9 +87,12 @@ class feisty_instance_type(object):
         ecosystem.init_module_variables(**model_settings)
 
     def _init_zooplankton(self, zooplankton_settings):
+
+        ecosystem.init_zooplankton_defaults(**zooplankton_settings['defaults'])
+
         self.zooplankton = []
         self.zoo_names = []
-        for z_settings in zooplankton_settings:
+        for z_settings in zooplankton_settings['members']:
             zoo_i = ecosystem.zooplankton_type(**z_settings)
             self.zooplankton.append(zoo_i)
             self.zoo_names.append(zoo_i.name)
@@ -109,6 +112,7 @@ class feisty_instance_type(object):
         """initialize fish"""
 
         ecosystem.init_fish_defaults(**fish_settings['defaults'])
+
         self.fish = []
         self.fish_names = []
         for fish_parameters in fish_settings['members']:
@@ -121,9 +125,12 @@ class feisty_instance_type(object):
         self.n_fish = len(self.fish)
 
     def _init_benthic_prey_settings(self, benthic_prey_settings):
+
+        ecosystem.init_benthic_prey_defaults(**benthic_prey_settings['defaults'])
+
         self.benthic_prey = []
         self.benthic_prey_names = []
-        for b_settings in benthic_prey_settings:
+        for b_settings in benthic_prey_settings['members']:
             bprey_i = ecosystem.benthic_prey_type(**b_settings)
             self.benthic_prey.append(bprey_i)
             self.benthic_prey_names.append(bprey_i.name)

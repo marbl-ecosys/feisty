@@ -11,10 +11,10 @@ model_settings:
   # Example:
   #
   # .. code-block:: yaml
-  #
-  #    small: [0.001, 0.5]
-  #    medium: [0.5, 250.]
-  #    large: [250., 125000.]
+  #    size_class_bounds
+  #      small: [0.001, 0.5]
+  #      medium: [0.5, 250.]
+  #      large: [250., 125000.]
   size_class_bounds:
     small: [0.001, 0.5]
     medium: [0.5, 250.]
@@ -62,7 +62,9 @@ model_settings:
 #
 # - name
 zooplankton:
-  - name: Zoo
+  defaults: {}
+  members:
+    - name: Zoo
 
 ###
 # Define the fish that are simulated by FEISTY.
@@ -172,9 +174,11 @@ fish:
 ###
 # Define the benthic prey simulated by FEISTY.
 benthic_prey:
-  - name: benthic_prey
+  defaults:
     benthic_efficiency: 0.075 # transfer efficiency of detritus to benthic prey
     carrying_capacity: 0.
+  members:
+    - name: benthic_prey
 
 ###
 # Build a food web of predator-prey relationships as a list.
@@ -184,130 +188,90 @@ benthic_prey:
 #
 #    - predator: Sf
 #      prey: Zoo
-#      encounter_parameters:
 #      preference: 1.
-#      consumption_parameters: {}
 food_web:
   # small forage
   - predator: Sf
     prey: Zoo
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   # small piscivore
   - predator: Sp
     prey: Zoo
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   # small demersal
   - predator: Sd
     prey: Zoo
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   # medium forage
   - predator: Mf
     prey: Zoo
-    encounter_parameters:
-      preference: 0.45
-    consumption_parameters: {}
+    preference: 0.45
 
   - predator: Mf
     prey: Sf
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Mf
     prey: Sp
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Mf
     prey: Sd
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   # medium piscivore
   - predator: Mp
     prey: Zoo
-    encounter_parameters:
-      preference: 0.45
-    consumption_parameters: {}
+    preference: 0.45
 
   - predator: Mp
     prey: Sf
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Mp
     prey: Sp
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Mp
     prey: Sd
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Md
     prey: benthic_prey
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   # large piscivore
   - predator: Lp
     prey: Mf
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Lp
     prey: Mp
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Lp
     prey: Md
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   # large demersal
   - predator: Ld
     prey: Mf
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Ld
     prey: Mp
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Ld
     prey: Md
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
   - predator: Ld
     prey: benthic_prey
-    encounter_parameters:
-      preference: 1.
-    consumption_parameters: {}
+    preference: 1.
 
 ###
 # Specify how growth and reproduction is routed among model constituents.

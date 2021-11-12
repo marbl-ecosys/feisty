@@ -14,15 +14,15 @@ benthic_prey_settings = settings_dict_def['benthic_prey']
 reproduction_routing = settings_dict_def['reproduction_routing']
 
 for i in range(len(settings_dict_def['food_web'])):
-    settings_dict_def['food_web'][i]['encounter_parameters']['preference'] = np.random.rand()
+    settings_dict_def['food_web'][i]['preference'] = np.random.rand()
 
 
 fish_ic_data = 1e-5
 benthic_prey_ic_data = 1e-4
 
-n_zoo = len(settings_dict_def['zooplankton'])
+n_zoo = len(settings_dict_def['zooplankton']['members'])
 n_fish = len(settings_dict_def['fish']['members'])
-n_benthic_prey = 1
+n_benthic_prey = len(settings_dict_def['benthic_prey']['members'])
 
 NX = 10
 NX_2 = 5
