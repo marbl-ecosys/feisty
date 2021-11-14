@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FEISTY Settings &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    <title>FEISTY test cases &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -52,8 +52,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Default settings" href="settings-show-defaults.html" />
-    <link rel="prev" title="feisty.driver.simulate_testcase" href="generated/feisty.driver.simulate_testcase.html" />
+    <link rel="next" title="Running the model" href="driver-example.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -113,8 +113,8 @@
    Usage
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="testcase-datasets.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    FEISTY test cases
   </a>
  </li>
@@ -194,11 +194,11 @@
    </li>
   </ul>
  </li>
- <li class="toctree-l1 current active has-children">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="settings.html">
    FEISTY Settings
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
   <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
@@ -414,9 +414,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/settings.rst"><button type="button"
+        <a class="dropdown-buttons" href="_sources/testcase-datasets.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.rst</button></a>
+                data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -434,7 +434,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fsettings.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Ftestcase-datasets.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -455,6 +455,31 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#idealized-bathymetry">
+   Idealized bathymetry
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#idealized-forcing-data">
+   Idealized forcing data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#visualizing-forcing-data">
+     Visualizing forcing data
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -463,89 +488,198 @@
         
               <div>
                 
-  <div class="section" id="feisty-settings">
-<h1>FEISTY Settings<a class="headerlink" href="#feisty-settings" title="Permalink to this headline">¶</a></h1>
-<p>This page provide a description of the settings used to configure the FEISTY model.</p>
-<dl>
-<dt>loffline</dt><dd><p>Run feisty in offline mode (cap fish ingestion of zooplankton using mortality term).</p>
-</dd>
-<dt>model_settings</dt><dd><dl>
-<p>This section defines aspects of the model structure, including the size classes and names of the model functional types.</p>
-<dt>size_class_bounds</dt><dd><p>Specify the names and bounds for the model size classes [grams].</p>
-<p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">size_class_bounds</span><span class="p">:</span>
-  <span class="nt">small</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0.001</span><span class="p p-Indicator">,</span> <span class="nv">0.5</span><span class="p p-Indicator">]</span>
-  <span class="nt">medium</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0.5</span><span class="p p-Indicator">,</span> <span class="nv">250.</span><span class="p p-Indicator">]</span>
-  <span class="nt">large</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">250.</span><span class="p p-Indicator">,</span> <span class="nv">125000.</span><span class="p p-Indicator">]</span>
+  <div class="tex2jax_ignore mathjax_ignore section" id="feisty-test-cases">
+<h1>FEISTY test cases<a class="headerlink" href="#feisty-test-cases" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">testcase</span></code> module provides some utilites to generate domain and forcing data
+for a handful of <code class="docutils literal notranslate"><span class="pre">feisty</span></code> test cases.</p>
+<p>Here we illustrate some of these utilties.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
 </pre></div>
 </div>
-</dd>
-<dt>functional_type_keys</dt><dd><p>Specify the list of functional types included in the model.
-(Zooplankton are listed here, but are really a forcing, not a prognostic component.)</p>
-</dd>
-<dt>pelagic_demersal_coupling_type_keys</dt><dd><p>List the functional types that engage in pelagic-demersal coupling
-(if enabled in <code class="docutils literal notranslate"><span class="pre">fish</span></code> structure below.)</p>
-</dd>
-<dt>zooplankton_functional_type_keys</dt><dd><p>Specify the “zooplankton” functional types.</p>
-</dd>
-<dt>pelagic_functional_type_keys</dt><dd><p>Specify the functional types that inhabit the pelagic zone.</p>
-</dd>
-<dt>demersal_functional_type_keys</dt><dd><p>Specify the “demersal” functional types.</p>
-</dd>
-<dt>pelagic_demersal_coupling_apply_pref_type_keys</dt><dd><p>When computing pelagic-demersal coupling, apply prey preference-weighting to prey
-biomass sums.</p>
-</dd>
-<dt>benthic_pelagic_depth_cutoff</dt><dd><p>Benthic-pelagic coupling cutoff [meters].</p>
-</dd>
-</dl>
-</dd>
-<dt>zooplankton</dt><dd><p>Define the zooplankton groups used to force FEISTY. List of dictionaries with fields including:</p>
-<ul class="simple">
-<li><p>name</p></li>
-</ul>
-</dd>
-<dt>fish</dt><dd><p>Define the fish that are simulated by FEISTY.
-List of dictionaries specify fish parameters.</p>
-<div class="line-block">
-<div class="line"><strong>name</strong>: The name of the fish.</div>
-<div class="line"><strong>size_class</strong>: The size class (must be in <code class="docutils literal notranslate"><span class="pre">size_class_bounds</span></code> above).</div>
-<div class="line"><strong>functional_type</strong>: The functional type (must be in <code class="docutils literal notranslate"><span class="pre">functional_type_keys</span></code> above).</div>
-<div class="line"><strong>t_frac_pelagic_static</strong>:</div>
-<div class="line"><strong>pelagic_demersal_coupling</strong>: Does this group do pelagic-demersal coupling (boolean).</div>
-<div class="line"><strong>harvest_selectivity</strong>: Proportion of biomass subject to fishing rate (fraction).</div>
-<div class="line"><strong>energy_frac_somatic_growth</strong>: Fraction of available energy routed to growth (fraction).</div>
 </div>
-<p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sf</span>
-  <span class="nt">size_class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">small</span>
-  <span class="nt">functional_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forage</span>
-  <span class="nt">t_frac_pelagic_static</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.</span>
-  <span class="nt">pelagic_demersal_coupling</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-  <span class="nt">harvest_selectivity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.</span>
-  <span class="nt">energy_frac_somatic_growth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.</span>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+
+<span class="kn">import</span> <span class="nn">feisty</span>
 </pre></div>
 </div>
-</dd>
-<dt>benthic_prey</dt><dd><p>Define the benthic prey simulated by FEISTY.</p>
-</dd>
-<dt>food_web</dt><dd><p>Build a food web of predator-prey relationships as a list.
-Here is an example entry:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">predator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sf</span>
-  <span class="nt">prey</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Zoo</span>
-  <span class="nt">preference</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.</span>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_2788</span><span class="o">/</span><span class="mf">2259834359.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> 
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">feisty</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;feisty&#39;
 </pre></div>
 </div>
-</dd>
-<dt>reproduction_routing</dt><dd><p>Specify how growth and reproduction is routed among model constituents.</p>
-</dd>
-<dt>fishing</dt><dd><dl class="simple">
-<p>Parameterize fishing.</p>
-<dt>fishing_rate_per_year</dt><dd><p>Biomass harvest by fishing.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="idealized-bathymetry">
+<h2>Idealized bathymetry<a class="headerlink" href="#idealized-bathymetry" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">domain_dict</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">testcase</span><span class="o">.</span><span class="n">domain_tanh_shelf</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+<span class="n">domain_dict</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;bathymetry&#39;: &lt;xarray.DataArray &#39;bathymetry&#39; (X: 22)&gt;
+ array([  30.04108171,   30.19902725,   31.17873201,   36.8321355 ,
+          61.34734988,  131.85502453,  264.42098685,  437.55383604,
+         609.22301965,  749.85055796,  851.52743149,  919.48569869,
+         962.76570279,  989.53462509, 1005.8032774 , 1015.58739719,
+        1021.43508524, 1024.91716307, 1026.98605941, 1028.21370613,
+        1028.94160815, 1029.37300191])
+ Coordinates:
+   * X        (X) float64 -0.5 -0.2381 0.02381 0.2857 ... 4.214 4.476 4.738 5.0
+ Attributes:
+     long_name:  depth
+     units:      m,
+ &#39;NX&#39;: 22}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">domain_dict</span><span class="p">[</span><span class="s2">&quot;bathymetry&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Bathymetry&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/testcase-datasets_5_0.png" src="_images/testcase-datasets_5_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="idealized-forcing-data">
+<h2>Idealized forcing data<a class="headerlink" href="#idealized-forcing-data" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">testcase</span></code> subpackage of <code class="docutils literal notranslate"><span class="pre">feisty</span></code> includes a utilty to generate idealized
+forcing representing an annual cycle using harmonic function.</p>
+<p>Here is an example dataset returned:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">forcing</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">testcase</span><span class="o">.</span><span class="n">forcing_cyclic</span><span class="p">(</span><span class="n">domain_dict</span><span class="p">)</span>
+<span class="n">forcing</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>xarray.Dataset {
+dimensions:
+	time = 366 ;
+	X = 22 ;
+	zooplankton = 1 ;
+
+variables:
+	float64 time(time) ;
+	float64 X(X) ;
+	float64 T_pelagic(time, X) ;
+		T_pelagic:long_name = T_pelagic ;
+		T_pelagic:units = degC ;
+	float64 T_bottom(time, X) ;
+		T_bottom:long_name = T_bottom ;
+		T_bottom:units = degC ;
+	float64 poc_flux_bottom(time, X) ;
+		poc_flux_bottom:long_name = POC flux ;
+		poc_flux_bottom:units = g/m^2/d ;
+		poc_flux_bottom:b = 0.7 ;
+	&lt;U3 zooplankton(zooplankton) ;
+	float64 zooC(zooplankton, time, X) ;
+		zooC:long_name = Zooplankton biomass ;
+		zooC:units = g/m^2 ;
+		zooC:harmonic_parms = Zoo = {&#39;mu&#39;: 4.0, &#39;amp_fraction&#39;: 0.2, &#39;phase&#39;: 10.0} ;
+	float64 zoo_mort(zooplankton, time, X) ;
+		zoo_mort:long_name = Zooplankton quadratic mortality ;
+		zoo_mort:units = g/m^2/d ;
+
+// global attributes:
+	:note = Idealized cyclic forcing for FEISTY model. ;
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="visualizing-forcing-data">
+<h3>Visualizing forcing data<a class="headerlink" href="#visualizing-forcing-data" title="Permalink to this headline">¶</a></h3>
+<p>The temperature field looks like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">forcing</span><span class="o">.</span><span class="n">T_pelagic</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">forcing</span><span class="o">.</span><span class="n">T_bottom</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/testcase-datasets_9_0.png" src="_images/testcase-datasets_9_0.png" />
+</div>
+</div>
+<p>Or at a single <code class="docutils literal notranslate"><span class="pre">X</span></code> point:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">forcing</span><span class="o">.</span><span class="n">T_pelagic</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;T_pelagic&quot;</span><span class="p">)</span>
+<span class="n">forcing</span><span class="o">.</span><span class="n">T_bottom</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;T_bottom&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/testcase-datasets_11_0.png" src="_images/testcase-datasets_11_0.png" />
+</div>
+</div>
+<p>Zooplankton and POC flux</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zoo</span> <span class="o">=</span> <span class="n">forcing</span><span class="o">.</span><span class="n">zooC</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">zoo</span><span class="o">.</span><span class="n">zooplankton</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">zoo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zooplankton</span><span class="o">=</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/testcase-datasets_13_0.png" src="_images/testcase-datasets_13_0.png" />
+</div>
+</div>
+<p>Zooplankton mortality</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zoo</span> <span class="o">=</span> <span class="n">forcing</span><span class="o">.</span><span class="n">zoo_mort</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">zoo</span><span class="o">.</span><span class="n">zooplankton</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">zoo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zooplankton</span><span class="o">=</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/testcase-datasets_15_0.png" src="_images/testcase-datasets_15_0.png" />
+</div>
+</div>
+<p>POC flux</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">forcing</span><span class="o">.</span><span class="n">poc_flux_bottom</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/testcase-datasets_17_0.png" src="_images/testcase-datasets_17_0.png" />
+</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -574,17 +708,17 @@ Here is an example entry:</p>
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="generated/feisty.driver.simulate_testcase.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="usage.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">feisty.driver.simulate_testcase</p>
+            <p class="prev-next-title">Usage</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="settings-show-defaults.html" title="next page">
+    <a class='right-next' id="next-link" href="driver-example.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Default settings</p>
+        <p class="prev-next-title">Running the model</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

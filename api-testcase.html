@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FEISTY Settings &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    <title>FEISTY testcase &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -52,8 +52,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Default settings" href="settings-show-defaults.html" />
-    <link rel="prev" title="feisty.driver.simulate_testcase" href="generated/feisty.driver.simulate_testcase.html" />
+    <link rel="next" title="feisty.testcase.domain_tanh_shelf" href="generated/feisty.testcase.domain_tanh_shelf.html" />
+    <link rel="prev" title="feisty.feisty_instance_type.compute_tendencies" href="generated/feisty.feisty_instance_type.compute_tendencies.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -150,11 +150,11 @@
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="api-testcase.html">
+ <li class="toctree-l1 current active has-children">
+  <a class="current reference internal" href="#">
    FEISTY testcase
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
   <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
@@ -194,11 +194,11 @@
    </li>
   </ul>
  </li>
- <li class="toctree-l1 current active has-children">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="settings.html">
    FEISTY Settings
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
   <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
@@ -414,7 +414,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/settings.rst"><button type="button"
+        <a class="dropdown-buttons" href="_sources/api-testcase.rst"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.rst</button></a>
         <!-- Download PDF via print -->
@@ -434,7 +434,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fsettings.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fapi-testcase.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -455,6 +455,19 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#testcase-utilities">
+   Testcase utilities
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -463,89 +476,25 @@
         
               <div>
                 
-  <div class="section" id="feisty-settings">
-<h1>FEISTY Settings<a class="headerlink" href="#feisty-settings" title="Permalink to this headline">¶</a></h1>
-<p>This page provide a description of the settings used to configure the FEISTY model.</p>
-<dl>
-<dt>loffline</dt><dd><p>Run feisty in offline mode (cap fish ingestion of zooplankton using mortality term).</p>
-</dd>
-<dt>model_settings</dt><dd><dl>
-<p>This section defines aspects of the model structure, including the size classes and names of the model functional types.</p>
-<dt>size_class_bounds</dt><dd><p>Specify the names and bounds for the model size classes [grams].</p>
-<p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">size_class_bounds</span><span class="p">:</span>
-  <span class="nt">small</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0.001</span><span class="p p-Indicator">,</span> <span class="nv">0.5</span><span class="p p-Indicator">]</span>
-  <span class="nt">medium</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0.5</span><span class="p p-Indicator">,</span> <span class="nv">250.</span><span class="p p-Indicator">]</span>
-  <span class="nt">large</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">250.</span><span class="p p-Indicator">,</span> <span class="nv">125000.</span><span class="p p-Indicator">]</span>
-</pre></div>
-</div>
-</dd>
-<dt>functional_type_keys</dt><dd><p>Specify the list of functional types included in the model.
-(Zooplankton are listed here, but are really a forcing, not a prognostic component.)</p>
-</dd>
-<dt>pelagic_demersal_coupling_type_keys</dt><dd><p>List the functional types that engage in pelagic-demersal coupling
-(if enabled in <code class="docutils literal notranslate"><span class="pre">fish</span></code> structure below.)</p>
-</dd>
-<dt>zooplankton_functional_type_keys</dt><dd><p>Specify the “zooplankton” functional types.</p>
-</dd>
-<dt>pelagic_functional_type_keys</dt><dd><p>Specify the functional types that inhabit the pelagic zone.</p>
-</dd>
-<dt>demersal_functional_type_keys</dt><dd><p>Specify the “demersal” functional types.</p>
-</dd>
-<dt>pelagic_demersal_coupling_apply_pref_type_keys</dt><dd><p>When computing pelagic-demersal coupling, apply prey preference-weighting to prey
-biomass sums.</p>
-</dd>
-<dt>benthic_pelagic_depth_cutoff</dt><dd><p>Benthic-pelagic coupling cutoff [meters].</p>
-</dd>
-</dl>
-</dd>
-<dt>zooplankton</dt><dd><p>Define the zooplankton groups used to force FEISTY. List of dictionaries with fields including:</p>
-<ul class="simple">
-<li><p>name</p></li>
-</ul>
-</dd>
-<dt>fish</dt><dd><p>Define the fish that are simulated by FEISTY.
-List of dictionaries specify fish parameters.</p>
-<div class="line-block">
-<div class="line"><strong>name</strong>: The name of the fish.</div>
-<div class="line"><strong>size_class</strong>: The size class (must be in <code class="docutils literal notranslate"><span class="pre">size_class_bounds</span></code> above).</div>
-<div class="line"><strong>functional_type</strong>: The functional type (must be in <code class="docutils literal notranslate"><span class="pre">functional_type_keys</span></code> above).</div>
-<div class="line"><strong>t_frac_pelagic_static</strong>:</div>
-<div class="line"><strong>pelagic_demersal_coupling</strong>: Does this group do pelagic-demersal coupling (boolean).</div>
-<div class="line"><strong>harvest_selectivity</strong>: Proportion of biomass subject to fishing rate (fraction).</div>
-<div class="line"><strong>energy_frac_somatic_growth</strong>: Fraction of available energy routed to growth (fraction).</div>
-</div>
-<p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sf</span>
-  <span class="nt">size_class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">small</span>
-  <span class="nt">functional_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forage</span>
-  <span class="nt">t_frac_pelagic_static</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.</span>
-  <span class="nt">pelagic_demersal_coupling</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-  <span class="nt">harvest_selectivity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.</span>
-  <span class="nt">energy_frac_somatic_growth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.</span>
-</pre></div>
-</div>
-</dd>
-<dt>benthic_prey</dt><dd><p>Define the benthic prey simulated by FEISTY.</p>
-</dd>
-<dt>food_web</dt><dd><p>Build a food web of predator-prey relationships as a list.
-Here is an example entry:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">predator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sf</span>
-  <span class="nt">prey</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Zoo</span>
-  <span class="nt">preference</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.</span>
-</pre></div>
-</div>
-</dd>
-<dt>reproduction_routing</dt><dd><p>Specify how growth and reproduction is routed among model constituents.</p>
-</dd>
-<dt>fishing</dt><dd><dl class="simple">
-<p>Parameterize fishing.</p>
-<dt>fishing_rate_per_year</dt><dd><p>Biomass harvest by fishing.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<div class="toctree-wrapper compound">
+  <div class="section" id="feisty-testcase">
+<h1>FEISTY testcase<a class="headerlink" href="#feisty-testcase" title="Permalink to this headline">¶</a></h1>
+<p>This page provides an auto-generated summary of the <cite>feisty</cite> API.</p>
+<div class="section" id="testcase-utilities">
+<h2>Testcase utilities<a class="headerlink" href="#testcase-utilities" title="Permalink to this headline">¶</a></h2>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/feisty.testcase.domain_tanh_shelf.html#feisty.testcase.domain_tanh_shelf" title="feisty.testcase.domain_tanh_shelf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">domain_tanh_shelf</span></code></a>([nx])</p></td>
+<td><p>Compute idealized bathymetry analytically using <code class="docutils literal notranslate"><span class="pre">tanh</span></code> function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/feisty.testcase.forcing_cyclic.html#feisty.testcase.forcing_cyclic" title="feisty.testcase.forcing_cyclic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forcing_cyclic</span></code></a>(domain_dict[, nt, zoo_spec])</p></td>
+<td><p>Return forcing data for a test case using harmonic functions to generate seasonally-varying temperature, POC flux and zooplankton biomass forcing.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -574,17 +523,17 @@ Here is an example entry:</p>
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="generated/feisty.driver.simulate_testcase.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="generated/feisty.feisty_instance_type.compute_tendencies.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">feisty.driver.simulate_testcase</p>
+            <p class="prev-next-title">feisty.feisty_instance_type.compute_tendencies</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="settings-show-defaults.html" title="next page">
+    <a class='right-next' id="next-link" href="generated/feisty.testcase.domain_tanh_shelf.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Default settings</p>
+        <p class="prev-next-title">feisty.testcase.domain_tanh_shelf</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
