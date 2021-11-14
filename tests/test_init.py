@@ -32,7 +32,7 @@ NX = 10
 NX_2 = 5
 domain_dict = {
     'NX': NX,
-    'depth_of_seafloor': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
+    'bathymetry': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
 }
 
 F = feisty.feisty_instance_type(
@@ -79,12 +79,12 @@ def test_domain_values():
     """test domain module init"""
 
     assert domain._N_points == domain_dict['NX']
-    assert (domain.ocean_depth == domain_dict['depth_of_seafloor']).all()
+    assert (domain.ocean_depth == domain_dict['bathymetry']).all()
 
 
-def test_domain_bad_depth_of_seafloor():
+def test_domain_bad_bathymetry():
     """ensure that you can't initialize with wrong domain lengths"""
-    domain_dict_bad = {'NX': NX, 'depth_of_seafloor': np.ones(NX * 2) * 1500.0}
+    domain_dict_bad = {'NX': NX, 'bathymetry': np.ones(NX * 2) * 1500.0}
     with pytest.raises(AssertionError):
         feisty.feisty_instance_type(
             domain_dict=domain_dict_bad,
@@ -351,6 +351,8 @@ def test_init_tendency_arrays():
     assert (ds.benthic_prey == [b['name'] for b in benthic_prey_settings['members']]).all()
 
     assert set(ds.coords.keys()) == {
+        'X',
+        'group',
         'zooplankton',
         'fish',
         'benthic_prey',
@@ -371,7 +373,6 @@ def test_init_tendency_arrays():
         'growth_rate',
         'reproduction_rate',
         'recruitment_flux',
-        'total_tendency',
         'fish_catch_rate',
         'encounter_rate_pred',
         'consumption_rate_max_pred',
@@ -380,6 +381,7 @@ def test_init_tendency_arrays():
 
     zooplankton_coord_vars = ['predation_zoo_flux']
     benthic_prey_coord_vars = ['benthic_biomass_new']
+    group_coord_vars = ['total_tendency']
     feeding_link_coord_vars = [
         'encounter_rate_link',
         'consumption_rate_link',
@@ -393,6 +395,10 @@ def test_init_tendency_arrays():
         if key in fish_coord_vars:
             assert da.dims == ('fish', 'X')
             assert da.shape == (n_fish, NX)
+            checked.append(key)
+        elif key in group_coord_vars:
+            assert da.dims == ('group', 'X')
+            assert da.shape == (n_fish, NX)  # TODO: fix when benthic prey are folded in
             checked.append(key)
         elif key in benthic_prey_coord_vars:
             assert da.dims == ('benthic_prey', 'X')

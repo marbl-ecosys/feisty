@@ -7,7 +7,11 @@ parts:
   - caption: User guide
     chapters:
       - file: usage
-      - file: api
+      - file: testcase-datasets
+      - file: driver-example
+      - file: api-interface
+      - file: api-testcase
+      - file: api-driver
       - file: settings
         sections:
           - file: settings-show-defaults

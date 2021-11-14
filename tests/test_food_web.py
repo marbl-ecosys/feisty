@@ -31,7 +31,7 @@ NX = 10
 NX_2 = 5
 domain_dict = {
     'NX': NX,
-    'depth_of_seafloor': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
+    'bathymetry': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
 }
 
 F = feisty.feisty_instance_type(

@@ -5,17 +5,23 @@ _N_points = None
 ocean_depth = None
 
 
-def init_module_variables(NX, depth_of_seafloor):
+def init_module_variables(NX, bathymetry):
     """initialize module variables"""
     global _N_points
     global ocean_depth
 
     assert (
-        len(depth_of_seafloor) == NX
-    ), f'unexpected length for depth_of_seafloor; expected {NX}, received {len(depth_of_seafloor)}'
+        len(bathymetry) == NX
+    ), f'unexpected length for bathymetry; expected {NX}, received {len(bathymetry)}'
 
     _N_points = NX
-    ocean_depth = depth_of_seafloor
+    if isinstance(bathymetry, xr.DataArray):
+        assert 'X' in bathymetry.coords
+    else:
+        bathymetry = xr.DataArray(bathymetry, dims=('X'), name='ocean_depth')
+        bathymetry = bathymetry.assign_coords({'X': bathymetry})
+
+    ocean_depth = bathymetry
 
 
 def init_array(name=None, constant=None, attrs={}):
@@ -24,6 +30,7 @@ def init_array(name=None, constant=None, attrs={}):
     return xr.DataArray(
         np.ones((_N_points,)) * x,
         dims=('X',),
+        coords={'X': ocean_depth.X},
         attrs=attrs,
         name=name,
     )

@@ -18,6 +18,7 @@ dependencies:
   - pre-commit
   - pytest
   - pytest-cov
+  - scipy
   - xarray
   - pip:
       - sphinx-click

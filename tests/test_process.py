@@ -31,7 +31,7 @@ NX = 10
 NX_2 = 5
 domain_dict = {
     'NX': NX,
-    'depth_of_seafloor': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
+    'bathymetry': np.concatenate((np.ones(NX_2) * 1500.0, np.ones(NX_2) * 15.0)),
 }
 
 F = feisty.feisty_instance_type(
@@ -74,7 +74,7 @@ def test_t_frac_pelagic():
 
     pelagic_functional_types = model_settings['pelagic_functional_type_keys']
     demersal_functional_types = model_settings['demersal_functional_type_keys']
-    ocean_depth = domain_dict['depth_of_seafloor']
+    ocean_depth = domain_dict['bathymetry']
     PI_be_cutoff = model_settings['benthic_pelagic_depth_cutoff']
 
     for i, fish in enumerate(F.fish):

@@ -15,8 +15,8 @@ class feisty_instance_type(object):
       Dictionary containing domain information, for example::
 
           domain_dict = {
-              'NX': len(depth_of_seafloor_data),
-              'depth_of_seafloor': depth_of_seafloor_data)),
+              'NX': len(bathymetry_data),
+              'bathymetry': bathymetry_data)),
           }
 
     settings_dict : dict, optional
@@ -50,16 +50,15 @@ class feisty_instance_type(object):
     def __init__(
         self,
         domain_dict,
-        settings_dict=None,
-        fish_ic_data=1e-5,
-        benthic_prey_ic_data=1e-5,
+        settings_dict={},
+        fish_ic_data=None,
+        benthic_prey_ic_data=None,
     ):
         """Initialize the ``feisty_instance_type``."""
 
         self.domain_dict = domain_dict
         self.settings_dict = settings.get_defaults()
-        if settings_dict is not None:
-            self.settings_dict.update(settings_dict)
+        self.settings_dict.update(settings_dict)
 
         self.loffline = self.settings_dict['loffline']
         self._init_domain(self.domain_dict)
@@ -69,6 +68,9 @@ class feisty_instance_type(object):
         self._init_zooplankton(self.settings_dict['zooplankton'])
         self._init_fish_settings(self.settings_dict['fish'])
         self._init_benthic_prey_settings(self.settings_dict['benthic_prey'])
+
+        fish_ic_data = 1e-5 if fish_ic_data is None else fish_ic_data
+        benthic_prey_ic_data = 1e-5 if benthic_prey_ic_data is None else benthic_prey_ic_data
         self._init_biomass(fish_ic_data, benthic_prey_ic_data)
 
         self._init_food_web(self.settings_dict['food_web'])
@@ -149,9 +151,15 @@ class feisty_instance_type(object):
         n = len(group_coord)
         self.ndx_zoo = np.arange(0, self.n_zoo)
         self.ndx_fish = np.arange(self.n_zoo, self.n_zoo + self.n_fish)
-        self.ndx_benthic_prey = np.arange(n - 1, n)
+        self.ndx_benthic_prey = np.arange(self.n_zoo + self.n_fish, n)
 
-        self.biomass = domain.init_array_2d('group', group_coord)
+        self.ndx_prognostic = np.concatenate((self.ndx_fish, self.ndx_benthic_prey))
+        self.prog_ndx_fish = np.arange(0, self.n_fish)
+        self.prog_ndx_benthic_prey = np.arange(self.n_fish, self.n_fish + self.n_benthic_prey)
+
+        # TODO: make private
+        self.biomass = domain.init_array_2d('group', group_coord, name='biomass')
+
         self.set_fish_biomass(fish_ic_data)
         self.set_benthic_prey_biomass(benthic_prey_ic_data)
 
@@ -245,6 +253,10 @@ class feisty_instance_type(object):
             ), 'data has the wrong dimensions'
 
         self.biomass.data[self.ndx_benthic_prey, :] = data
+
+    def get_prognostic(self):
+        """Return array of prognostic biomass components."""
+        return self.biomass.isel(group=self.ndx_prognostic)
 
     def _compute_t_frac_pelagic(self, reset=False):
         process.compute_t_frac_pelagic(
@@ -480,8 +492,6 @@ def _init_tendency_data(zoo_list, fish_list, benthic_prey_list, food_web):
 
     pred_names = [link.predator.name for link in food_web]
     prey_names = [link.prey.name for link in food_web]
-    print(pred_names)
-    print(prey_names)
     feeding_link_coord = xr.DataArray(
         [f'{pred}_{prey}' for pred, prey in zip(pred_names, prey_names)], dims='feeding_link'
     )
@@ -575,12 +585,6 @@ def _init_tendency_data(zoo_list, fish_list, benthic_prey_list, food_web):
         name='recruitment_flux',
         attrs={'long_name': 'Recruitment from smaller size classes or reproduction'},
     )
-    ds['total_tendency'] = domain.init_array_2d(
-        coord_name='fish',
-        coord_values=fish_names,
-        name='total_tendency',
-        attrs={'long_name': 'Total time tendency'},
-    )
     ds['fish_catch_rate'] = domain.init_array_2d(
         coord_name='fish',
         coord_values=fish_names,
@@ -590,6 +594,14 @@ def _init_tendency_data(zoo_list, fish_list, benthic_prey_list, food_web):
     ds['benthic_biomass_new'] = domain.init_array_2d(
         coord_name='benthic_prey',
         coord_values=benthic_prey_names,
+    )
+
+    # TODO: include benthic_prey once timestepping has been moved out of feisty
+    ds['total_tendency'] = domain.init_array_2d(
+        coord_name='group',
+        coord_values=fish_names,
+        name='total_tendency',
+        attrs={'long_name': 'Total time tendency'},
     )
 
     ds['encounter_rate_pred'] = domain.init_array_2d(
