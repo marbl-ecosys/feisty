@@ -160,8 +160,8 @@ class feisty_instance_type(object):
         # TODO: make private
         self.biomass = domain.init_array_2d('group', group_coord, name='biomass')
 
-        self.set_fish_biomass(fish_ic_data)
-        self.set_benthic_prey_biomass(benthic_prey_ic_data)
+        self._set_fish_biomass(fish_ic_data)
+        self._set_benthic_prey_biomass(benthic_prey_ic_data)
 
     def _init_food_web(self, feeding_settings):
         """initialize food_web"""
@@ -189,7 +189,7 @@ class feisty_instance_type(object):
             self.food_web,
         )
 
-    def set_fish_biomass(self, data):
+    def _set_fish_biomass(self, data):
         """Set the values of the fish biomass data.
 
         Parameters
@@ -206,7 +206,7 @@ class feisty_instance_type(object):
 
         self.biomass.data[self.ndx_fish, :] = data
 
-    def set_zoo_biomass(self, data):
+    def _set_zoo_biomass(self, data):
         """Set the values of the zooplankton biomass data.
 
         Parameters
@@ -223,7 +223,7 @@ class feisty_instance_type(object):
 
         self.biomass.data[self.ndx_zoo, :] = data
 
-    def set_zoo_mortality(self, data):
+    def _set_zoo_mortality(self, data):
         """Set the values of the zooplankton mortality data.
 
         Parameters
@@ -237,7 +237,7 @@ class feisty_instance_type(object):
 
         self.zoo_mortality.data[:, :] = data
 
-    def set_benthic_prey_biomass(self, data):
+    def _set_benthic_prey_biomass(self, data):
         """Set the values of the benthic prey biomass data.
 
         Parameters
@@ -287,7 +287,7 @@ class feisty_instance_type(object):
             self.food_web,
             self.gcm_state.poc_flux,
         )
-        self.set_benthic_prey_biomass(self.tendency_data.benthic_biomass_new)
+        self._set_benthic_prey_biomass(self.tendency_data.benthic_biomass_new)
 
     def _compute_pred_encounter_consumption_max(self):
         process.compute_pred_encounter_consumption_max(
@@ -449,10 +449,10 @@ class feisty_instance_type(object):
         """
 
         # update state information
-        self.set_fish_biomass(fish_biomass)
-        self.set_benthic_prey_biomass(benthic_prey_biomass)
-        self.set_zoo_biomass(zooplankton_biomass)
-        self.set_zoo_mortality(zoo_mortality_data)
+        self._set_fish_biomass(fish_biomass)
+        self._set_benthic_prey_biomass(benthic_prey_biomass)
+        self._set_zoo_biomass(zooplankton_biomass)
+        self._set_zoo_mortality(zoo_mortality_data)
         self.gcm_state.update(**gcm_state_update_kwargs)
 
         # advance benthic prey concentrations

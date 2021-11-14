@@ -66,9 +66,9 @@ def test_t_frac_pelagic():
     # generate random biomass data
     data = xr.full_like(F.biomass, fill_value=0.0)
     data.data[:, :] = np.random.rand(*data.shape)
-    F.set_zoo_biomass(data.isel(group=F.ndx_zoo))
-    F.set_fish_biomass(data.isel(group=F.ndx_fish))
-    F.set_benthic_prey_biomass(data.isel(group=F.ndx_benthic_prey))
+    F._set_zoo_biomass(data.isel(group=F.ndx_zoo))
+    F._set_fish_biomass(data.isel(group=F.ndx_fish))
+    F._set_benthic_prey_biomass(data.isel(group=F.ndx_benthic_prey))
 
     F._compute_t_frac_pelagic()
 
@@ -137,9 +137,9 @@ def test_t_frac_pelagic():
         assert (F.tendency_data.t_frac_pelagic.data[i, :] == t_frac_pelagic).all()
 
     # put it back
-    F.set_zoo_biomass(zoo_data_prior)
-    F.set_fish_biomass(fish_data_prior)
-    F.set_benthic_prey_biomass(benthic_data_prior)
+    F._set_zoo_biomass(zoo_data_prior)
+    F._set_fish_biomass(fish_data_prior)
+    F._set_benthic_prey_biomass(benthic_data_prior)
 
     F._compute_t_frac_pelagic(reset=True)
     for i, fish in enumerate(F.fish):
@@ -308,7 +308,7 @@ def test_compute_tendencies():
         poc_flux=poc_flux,
     )
 
-    F.set_fish_biomass(fish_biomass_prior)
-    F.set_zoo_biomass(zooplankton_prior)
-    F.set_benthic_prey_biomass(benthic_data_prior)
-    F.set_zoo_mortality(zoo_mortality_data * 0.0)
+    F._set_fish_biomass(fish_biomass_prior)
+    F._set_zoo_biomass(zooplankton_prior)
+    F._set_benthic_prey_biomass(benthic_data_prior)
+    F._set_zoo_mortality(zoo_mortality_data * 0.0)

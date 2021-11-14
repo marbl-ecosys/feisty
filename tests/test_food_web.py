@@ -221,9 +221,9 @@ def test_get_prey_biomass():
     fish_data_prior = F.biomass.isel(group=F.ndx_fish).data
     benthic_data_prior = F.biomass.isel(group=F.ndx_benthic_prey).data
 
-    F.set_zoo_biomass(data.isel(group=F.ndx_zoo))
-    F.set_fish_biomass(data.isel(group=F.ndx_fish))
-    F.set_benthic_prey_biomass(data.isel(group=F.ndx_benthic_prey))
+    F._set_zoo_biomass(data.isel(group=F.ndx_zoo))
+    F._set_fish_biomass(data.isel(group=F.ndx_fish))
+    F._set_benthic_prey_biomass(data.isel(group=F.ndx_benthic_prey))
 
     # ensure that the prey biomass returned matchs that input
     for pred_obj, prey_obj in zip(F.food_web.predator_obj, F.food_web.prey_obj):
@@ -288,9 +288,9 @@ def test_get_prey_biomass():
         assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
     # put it back
-    F.set_zoo_biomass(zoo_data_prior)
-    F.set_fish_biomass(fish_data_prior)
-    F.set_benthic_prey_biomass(benthic_data_prior)
+    F._set_zoo_biomass(zoo_data_prior)
+    F._set_fish_biomass(fish_data_prior)
+    F._set_benthic_prey_biomass(benthic_data_prior)
 
 
 def test_get_prey_biomass_dne():
@@ -392,9 +392,9 @@ def test_compute_feeding_1():
     # generate random biomass data
     data = xr.full_like(F.biomass, fill_value=0.0)
     data.data[:, :] = np.ones(data.shape)
-    F.set_zoo_biomass(data.isel(group=F.ndx_zoo))
-    F.set_fish_biomass(data.isel(group=F.ndx_fish))
-    F.set_benthic_prey_biomass(data.isel(group=F.ndx_benthic_prey))
+    F._set_zoo_biomass(data.isel(group=F.ndx_zoo))
+    F._set_fish_biomass(data.isel(group=F.ndx_fish))
+    F._set_benthic_prey_biomass(data.isel(group=F.ndx_benthic_prey))
 
     F._compute_t_frac_pelagic(reset=True)
     F._compute_temperature()
@@ -438,9 +438,9 @@ def test_compute_feeding_1():
     # F.food_web._rescale_consumption(F.biomass, zoo_mortality=F.zoo_mortality)
     # assert 0
     # put it back
-    F.set_zoo_biomass(zoo_data_prior)
-    F.set_fish_biomass(fish_data_prior)
-    F.set_benthic_prey_biomass(benthic_data_prior)
+    F._set_zoo_biomass(zoo_data_prior)
+    F._set_fish_biomass(fish_data_prior)
+    F._set_benthic_prey_biomass(benthic_data_prior)
 
 
 def test_rescale_zoo_consumption():
@@ -450,7 +450,7 @@ def test_rescale_zoo_consumption():
     zoo_mortality_data = np.ones((n_zoo, NX))
 
     F.tendency_data.consumption_rate_link[:, :] = data
-    F.set_zoo_mortality(zoo_mortality_data * 0.0)
+    F._set_zoo_mortality(zoo_mortality_data * 0.0)
 
     for i, link in enumerate(F.food_web):
         assert (F.tendency_data.consumption_rate_link[i, :] == data[i, :]).all()

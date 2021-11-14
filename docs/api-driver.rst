@@ -14,4 +14,6 @@ Driver API
    :toctree: generated/
 
    simulation
+   simulation.run
+   simulation.ds
    simulate_testcase

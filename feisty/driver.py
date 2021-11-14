@@ -115,12 +115,17 @@ class simulation(object):
         zeros = xr.full_like(self.time, fill_value=0.0)
         ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
         ds_prog = zeros * self.obj.get_prognostic().to_dataset()
-        self.ds = xr.merge((ds_prog, ds_diag))
+        self._ds = xr.merge((ds_prog, ds_diag))
 
     def _post_data(self, n, state_t):
-        self.ds.biomass[n, :] = state_t
+        self._ds.biomass[n, :] = state_t
         for v in self._diagnostic_names:
-            self.ds[v][n, :] = self.obj.tendency_data[v]
+            self._ds[v][n, :] = self.obj.tendency_data[v]
+
+    @property
+    def ds(self):
+        """Data comprising the output from a ``feisty`` simulation."""
+        return self._ds
 
     def run(self, nt, file_out=None):
         """Integrate the FEISTY model.
@@ -169,10 +174,19 @@ class simulation(object):
             - write output
         """
         if file_out is not None:
-            self.ds.to_netcdf(file_out)
+            self._ds.to_netcdf(file_out)
 
 
-class simulate_testcase(simulation):
+def simulate_testcase(
+    domain_name,
+    forcing_name,
+    settings_in={},
+    fish_ic_data=None,
+    benthic_prey_ic_data=None,
+    domain_kwargs={},
+    forcing_kwargs={},
+):
+
     """Return an instance of ``feisty.driver.simulation`` for ``testcase`` data.
 
     Parameters
@@ -198,27 +212,62 @@ class simulate_testcase(simulation):
 
     forcing_kwargs : dict
       Keyword arguments to pass to forcing generation function.
+
+    Returns
+    -------
+
+    sim : feisty.driver.simulation
+      An instance of the ``feisty.driver.simulation`` ready for integration.
+
+    Examples
+    --------
+
+    Instantiate a ``simulation``::
+
+      >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
+
+    Integrate the model for 365 days::
+
+       >>> testcase.run(365)
+
+    Access the output::
+
+      >>> testcase.ds.info()
+      xarray.Dataset {
+      dimensions:
+              X = 22 ;
+              group = 9 ;
+              time = 365 ;
+              fish = 8 ;
+      variables:
+              float64 X(X) ;
+              <U12 group(group) ;
+              float64 biomass(time, group, X) ;
+              <U2 fish(fish) ;
+              float64 T_habitat(time, fish, X) ;
+              float64 ingestion_rate(time, fish, X) ;
+              float64 predation_flux(time, fish, X) ;
+              float64 predation_rate(time, fish, X) ;
+              float64 metabolism_rate(time, fish, X) ;
+              float64 mortality_rate(time, fish, X) ;
+              float64 energy_avail_rate(time, fish, X) ;
+              float64 growth_rate(time, fish, X) ;
+              float64 reproduction_rate(time, fish, X) ;
+              float64 recruitment_flux(time, fish, X) ;
+              float64 fish_catch_rate(time, fish, X) ;
+      // global attributes:
+        }
     """
 
-    def __init__(
-        self,
-        domain_name,
-        forcing_name,
-        settings_in={},
-        fish_ic_data=None,
-        benthic_prey_ic_data=None,
-        domain_kwargs={},
-        forcing_kwargs={},
-    ):
-        assert domain_name in _test_domain
-        assert forcing_name in _test_forcing
+    assert domain_name in _test_domain
+    assert forcing_name in _test_forcing
 
-        domain_dict = _test_domain[domain_name](**domain_kwargs)
-        forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
-        super().__init__(
-            domain_dict,
-            forcing,
-            settings_in,
-            fish_ic_data,
-            benthic_prey_ic_data,
-        )
+    domain_dict = _test_domain[domain_name](**domain_kwargs)
+    forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
+    return simulation(
+        domain_dict,
+        forcing,
+        settings_in,
+        fish_ic_data,
+        benthic_prey_ic_data,
+    )
