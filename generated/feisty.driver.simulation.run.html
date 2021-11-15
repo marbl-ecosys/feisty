@@ -477,11 +477,20 @@
 <h1>feisty.driver.simulation.run<a class="headerlink" href="#feisty-driver-simulation-run" title="Permalink to this headline">¶</a></h1>
 <dl class="py method">
 <dt id="feisty.driver.simulation.run">
-<code class="sig-prename descclassname"><span class="pre">simulation.</span></code><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.driver.simulation.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">simulation.</span></code><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euler'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.driver.simulation.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Integrate the FEISTY model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>nt</strong> (<em>integer</em>) – Number of timesteps to run.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nt</strong> (<em>integer</em>) – Number of timesteps to run.</p></li>
+<li><p><strong>file_out</strong> (<em>string</em>) – File name to write model output data.</p></li>
+<li><p><strong>method</strong> (<em>string</em>) – <p>Method of solving feisty equations. Options: [‘euler’, ‘Radau’, ‘RK45’].</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only <code class="docutils literal notranslate"><span class="pre">method='euler'</span></code> is supported currently.</p>
+</div>
+</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
