@@ -25,6 +25,15 @@ def test_forcing_cyclic():
     }
 
 
+def test_not_implemented():
+    """ensure appropriate failures with bad method."""
+    testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
+    with pytest.raises(ValueError):
+        testcase.run(1, method='intuition')
+    with pytest.raises(NotImplementedError):
+        testcase.run(1, method='Radau')
+
+
 def test_read_settings():
     """ensure we can update default settings from a file or dict"""
     sd_default = feisty.settings.get_defaults()
@@ -67,11 +76,9 @@ def test_simulate_testcase_init_1():
 
 def test_simulate_testcase_init_2():
     testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
-    testcase._init_time_coord(365)
+
+    testcase._init_output_arrays(365)
     assert (testcase.time == np.arange(1.0, 366.0, 1.0)).all()
-
-    testcase._init_output_arrays()
-
     assert isinstance(testcase.ds, xr.Dataset)
     assert set(testcase.ds.data_vars) == {'biomass'}.union(testcase._diagnostic_names)
     assert len(testcase.ds.group) == len(testcase.obj.ndx_prognostic)

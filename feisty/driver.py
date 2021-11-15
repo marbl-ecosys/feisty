@@ -8,6 +8,9 @@ from . import testcase
 from .core import settings as settings_mod
 from .core.interface import feisty_instance_type
 
+path_to_here = os.path.dirname(os.path.realpath(__file__))
+
+
 _test_domain = dict(
     tanh_shelf=testcase.domain_tanh_shelf,
 )
@@ -102,16 +105,13 @@ class simulation(object):
     def _forcing_t(self, t):
         return self.forcing.interp(time=t)
 
-    def _init_time_coord(self, nt):
+    def _init_output_arrays(self, nt):
         self.time = xr.DataArray(
             np.arange(1.0, nt + 1.0, 1.0),
             dims=('time'),
             name='time',
             attrs={'long_name': 'time'},
         )
-
-    def _init_output_arrays(self):
-
         zeros = xr.full_like(self.time, fill_value=0.0)
         ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
         ds_prog = zeros * self.obj.get_prognostic().to_dataset()
@@ -127,7 +127,46 @@ class simulation(object):
         """Data comprising the output from a ``feisty`` simulation."""
         return self._ds
 
-    def run(self, nt, file_out=None):
+    def _compute_tendency(self, t, state_t):
+        """Return the feisty time tendency."""
+        gcm_data_t = self._forcing_t(t)
+        return self.obj.compute_tendencies(
+            state_t.isel(group=self.obj.prog_ndx_fish),
+            state_t.isel(group=self.obj.prog_ndx_benthic_prey),
+            gcm_data_t.zooC,
+            gcm_data_t.zoo_mort,
+            T_pelagic=gcm_data_t.T_pelagic,
+            T_bottom=gcm_data_t.T_bottom,
+            poc_flux=gcm_data_t.poc_flux_bottom,
+        )
+
+    def _solve(self, nt, method):
+        """Call a numerical ODE solver to integrate the feisty model in time."""
+
+        state_t = self.obj.get_prognostic().copy()
+        self._init_output_arrays(nt)
+        print('here')
+        if method == 'euler':
+            self._solve_foward_euler(nt, state_t)
+
+        elif method in ['Radau', 'RK45']:
+            # TODO: make input arguments
+            self._solve_scipy(nt, state_t, method)
+        else:
+            raise ValueError(f'unknown method: {method}')
+
+    def _solve_foward_euler(self, nt, state_t):
+        """use forward-euler to solve feisty model"""
+        for n in range(nt):
+            dfdt = self._compute_tendency(self.time[n], state_t)
+            state_t[self.obj.prog_ndx_fish, :] = state_t[self.obj.prog_ndx_fish, :] + dfdt * self.dt
+            self._post_data(n, state_t)
+
+    def _solve_scipy(self, nt, state_t, method):
+        """use a SciPy solver to integrate the model equation."""
+        raise NotImplementedError('scipy solvers not implemented')
+
+    def run(self, nt, file_out=None, method='euler'):
         """Integrate the FEISTY model.
 
         Parameters
@@ -135,37 +174,18 @@ class simulation(object):
 
         nt : integer
           Number of timesteps to run.
+
+        file_out : string
+          File name to write model output data.
+
+        method : string
+          Method of solving feisty equations. Options: ['euler', 'Radau', 'RK45'].
+
+          .. note::
+             Only ``method='euler'`` is supported currently.
+
         """
-
-        # get tracer values
-        state_t = self.obj.get_prognostic().copy()
-
-        # set up time-coordinate
-        self._init_time_coord(nt)
-
-        # initialize memory for output
-        self._init_output_arrays()
-
-        # run loop
-        for n in range(nt):
-            # interpolate forcing
-            gcm_data_t = self._forcing_t(self.time[n])
-
-            # compute tendencies
-            dfdt = self.obj.compute_tendencies(
-                state_t.isel(group=self.obj.prog_ndx_fish),
-                state_t.isel(group=self.obj.prog_ndx_benthic_prey),
-                gcm_data_t.zooC,
-                gcm_data_t.zoo_mort,
-                T_pelagic=gcm_data_t.T_pelagic,
-                T_bottom=gcm_data_t.T_bottom,
-                poc_flux=gcm_data_t.poc_flux_bottom,
-            )
-
-            # advance FEISTY state
-            state_t[self.obj.prog_ndx_fish, :] = state_t[self.obj.prog_ndx_fish, :] + dfdt * self.dt
-            self._post_data(n, state_t)
-
+        self._solve(nt, method)
         self._shutdown(file_out)
 
     def _shutdown(self, file_out):
@@ -264,6 +284,7 @@ def simulate_testcase(
 
     domain_dict = _test_domain[domain_name](**domain_kwargs)
     forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
+
     return simulation(
         domain_dict,
         forcing,

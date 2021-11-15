@@ -11,9 +11,11 @@ This is accomlished by adding the following to _config.yml:
     add_book_to_path: ../
 
 """
+import os
 import sys
 
-sys.path.append('./docs/source')
+path_to_here = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(path_to_here, 'docs'))
 
 
 def setup(dummy):
