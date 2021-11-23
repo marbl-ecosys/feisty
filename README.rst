@@ -9,6 +9,8 @@
 .. image:: https://img.shields.io/codecov/c/github/marbl-ecosys/feisty.svg?style=for-the-badge
     :target: https://app.codecov.io/gh/marbl-ecosys/feisty
 
+.. image:: https://zenodo.org/badge/409330984.svg
+   :target: https://zenodo.org/badge/latestdoi/409330984
 
 .. If you want the following badges to be visible, please remove this line, and unindent the lines below
     .. image:: https://img.shields.io/readthedocs/feisty/latest.svg?style=for-the-badge
