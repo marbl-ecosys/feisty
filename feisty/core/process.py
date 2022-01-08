@@ -202,7 +202,7 @@ def compute_consumption(
     """
 
     for i, link in enumerate(food_web):
-        enc = consumption_rate_link[i, :]
+        enc = encounter_rate_link[i, :]
         cmax = consumption_rate_max_pred[link.i_fish, :]
         enc_total = encounter_rate_total[link.i_fish, :]
         consumption_rate_link[i, :] = cmax * enc / (cmax + enc_total)
