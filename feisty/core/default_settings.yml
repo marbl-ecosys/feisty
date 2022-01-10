@@ -161,7 +161,7 @@ fish:
       size_class: large
       functional_type: piscivore
       t_frac_pelagic_static: 1.
-      pelagic_demersal_coupling: false
+      pelagic_demersal_coupling: false # param.pdc = 1 => false here and true in Ld
       harvest_selectivity: 1.
       energy_frac_somatic_growth: 0.5
 
@@ -169,7 +169,7 @@ fish:
       size_class: large
       functional_type: demersal
       t_frac_pelagic_static: 0.
-      pelagic_demersal_coupling: true
+      pelagic_demersal_coupling: true # param.pdc = 1 => true here and false in Lp
       harvest_selectivity: 1.
       energy_frac_somatic_growth: 0.5
 

@@ -171,7 +171,8 @@ def compute_encounter(
         else:
             t_frac_pelagic_pred = t_frac_pelagic.isel(fish=link.i_fish)
             t_frac_prey_pred = t_frac_pelagic_pred
-            if link.prey.is_demersal:
+            if link.prey.is_demersal and not link.prey.is_small:
+                # small demersal class is larval, which stays in pelagic
                 t_frac_prey_pred = 1.0 - t_frac_pelagic_pred
 
             bio = biomass.isel(group=link.ndx_prey)

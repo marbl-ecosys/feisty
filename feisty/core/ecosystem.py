@@ -265,6 +265,11 @@ class fish_type(object):
         """Return `True` if key is a demersal functional type"""
         return self.functional_type_key in _demersal_functional_type_keys
 
+    @property
+    def is_small(self):
+        """Return `True` if size_class is small"""
+        return self.size_class == 'small'
+
 
 class zooplankton_type(object):
     """Data structure containing zooplankton parameters."""
@@ -274,6 +279,7 @@ class zooplankton_type(object):
         self.functional_type_key = 'zooplankton'
         self.functional_type = functional_types['zooplankton']
         self.is_demersal = False
+        self.is_small = False
         self.is_zooplankton = True
         for key, default_value in _zooplankton_defaults.items():
             assign_key = key
@@ -291,6 +297,7 @@ class benthic_prey_type(object):
         self.functional_type_key = 'benthic_prey'
         self.functional_type = functional_types['benthic_prey']
         self.is_zooplankton = False
+        self.is_small = False
 
         for key, default_value in _benthic_prey_defaults.items():
             assign_key = key
