@@ -52,4 +52,5 @@ repos:
             '--keep-metadata',
             '--keep-execution-count',
             '--keep-empty',
+            '--line-width=90',
           ]
