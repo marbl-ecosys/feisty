@@ -69,13 +69,14 @@ def init_module_variables(
         functional_types.keys()
     ), f'unknown functional type specified in `pelagic_demersal_coupling_type_keys` list: {pelagic_demersal_coupling_type_keys}'
 
-    assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
-        functional_types.keys()
-    ), f'unknown functional type specified in `pelagic_demersal_coupling_apply_pref_type_keys` list: {pelagic_demersal_coupling_apply_pref_type_keys}'
+    if pelagic_demersal_coupling_apply_pref_type_keys:
+        assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
+            functional_types.keys()
+        ), f'unknown functional type specified in `pelagic_demersal_coupling_apply_pref_type_keys` list: {pelagic_demersal_coupling_apply_pref_type_keys}'
 
-    assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
-        pelagic_demersal_coupling_type_keys
-    ), f'pelagic_demersal_coupling_apply_pref_types specifies types not found in pelagic_demersal_coupling_type_keys: {pelagic_demersal_coupling_apply_pref_type_keys}'
+        assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
+            pelagic_demersal_coupling_type_keys
+        ), f'pelagic_demersal_coupling_apply_pref_types specifies types not found in pelagic_demersal_coupling_type_keys: {pelagic_demersal_coupling_apply_pref_type_keys}'
 
     assert not set(pelagic_functional_type_keys) - set(
         functional_types.keys()
@@ -113,9 +114,12 @@ def init_module_variables(
 
     _zooplankton_functional_type_keys = set(zooplankton_functional_type_keys)
 
-    _pdc_apply_pref_func_types = [
-        functional_types[k] for k in pelagic_demersal_coupling_apply_pref_type_keys
-    ]
+    if pelagic_demersal_coupling_apply_pref_type_keys:
+        _pdc_apply_pref_func_types = [
+            functional_types[k] for k in pelagic_demersal_coupling_apply_pref_type_keys
+        ]
+    else:
+        _pdc_apply_pref_func_types = []
     PI_be_cutoff = benthic_pelagic_depth_cutoff
 
 
@@ -296,7 +300,7 @@ class benthic_prey_type(object):
         if kwargs:
             raise ValueError(f'unknown parameters: {kwargs}')
 
-        self.lcarrying_capacity = self.carrying_capacity == 0.0
+        self.lcarrying_capacity = not self.carrying_capacity == 0.0
 
     @property
     def is_demersal(self):
