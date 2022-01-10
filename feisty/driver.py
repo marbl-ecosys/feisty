@@ -93,6 +93,10 @@ class simulation(object):
             'reproduction_rate',
             'recruitment_flux',
             'fish_catch_rate',
+            'encounter_rate_link',
+            'encounter_rate_total',
+            'consumption_rate_max_pred',
+            'consumption_rate_link',
         ]
 
         self.obj = feisty_instance_type(
@@ -145,7 +149,6 @@ class simulation(object):
 
         state_t = self.obj.get_prognostic().copy()
         self._init_output_arrays(nt)
-        print('here')
         if method == 'euler':
             self._solve_foward_euler(nt, state_t)
 
