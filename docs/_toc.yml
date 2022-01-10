@@ -9,7 +9,6 @@ parts:
       - file: usage
       - file: testcase-datasets
       - file: driver-example
-      - file: matlab-comparison
       - file: api-interface
       - file: api-testcase
       - file: api-driver
