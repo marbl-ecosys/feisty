@@ -331,6 +331,8 @@ class reproduction_routing(object):
 
     def __init__(self, routing_settings, fish_list, all_groups):
 
+        # TODO: ASSERT THAT "from" IS UNIQUE!
+
         if isinstance(all_groups, xr.DataArray):
             all_groups = all_groups.values
         elif isinstance(all_groups, list):
@@ -339,10 +341,14 @@ class reproduction_routing(object):
         self._n_links = len(routing_settings)
         self._index = 0
 
+        # index (of "from" part of link) into groups; used for biomass
         self.ndx_from = [np.where(link['from'] == all_groups)[0][0] for link in routing_settings]
 
         fish_names = np.array([f.name for f in fish_list], dtype=object)
+        # indices of "to" and "from" part of links into fish; used from rest of terms
+        # (reproduction rate, growth rate, actual recruitment rate)
         self.i_fish = [np.where(link['to'] == fish_names)[0][0] for link in routing_settings]
+        self.i_fish_from = [np.where(link['from'] == fish_names)[0][0] for link in routing_settings]
 
         self.is_larval = []
         self.efficiency = []
@@ -372,7 +378,11 @@ class reproduction_routing(object):
         i = self._index
         self._index += 1
         return reproduction_link(
-            self.ndx_from[i], self.i_fish[i], self.is_larval[i], self.efficiency[i]
+            self.ndx_from[i],
+            self.i_fish_from[i],
+            self.i_fish[i],
+            self.is_larval[i],
+            self.efficiency[i],
         )
 
 
@@ -380,12 +390,13 @@ class reproduction_link(object):
     """Data structure with the information pertaining to a specific link in
     reproduction routing list."""
 
-    def __init__(self, ndx_from, i_fish, is_larval, efficiency):
+    def __init__(self, ndx_from, i_fish_from, i_fish, is_larval, efficiency):
         assert np.isscalar(ndx_from)
         assert np.isscalar(i_fish)
         assert np.isscalar(is_larval)
         assert np.isscalar(efficiency) or efficiency is None
         self.ndx_from = ndx_from
+        self.i_fish_from = i_fish_from
         self.i_fish = i_fish
         self.is_larval = is_larval
         self.efficiency = efficiency

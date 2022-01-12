@@ -451,11 +451,11 @@ def compute_recruitment(
         if link.is_larval:
             recruitment_flux[link.i_fish, :] = (
                 link.efficiency
-                * reproduction_rate[link.i_fish, :]
+                * reproduction_rate[link.i_fish_from, :]
                 * biomass.isel(group=link.ndx_from)
             )
         else:
-            recruitment_flux[link.i_fish, :] = growth_rate[link.i_fish, :] * biomass.isel(
+            recruitment_flux[link.i_fish, :] = growth_rate[link.i_fish_from, :] * biomass.isel(
                 group=link.ndx_from
             )
 

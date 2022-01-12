@@ -471,11 +471,12 @@ class feisty_instance_type(object):
         self._compute_ingestion()
         self._compute_predation()
         self._compute_mortality()
-        self._compute_fish_catch()
+
         self._compute_energy_avail()
         self._compute_growth()
         self._compute_reproduction()
         self._compute_recruitment()
+        self._compute_fish_catch()
 
         # aggregate tendency terms
         self._compute_total_tendency()

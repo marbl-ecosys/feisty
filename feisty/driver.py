@@ -163,6 +163,9 @@ class simulation(object):
         for n in range(nt):
             dfdt = self._compute_tendency(self.time[n], state_t)
             state_t[self.obj.prog_ndx_fish, :] = state_t[self.obj.prog_ndx_fish, :] + dfdt * self.dt
+            state_t[self.obj.prog_ndx_benthic_prey, :] = self.obj.biomass.isel(
+                group=self.obj.ndx_benthic_prey
+            )
             self._post_data(n, state_t)
 
     def _solve_scipy(self, nt, state_t, method):
