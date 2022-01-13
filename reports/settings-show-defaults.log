@@ -27,12 +27,11 @@ print(yaml.dump(defaults, default_flow_style=False, sort_keys=False))
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-[0;32m/tmp/ipykernel_3143/87745352.py[0m in [0;36m<module>[0;34m[0m
-[1;32m      1[0m [0;32mimport[0m [0myaml[0m[0;34m[0m[0;34m[0m[0m
-[1;32m      2[0m [0;34m[0m[0m
-[0;32m----> 3[0;31m [0;32mimport[0m [0mfeisty[0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m      4[0m [0;34m[0m[0m
-[1;32m      5[0m [0mdefaults[0m [0;34m=[0m [0mfeisty[0m[0;34m.[0m[0msettings[0m[0;34m.[0m[0mget_defaults[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+Input [0;32mIn [1][0m, in [0;36m<module>[0;34m[0m
+[1;32m      1[0m [38;5;28;01mimport[39;00m [38;5;21;01myaml[39;00m
+[0;32m----> 3[0m [38;5;28;01mimport[39;00m [38;5;21;01mfeisty[39;00m
+[1;32m      5[0m defaults [38;5;241m=[39m feisty[38;5;241m.[39msettings[38;5;241m.[39mget_defaults()
+[1;32m      6[0m [38;5;28mprint[39m(yaml[38;5;241m.[39mdump(defaults, default_flow_style[38;5;241m=[39m[38;5;28;01mFalse[39;00m, sort_keys[38;5;241m=[39m[38;5;28;01mFalse[39;00m))
 
 [0;31mModuleNotFoundError[0m: No module named 'feisty'
 ModuleNotFoundError: No module named 'feisty'
