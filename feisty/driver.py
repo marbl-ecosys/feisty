@@ -111,7 +111,7 @@ class simulation(object):
 
     def _init_output_arrays(self, nt):
         self.time = xr.DataArray(
-            np.arange(1.0, nt + 1.0, 1.0),
+            np.arange(0.0, nt, 1.0),
             dims=('time'),
             name='time',
             attrs={'long_name': 'time'},

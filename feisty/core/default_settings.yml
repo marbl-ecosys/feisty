@@ -52,7 +52,8 @@ model_settings:
   ###
   # When computing pelagic-demersal coupling, apply prey preference-weighting to prey
   # biomass sums.
-  pelagic_demersal_coupling_apply_pref_type_keys: []
+  pelagic_demersal_coupling_apply_pref_type_keys:
+    - demersal
   ###
   # Benthic-pelagic coupling cutoff [meters].
   benthic_pelagic_depth_cutoff: 200.

@@ -16,7 +16,7 @@ def annual_harmonic(t, mu, a1, phi1=0.0, a2=0.0, phi2=0.0):
 def gen_idealized_cycle(name, nt, mu, a1, phi1=0.0, a2=0.0, phi2=0.0):
     """Generate a xarray.DataArray from a harmonic function."""
     time = xr.DataArray(
-        np.arange(0.0, nt + 1.0, 1.0),
+        np.arange(0.0, nt, 1.0),
         dims=('time'),
         name='time',
     )
