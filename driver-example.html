@@ -548,7 +548,9 @@
 <p>Setup a <code class="docutils literal notranslate"><span class="pre">feisty</span></code> integration.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">feisty</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">feisty</span>
 </pre></div>
 </div>
 </div>
@@ -589,12 +591,16 @@ dimensions:
 	group = 9 ;
 	time = 365 ;
 	fish = 8 ;
+	feeding_link = 19 ;
 
 variables:
 	float64 X(X) ;
 	&lt;U12 group(group) ;
 	float64 biomass(time, group, X) ;
 	&lt;U2 fish(fish) ;
+	&lt;U15 feeding_link(feeding_link) ;
+	&lt;U2 predator(feeding_link) ;
+	&lt;U12 prey(feeding_link) ;
 	float64 T_habitat(time, fish, X) ;
 	float64 ingestion_rate(time, fish, X) ;
 	float64 predation_flux(time, fish, X) ;
@@ -606,6 +612,10 @@ variables:
 	float64 reproduction_rate(time, fish, X) ;
 	float64 recruitment_flux(time, fish, X) ;
 	float64 fish_catch_rate(time, fish, X) ;
+	float64 encounter_rate_link(time, feeding_link, X) ;
+	float64 encounter_rate_total(time, fish, X) ;
+	float64 consumption_rate_max_pred(time, fish, X) ;
+	float64 consumption_rate_link(time, feeding_link, X) ;
 
 // global attributes:
 }
@@ -620,10 +630,25 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x15f725d90&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x2ab15e985060&gt;]
 </pre></div>
 </div>
 <img alt="_images/driver-example_8_1.png" src="_images/driver-example_8_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_ds</span> <span class="o">=</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+    <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/driver-example_9_0.png" src="_images/driver-example_9_0.png" />
 </div>
 </div>
 </div>
@@ -637,16 +662,16 @@ variables:
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "conda-env-miniconda3-dev-feisty-py"
         },
         kernelOptions: {
-            kernelName: "python3",
+            kernelName: "conda-env-miniconda3-dev-feisty-py",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'conda-env-miniconda3-dev-feisty-py'</script>
 
               </div>
               

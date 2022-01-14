@@ -24,5 +24,6 @@
    .. autosummary::
    
       ~fish_type.is_demersal
+      ~fish_type.is_small
    
    

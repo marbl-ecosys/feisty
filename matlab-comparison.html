@@ -1,0 +1,2084 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Running the model &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Fisheries Size and Functional Type model (FEISTY)</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs..." aria-label="Search the docs..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption">
+ <span class="caption-text">
+  Scientific documentation
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="scientific-background.html">
+   Scientific Background
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User guide
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="usage.html">
+   Usage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="testcase-datasets.html">
+   FEISTY test cases
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="driver-example.html">
+   Running the model
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="api-interface.html">
+   FEISTY Interface
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.feisty_instance_type.html">
+     feisty.feisty_instance_type
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.feisty_instance_type.get_prognostic.html">
+     feisty.feisty_instance_type.get_prognostic
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.feisty_instance_type.compute_tendencies.html">
+     feisty.feisty_instance_type.compute_tendencies
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="api-testcase.html">
+   FEISTY testcase
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.testcase.domain_tanh_shelf.html">
+     feisty.testcase.domain_tanh_shelf
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.testcase.forcing_cyclic.html">
+     feisty.testcase.forcing_cyclic
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="api-driver.html">
+   FEISTY Driver
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.driver.simulation.html">
+     feisty.driver.simulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.driver.simulation.run.html">
+     feisty.driver.simulation.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.driver.simulation.ds.html">
+     feisty.driver.simulation.ds
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.driver.simulate_testcase.html">
+     feisty.driver.simulate_testcase
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="settings.html">
+   FEISTY Settings
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="settings-show-defaults.html">
+     Default settings
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Developer guide
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributing.html">
+   Contributing to the FEISTY model
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="api-internal.html">
+   Internal API
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.benthic_prey_type.html">
+     feisty.core.ecosystem.benthic_prey_type
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.fish_type.html">
+     feisty.core.ecosystem.fish_type
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.fishing.html">
+     feisty.core.ecosystem.fishing
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.food_web.html">
+     feisty.core.ecosystem.food_web
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.food_web_link.html">
+     feisty.core.ecosystem.food_web_link
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.reproduction_link.html">
+     feisty.core.ecosystem.reproduction_link
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.reproduction_routing.html">
+     feisty.core.ecosystem.reproduction_routing
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.ecosystem.zooplankton_type.html">
+     feisty.core.ecosystem.zooplankton_type
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_rate_T_mass_scaling.html">
+     feisty.core.process.compute_rate_T_mass_scaling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_t_frac_pelagic.html">
+     feisty.core.process.compute_t_frac_pelagic
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.t_weighted_mean_temp.html">
+     feisty.core.process.t_weighted_mean_temp
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_metabolism.html">
+     feisty.core.process.compute_metabolism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_pred_encounter_consumption_max.html">
+     feisty.core.process.compute_pred_encounter_consumption_max
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_encounter.html">
+     feisty.core.process.compute_encounter
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_consumption.html">
+     feisty.core.process.compute_consumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_rescale_zoo_consumption.html">
+     feisty.core.process.compute_rescale_zoo_consumption
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_ingestion.html">
+     feisty.core.process.compute_ingestion
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_predation.html">
+     feisty.core.process.compute_predation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_natural_mortality.html">
+     feisty.core.process.compute_natural_mortality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_benthic_biomass_update.html">
+     feisty.core.process.compute_benthic_biomass_update
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_energy_avail.html">
+     feisty.core.process.compute_energy_avail
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_growth.html">
+     feisty.core.process.compute_growth
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_reproduction.html">
+     feisty.core.process.compute_reproduction
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_recruitment.html">
+     feisty.core.process.compute_recruitment
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_total_tendency.html">
+     feisty.core.process.compute_total_tendency
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="generated/feisty.core.process.compute_fish_catch.html">
+     feisty.core.process.compute_fish_catch
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="references.html">
+   References
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/matlab-comparison.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/marbl-ecosys/feisty"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/marbl-ecosys/feisty/issues/new?title=Issue%20on%20page%20%2Fmatlab-comparison.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configure-testcase-to-run">
+   Configure testcase to run
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#run-the-model">
+   Run the model
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Running the model</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configure-testcase-to-run">
+   Configure testcase to run
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#run-the-model">
+   Run the model
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="running-the-model">
+<h1>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">¶</a></h1>
+<p>Setup a <code class="docutils literal notranslate"><span class="pre">feisty</span></code> integration.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">import</span> <span class="nn">feisty</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="configure-testcase-to-run">
+<h2>Configure testcase to run<a class="headerlink" href="#configure-testcase-to-run" title="Permalink to this headline">¶</a></h2>
+<p>TODO: this is using the first column (which I believe is shallowest); want to add deepest column as well.
+That will require refactoring the yaml file and also changing test_ds.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">testcase</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">simulate_testcase</span><span class="p">(</span><span class="s2">&quot;tanh_shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;cyclic&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;matlab_first_timestep.yaml&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">baselines</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">baselines_dict</span><span class="p">,</span> <span class="n">da_or_ds</span><span class="p">,</span> <span class="n">full_table</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">markdown_formatting</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;dimname&quot;</span> <span class="ow">in</span> <span class="n">baselines_dict</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">baselines_dict</span><span class="p">[</span><span class="s1">&#39;dimname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> | Matlab Value | Python Value | Rel Err |&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;|  | Matlab Value | Python Value | Rel Err |&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;| --- | --- | --- | --- |&quot;</span><span class="p">)</span>
+        <span class="n">seps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;| &quot;</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="s2">&quot; |&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">seps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;dimname&quot;</span> <span class="ow">in</span> <span class="n">baselines_dict</span><span class="p">:</span>
+        <span class="n">all_vars</span> <span class="o">=</span> <span class="n">da_or_ds</span><span class="p">[</span><span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;dimname&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">all_vars</span> <span class="o">=</span> <span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">all_vars</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;dimname&quot;</span> <span class="ow">in</span> <span class="n">baselines_dict</span><span class="p">:</span>
+            <span class="n">da</span> <span class="o">=</span> <span class="n">da_or_ds</span>
+            <span class="n">sel_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;dimname&quot;</span><span class="p">]:</span> <span class="n">var</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">da</span> <span class="o">=</span> <span class="n">da_or_ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+            <span class="n">sel_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">matlab_val</span> <span class="o">=</span> <span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="n">var</span><span class="p">]</span>
+        <span class="n">py_val</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">sel_dict</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">if</span> <span class="n">matlab_val</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">rel_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">py_val</span> <span class="o">-</span> <span class="n">matlab_val</span><span class="p">)</span> <span class="o">/</span> <span class="n">matlab_val</span>
+            <span class="k">if</span> <span class="n">rel_err</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rel_err</span> <span class="o">=</span> <span class="o">-</span><span class="n">rel_err</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">py_val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rel_err</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">elif</span> <span class="n">py_val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rel_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="k">elif</span> <span class="n">py_val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rel_err</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">if</span> <span class="n">full_table</span> <span class="ow">or</span> <span class="n">rel_err</span> <span class="o">&gt;</span> <span class="mf">1e-2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}{</span><span class="n">var</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}{</span><span class="n">matlab_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">py_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}{</span><span class="n">rel_err</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="s2">&quot;day1&quot;</span><span class="p">][</span><span class="s2">&quot;forcing&quot;</span><span class="p">],</span>
+    <span class="n">testcase</span><span class="o">.</span><span class="n">forcing</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zooplankton</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>|  | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| T_pelagic | 1.8200e+01 | 1.8200e+01 | 0.0000e+00 |
+| T_bottom | 4.2000e+00 | 4.2000e+00 | 0.0000e+00 |
+| zooC | 3.3287e+00 | 3.3287e+00 | 0.0000e+00 |
+| poc_flux_bottom | 2.7847e-02 | 2.7847e-02 | 1.2459e-16 |
+| zoo_mort | 7.7564e-01 | 7.7564e-01 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="run-the-model">
+<h2>Run the model<a class="headerlink" href="#run-the-model" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+
+<span class="n">nsteps</span> <span class="o">=</span> <span class="mi">365</span>
+<span class="n">make_plot</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">testcase</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nsteps</span><span class="p">)</span>
+<span class="n">testcase</span><span class="o">.</span><span class="n">ds</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 21s, sys: 26.5 ms, total: 1min 21s
+Wall time: 1min 23s
+</pre></div>
+</div>
+<div class="output text_html"><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewBox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewBox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
+  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
+  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
+  --xr-border-color: var(--jp-border-color2, #e0e0e0);
+  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
+  --xr-background-color: var(--jp-layout-color0, white);
+  --xr-background-color-row-even: var(--jp-layout-color1, white);
+  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
+}
+
+html[theme=dark],
+body.vscode-dark {
+  --xr-font-color0: rgba(255, 255, 255, 1);
+  --xr-font-color2: rgba(255, 255, 255, 0.54);
+  --xr-font-color3: rgba(255, 255, 255, 0.38);
+  --xr-border-color: #1F1F1F;
+  --xr-disabled-color: #515151;
+  --xr-background-color: #111111;
+  --xr-background-color-row-even: #111111;
+  --xr-background-color-row-odd: #313131;
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 20px 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: none;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: '►';
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: '▼';
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: '(';
+}
+
+.xr-dim-list:after {
+  content: ')';
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ',';
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  margin-bottom: 0;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data {
+  display: none;
+  background-color: var(--xr-background-color) !important;
+  padding-bottom: 5px !important;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt;
+Dimensions:                    (X: 22, group: 9, time: 365, fish: 8, feeding_link: 19)
+Coordinates:
+  * X                          (X) float64 -0.5 -0.2381 0.02381 ... 4.738 5.0
+  * group                      (group) &lt;U12 &#x27;Sf&#x27; &#x27;Sp&#x27; ... &#x27;Ld&#x27; &#x27;benthic_prey&#x27;
+  * fish                       (fish) &lt;U2 &#x27;Sf&#x27; &#x27;Sp&#x27; &#x27;Sd&#x27; &#x27;Mf&#x27; ... &#x27;Md&#x27; &#x27;Lp&#x27; &#x27;Ld&#x27;
+  * feeding_link               (feeding_link) &lt;U15 &#x27;Sf_Zoo&#x27; ... &#x27;Ld_benthic_p...
+    predator                   (feeding_link) &lt;U2 &#x27;Sf&#x27; &#x27;Sp&#x27; &#x27;Sd&#x27; ... &#x27;Ld&#x27; &#x27;Ld&#x27;
+    prey                       (feeding_link) &lt;U12 &#x27;Zoo&#x27; ... &#x27;benthic_prey&#x27;
+Dimensions without coordinates: time
+Data variables: (12/16)
+    biomass                    (time, group, X) float64 9.999e-06 ... 0.05344
+    T_habitat                  (time, fish, X) float64 18.2 18.2 ... 18.2 18.2
+    ingestion_rate             (time, fish, X) float64 0.2152 ... 2.234e-05
+    predation_flux             (time, fish, X) float64 5.737e-12 ... 0.0
+    predation_rate             (time, fish, X) float64 5.737e-07 ... 0.0
+    metabolism_rate            (time, fish, X) float64 0.04296 ... 0.00488
+    ...                         ...
+    recruitment_flux           (time, fish, X) float64 1.453e-09 ... 0.0
+    fish_catch_rate            (time, fish, X) float64 0.0 0.0 ... 0.0008219
+    encounter_rate_link        (time, feeding_link, X) float64 2.288 ... 0.0
+    encounter_rate_total       (time, fish, X) float64 2.288 2.288 ... 2.239e-05
+    consumption_rate_max_pred  (time, fish, X) float64 0.2375 0.2375 ... 0.01062
+    consumption_rate_link      (time, feeding_link, X) float64 0.2152 ... 0.0</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-921728ae-9fbb-4091-bcab-75d98f43bb1a' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-921728ae-9fbb-4091-bcab-75d98f43bb1a' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>X</span>: 22</li><li><span class='xr-has-index'>group</span>: 9</li><li><span>time</span>: 365</li><li><span class='xr-has-index'>fish</span>: 8</li><li><span class='xr-has-index'>feeding_link</span>: 19</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-3573cce2-471c-46f2-b8c6-e5f1228fa703' class='xr-section-summary-in' type='checkbox'  checked><label for='section-3573cce2-471c-46f2-b8c6-e5f1228fa703' class='xr-section-summary' >Coordinates: <span>(6)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>X</span></div><div class='xr-var-dims'>(X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-0.5 -0.2381 0.02381 ... 4.738 5.0</div><input id='attrs-e8e0dbfa-843c-4ead-8543-9f0e5b4c0678' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-e8e0dbfa-843c-4ead-8543-9f0e5b4c0678' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-be266cfc-3d33-43d1-9ab2-1599998e008e' class='xr-var-data-in' type='checkbox'><label for='data-be266cfc-3d33-43d1-9ab2-1599998e008e' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-0.5     , -0.238095,  0.02381 ,  0.285714,  0.547619,  0.809524,
+        1.071429,  1.333333,  1.595238,  1.857143,  2.119048,  2.380952,
+        2.642857,  2.904762,  3.166667,  3.428571,  3.690476,  3.952381,
+        4.214286,  4.47619 ,  4.738095,  5.      ])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>group</span></div><div class='xr-var-dims'>(group)</div><div class='xr-var-dtype'>&lt;U12</div><div class='xr-var-preview xr-preview'>&#x27;Sf&#x27; &#x27;Sp&#x27; ... &#x27;Ld&#x27; &#x27;benthic_prey&#x27;</div><input id='attrs-1ed402cb-d327-4a9d-be63-9a0c52f2c1cd' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-1ed402cb-d327-4a9d-be63-9a0c52f2c1cd' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-9162472e-d921-42c9-82c2-555b2c3e75f0' class='xr-var-data-in' type='checkbox'><label for='data-9162472e-d921-42c9-82c2-555b2c3e75f0' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;Sf&#x27;, &#x27;Sp&#x27;, &#x27;Sd&#x27;, &#x27;Mf&#x27;, &#x27;Mp&#x27;, &#x27;Md&#x27;, &#x27;Lp&#x27;, &#x27;Ld&#x27;, &#x27;benthic_prey&#x27;],
+      dtype=&#x27;&lt;U12&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>fish</span></div><div class='xr-var-dims'>(fish)</div><div class='xr-var-dtype'>&lt;U2</div><div class='xr-var-preview xr-preview'>&#x27;Sf&#x27; &#x27;Sp&#x27; &#x27;Sd&#x27; ... &#x27;Md&#x27; &#x27;Lp&#x27; &#x27;Ld&#x27;</div><input id='attrs-3915416d-a201-41e7-9521-f65178999d0f' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-3915416d-a201-41e7-9521-f65178999d0f' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f721f52b-3e57-44b3-806e-724f73de1515' class='xr-var-data-in' type='checkbox'><label for='data-f721f52b-3e57-44b3-806e-724f73de1515' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;Sf&#x27;, &#x27;Sp&#x27;, &#x27;Sd&#x27;, &#x27;Mf&#x27;, &#x27;Mp&#x27;, &#x27;Md&#x27;, &#x27;Lp&#x27;, &#x27;Ld&#x27;], dtype=&#x27;&lt;U2&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>feeding_link</span></div><div class='xr-var-dims'>(feeding_link)</div><div class='xr-var-dtype'>&lt;U15</div><div class='xr-var-preview xr-preview'>&#x27;Sf_Zoo&#x27; ... &#x27;Ld_benthic_prey&#x27;</div><input id='attrs-c3041a75-4a97-4a84-8083-03dff4236761' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-c3041a75-4a97-4a84-8083-03dff4236761' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ec7099bc-c0e3-407b-b3d3-8ab0831fb739' class='xr-var-data-in' type='checkbox'><label for='data-ec7099bc-c0e3-407b-b3d3-8ab0831fb739' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;Sf_Zoo&#x27;, &#x27;Sp_Zoo&#x27;, &#x27;Sd_Zoo&#x27;, &#x27;Mf_Zoo&#x27;, &#x27;Mf_Sf&#x27;, &#x27;Mf_Sp&#x27;, &#x27;Mf_Sd&#x27;,
+       &#x27;Mp_Zoo&#x27;, &#x27;Mp_Sf&#x27;, &#x27;Mp_Sp&#x27;, &#x27;Mp_Sd&#x27;, &#x27;Md_benthic_prey&#x27;, &#x27;Lp_Mf&#x27;,
+       &#x27;Lp_Mp&#x27;, &#x27;Lp_Md&#x27;, &#x27;Ld_Mf&#x27;, &#x27;Ld_Mp&#x27;, &#x27;Ld_Md&#x27;, &#x27;Ld_benthic_prey&#x27;],
+      dtype=&#x27;&lt;U15&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>predator</span></div><div class='xr-var-dims'>(feeding_link)</div><div class='xr-var-dtype'>&lt;U2</div><div class='xr-var-preview xr-preview'>&#x27;Sf&#x27; &#x27;Sp&#x27; &#x27;Sd&#x27; ... &#x27;Ld&#x27; &#x27;Ld&#x27; &#x27;Ld&#x27;</div><input id='attrs-17899230-f1e5-402c-b024-7146cac6712c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-17899230-f1e5-402c-b024-7146cac6712c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-5e5b7b0c-6711-4dd9-ba71-c0627f823b9f' class='xr-var-data-in' type='checkbox'><label for='data-5e5b7b0c-6711-4dd9-ba71-c0627f823b9f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;Sf&#x27;, &#x27;Sp&#x27;, &#x27;Sd&#x27;, &#x27;Mf&#x27;, &#x27;Mf&#x27;, &#x27;Mf&#x27;, &#x27;Mf&#x27;, &#x27;Mp&#x27;, &#x27;Mp&#x27;, &#x27;Mp&#x27;, &#x27;Mp&#x27;,
+       &#x27;Md&#x27;, &#x27;Lp&#x27;, &#x27;Lp&#x27;, &#x27;Lp&#x27;, &#x27;Ld&#x27;, &#x27;Ld&#x27;, &#x27;Ld&#x27;, &#x27;Ld&#x27;], dtype=&#x27;&lt;U2&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>prey</span></div><div class='xr-var-dims'>(feeding_link)</div><div class='xr-var-dtype'>&lt;U12</div><div class='xr-var-preview xr-preview'>&#x27;Zoo&#x27; &#x27;Zoo&#x27; ... &#x27;Md&#x27; &#x27;benthic_prey&#x27;</div><input id='attrs-486d57a4-d726-4510-ba63-a2a48fc72644' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-486d57a4-d726-4510-ba63-a2a48fc72644' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d3c27001-abcd-4238-a0a5-9357b22ab88b' class='xr-var-data-in' type='checkbox'><label for='data-d3c27001-abcd-4238-a0a5-9357b22ab88b' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;Zoo&#x27;, &#x27;Zoo&#x27;, &#x27;Zoo&#x27;, &#x27;Zoo&#x27;, &#x27;Sf&#x27;, &#x27;Sp&#x27;, &#x27;Sd&#x27;, &#x27;Zoo&#x27;, &#x27;Sf&#x27;, &#x27;Sp&#x27;,
+       &#x27;Sd&#x27;, &#x27;benthic_prey&#x27;, &#x27;Mf&#x27;, &#x27;Mp&#x27;, &#x27;Md&#x27;, &#x27;Mf&#x27;, &#x27;Mp&#x27;, &#x27;Md&#x27;,
+       &#x27;benthic_prey&#x27;], dtype=&#x27;&lt;U12&#x27;)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-b2ea4e29-f390-4d1f-88f8-8d7cd53e5ebe' class='xr-section-summary-in' type='checkbox'  ><label for='section-b2ea4e29-f390-4d1f-88f8-8d7cd53e5ebe' class='xr-section-summary' >Data variables: <span>(16)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>biomass</span></div><div class='xr-var-dims'>(time, group, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>9.999e-06 9.999e-06 ... 0.05344</div><input id='attrs-ab6ea547-ff09-45b6-a68e-11507a86b8f2' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-ab6ea547-ff09-45b6-a68e-11507a86b8f2' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-3ab7c03c-bb47-4550-948c-498b9b697502' class='xr-var-data-in' type='checkbox'><label for='data-3ab7c03c-bb47-4550-948c-498b9b697502' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[9.99926662e-06, 9.99926662e-06, 9.99926662e-06, ...,
+         9.99926661e-06, 9.99926661e-06, 9.99926661e-06],
+        [9.99781325e-06, 9.99781325e-06, 9.99781325e-06, ...,
+         9.99781325e-06, 9.99781325e-06, 9.99781325e-06],
+        [9.99781325e-06, 9.99781325e-06, 9.99781325e-06, ...,
+         9.99781325e-06, 9.99781325e-06, 9.99781325e-06],
+        ...,
+        [1.00930036e-05, 1.00930036e-05, 1.00930036e-05, ...,
+         1.00930011e-05, 1.00930011e-05, 1.00930011e-05],
+        [9.97455286e-06, 9.97455127e-06, 9.97454171e-06, ...,
+         9.94024203e-06, 9.94024203e-06, 9.94024203e-06],
+        [2.09853430e-03, 2.09088194e-03, 2.04489308e-03, ...,
+         1.86110049e-04, 1.86022830e-04, 1.85971189e-04]],
+
+       [[9.99869024e-06, 9.99869024e-06, 9.99869024e-06, ...,
+         9.99869021e-06, 9.99869021e-06, 9.99869021e-06],
+        [9.99562640e-06, 9.99562640e-06, 9.99562640e-06, ...,
+         9.99562640e-06, 9.99562640e-06, 9.99562640e-06],
+        [9.99562640e-06, 9.99562640e-06, 9.99562640e-06, ...,
+         9.99562640e-06, 9.99562640e-06, 9.99562640e-06],
+...
+        [4.71823047e-04, 4.71823065e-04, 4.71823177e-04, ...,
+         4.71838565e-04, 4.71838565e-04, 4.71838565e-04],
+        [2.25068860e-04, 2.24382803e-04, 2.20201622e-04, ...,
+         1.86345587e-06, 1.86345587e-06, 1.86345587e-06],
+        [6.32388937e-01, 6.30070441e-01, 6.16136951e-01, ...,
+         5.33058364e-02, 5.32794423e-02, 5.32638148e-02]],
+
+       [[1.76963757e-05, 1.76963759e-05, 1.76963770e-05, ...,
+         1.76964993e-05, 1.76964993e-05, 1.76964993e-05],
+        [9.36525176e-06, 9.36525176e-06, 9.36525176e-06, ...,
+         9.36525176e-06, 9.36525176e-06, 9.36525176e-06],
+        [9.44799851e-06, 9.44744497e-06, 9.44411096e-06, ...,
+         9.36525176e-06, 9.36525176e-06, 9.36525176e-06],
+        ...,
+        [4.73863280e-04, 4.73863298e-04, 4.73863409e-04, ...,
+         4.73878969e-04, 4.73878969e-04, 4.73878969e-04],
+        [2.26724870e-04, 2.26035440e-04, 2.21833619e-04, ...,
+         1.85234903e-06, 1.85234903e-06, 1.85234903e-06],
+        [6.34471955e-01, 6.32145815e-01, 6.18166388e-01, ...,
+         5.34812376e-02, 5.34547567e-02, 5.34390778e-02]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>T_habitat</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>18.2 18.2 18.2 ... 18.2 18.2 18.2</div><input id='attrs-25ad63a6-d6cd-4f1c-a882-0ee50ec1d291' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-25ad63a6-d6cd-4f1c-a882-0ee50ec1d291' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-058ec1c4-62f3-45c4-9705-ee32c28583fe' class='xr-var-data-in' type='checkbox'><label for='data-058ec1c4-62f3-45c4-9705-ee32c28583fe' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[18.2       , 18.2       , 18.2       , ..., 18.2       ,
+         18.2       , 18.2       ],
+        [18.2       , 18.2       , 18.2       , ..., 18.2       ,
+         18.2       , 18.2       ],
+        [18.2       , 18.2       , 18.2       , ..., 18.2       ,
+         18.2       , 18.2       ],
+        ...,
+        [ 4.2       ,  4.2       ,  4.2       , ...,  4.2       ,
+          4.2       ,  4.2       ],
+        [18.2       , 18.2       , 18.2       , ..., 18.2       ,
+         18.2       , 18.2       ],
+        [ 4.27430001,  4.27456921,  4.27622899, ..., 18.2       ,
+         18.2       , 18.2       ]],
+
+       [[18.19937772, 18.19937772, 18.19937772, ..., 18.19937772,
+         18.19937772, 18.19937772],
+        [18.19937772, 18.19937772, 18.19937772, ..., 18.19937772,
+         18.19937772, 18.19937772],
+        [18.19937772, 18.19937772, 18.19937772, ..., 18.19937772,
+         18.19937772, 18.19937772],
+...
+        [ 4.19988148,  4.19988148,  4.19988148, ...,  4.19988148,
+          4.19988148,  4.19988148],
+        [18.19751108, 18.19751108, 18.19751108, ..., 18.19751108,
+         18.19751108, 18.19751108],
+        [ 4.20849874,  4.20853042,  4.20872578, ..., 18.19751108,
+         18.19751108, 18.19751108]],
+
+       [[18.19937772, 18.19937772, 18.19937772, ..., 18.19937772,
+         18.19937772, 18.19937772],
+        [18.19937772, 18.19937772, 18.19937772, ..., 18.19937772,
+         18.19937772, 18.19937772],
+        [18.19937772, 18.19937772, 18.19937772, ..., 18.19937772,
+         18.19937772, 18.19937772],
+        ...,
+        [ 4.19997037,  4.19997037,  4.19997037, ...,  4.19997037,
+          4.19997037,  4.19997037],
+        [18.19937772, 18.19937772, 18.19937772, ..., 18.19937772,
+         18.19937772, 18.19937772],
+        [ 4.20859241,  4.2086241 ,  4.20881958, ..., 18.19937772,
+         18.19937772, 18.19937772]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>ingestion_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.2152 0.2152 ... 2.234e-05</div><input id='attrs-31d45983-e678-4981-b43e-d5acdc65a6e7' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-31d45983-e678-4981-b43e-d5acdc65a6e7' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a7bb307e-9641-4d88-9e40-42dba831a031' class='xr-var-data-in' type='checkbox'><label for='data-a7bb307e-9641-4d88-9e40-42dba831a031' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[2.15195849e-01, 2.15195849e-01, 2.15195849e-01, ...,
+         2.15195849e-01, 2.15195849e-01, 2.15195849e-01],
+        [2.15195849e-01, 2.15195849e-01, 2.15195849e-01, ...,
+         2.15195849e-01, 2.15195849e-01, 2.15195849e-01],
+        [2.15195849e-01, 2.15195849e-01, 2.15195849e-01, ...,
+         2.15195849e-01, 2.15195849e-01, 2.15195849e-01],
+        ...,
+        [1.70905011e-04, 1.70286905e-04, 1.66571455e-04, ...,
+         1.52712197e-05, 1.52640682e-05, 1.52598339e-05],
+        [8.58485299e-07, 8.58485299e-07, 8.58485299e-07, ...,
+         8.58485299e-07, 8.58485299e-07, 8.58485299e-07],
+        [4.98908912e-05, 4.97136562e-05, 4.86482121e-05, ...,
+         6.43876983e-07, 6.43876983e-07, 6.43876983e-07]],
+
+       [[2.15233463e-01, 2.15233463e-01, 2.15233463e-01, ...,
+         2.15233463e-01, 2.15233463e-01, 2.15233463e-01],
+        [2.15233463e-01, 2.15233463e-01, 2.15233463e-01, ...,
+         2.15233463e-01, 2.15233463e-01, 2.15233463e-01],
+        [2.15233463e-01, 2.15233463e-01, 2.15233463e-01, ...,
+         2.15233463e-01, 2.15233463e-01, 2.15233463e-01],
+...
+        [1.48480015e-02, 1.48323955e-02, 1.47368545e-02, ...,
+         3.61599112e-03, 3.61451192e-03, 3.61363598e-03],
+        [2.96562419e-05, 2.96562420e-05, 2.96562425e-05, ...,
+         2.96562801e-05, 2.96562801e-05, 2.96562801e-05],
+        [3.40230108e-03, 3.39947523e-03, 3.38214876e-03, ...,
+         2.22577471e-05, 2.22577471e-05, 2.22577471e-05]],
+
+       [[2.15142387e-01, 2.15142387e-01, 2.15142387e-01, ...,
+         2.15142387e-01, 2.15142387e-01, 2.15142387e-01],
+        [2.15142387e-01, 2.15142387e-01, 2.15142387e-01, ...,
+         2.15142387e-01, 2.15142387e-01, 2.15142387e-01],
+        [2.15142387e-01, 2.15142387e-01, 2.15142387e-01, ...,
+         2.15142387e-01, 2.15142387e-01, 2.15142387e-01],
+        ...,
+        [1.48620362e-02, 1.48464520e-02, 1.47510429e-02, ...,
+         3.62583501e-03, 3.62435262e-03, 3.62347480e-03],
+        [2.97698611e-05, 2.97698612e-05, 2.97698617e-05, ...,
+         2.97698999e-05, 2.97698999e-05, 2.97698999e-05],
+        [3.40485541e-03, 3.40203464e-03, 3.38473900e-03, ...,
+         2.23430795e-05, 2.23430795e-05, 2.23430795e-05]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>predation_flux</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>5.737e-12 5.737e-12 ... 0.0 0.0</div><input id='attrs-b8428072-1e53-4431-b9c5-e51cc4f37a93' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b8428072-1e53-4431-b9c5-e51cc4f37a93' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b28e04c8-6ebc-44e6-a221-f11c3cfbb594' class='xr-var-data-in' type='checkbox'><label for='data-b28e04c8-6ebc-44e6-a221-f11c3cfbb594' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[5.73688894e-12, 5.73688894e-12, 5.73688894e-12, ...,
+         5.73688894e-12, 5.73688894e-12, 5.73688894e-12],
+        [5.73688894e-12, 5.73688894e-12, 5.73688894e-12, ...,
+         5.73688894e-12, 5.73688894e-12, 5.73688894e-12],
+        [5.73688894e-12, 5.73688894e-12, 5.73688894e-12, ...,
+         5.73688894e-12, 5.73688894e-12, 5.73688894e-12],
+        ...,
+        [2.35358338e-12, 2.35371925e-12, 2.35454226e-12, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[6.34100703e-12, 6.34100703e-12, 6.34100703e-12, ...,
+         6.34100701e-12, 6.34100701e-12, 6.34100701e-12],
+        [6.34008538e-12, 6.34008538e-12, 6.34008538e-12, ...,
+         6.34008536e-12, 6.34008536e-12, 6.34008536e-12],
+        [6.34008538e-12, 6.34008538e-12, 6.34008538e-12, ...,
+         6.34008536e-12, 6.34008536e-12, 6.34008536e-12],
+...
+        [3.78850058e-10, 3.78737711e-10, 3.77947176e-10, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[3.67521045e-10, 3.67521050e-10, 3.67521082e-10, ...,
+         3.67524168e-10, 3.67524168e-10, 3.67524168e-10],
+        [1.95149730e-10, 1.95149731e-10, 1.95149736e-10, ...,
+         1.95150041e-10, 1.95150041e-10, 1.95150041e-10],
+        [1.96852681e-10, 1.96841259e-10, 1.96772464e-10, ...,
+         1.95150041e-10, 1.95150041e-10, 1.95150041e-10],
+        ...,
+        [3.81896750e-10, 3.81787178e-10, 3.81012941e-10, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>predation_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>5.737e-07 5.737e-07 ... 0.0 0.0</div><input id='attrs-26592df5-6b10-437e-a060-4962fa7bbd92' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-26592df5-6b10-437e-a060-4962fa7bbd92' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-0a69e6b1-2bbe-4898-a748-c9d7c6884b52' class='xr-var-data-in' type='checkbox'><label for='data-0a69e6b1-2bbe-4898-a748-c9d7c6884b52' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[5.73688894e-07, 5.73688894e-07, 5.73688894e-07, ...,
+         5.73688894e-07, 5.73688894e-07, 5.73688894e-07],
+        [5.73688894e-07, 5.73688894e-07, 5.73688894e-07, ...,
+         5.73688894e-07, 5.73688894e-07, 5.73688894e-07],
+        [5.73688894e-07, 5.73688894e-07, 5.73688894e-07, ...,
+         5.73688894e-07, 5.73688894e-07, 5.73688894e-07],
+        ...,
+        [2.35358338e-07, 2.35371925e-07, 2.35454226e-07, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[6.34147210e-07, 6.34147210e-07, 6.34147210e-07, ...,
+         6.34147209e-07, 6.34147209e-07, 6.34147209e-07],
+        [6.34147210e-07, 6.34147210e-07, 6.34147210e-07, ...,
+         6.34147209e-07, 6.34147209e-07, 6.34147209e-07],
+        [6.34147210e-07, 6.34147210e-07, 6.34147210e-07, ...,
+         6.34147209e-07, 6.34147209e-07, 6.34147209e-07],
+...
+        [1.20068218e-06, 1.20041532e-06, 1.19846210e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[2.08330788e-05, 2.08330789e-05, 2.08330793e-05, ...,
+         2.08331119e-05, 2.08331119e-05, 2.08331119e-05],
+        [2.08330788e-05, 2.08330789e-05, 2.08330793e-05, ...,
+         2.08331119e-05, 2.08331119e-05, 2.08331119e-05],
+        [2.08330788e-05, 2.08330789e-05, 2.08330793e-05, ...,
+         2.08331119e-05, 2.08331119e-05, 2.08331119e-05],
+        ...,
+        [1.20647265e-06, 1.20621603e-06, 1.20432442e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>metabolism_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.04296 0.04296 ... 0.00488 0.00488</div><input id='attrs-c35e9103-7d37-47e2-9dae-d6957ef6971c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-c35e9103-7d37-47e2-9dae-d6957ef6971c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d36cec19-ce5a-494a-b9be-88a3e36c3662' class='xr-var-data-in' type='checkbox'><label for='data-d36cec19-ce5a-494a-b9be-88a3e36c3662' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[0.04296266, 0.04296266, 0.04296266, ..., 0.04296266,
+         0.04296266, 0.04296266],
+        [0.04296266, 0.04296266, 0.04296266, ..., 0.04296266,
+         0.04296266, 0.04296266],
+        [0.04296266, 0.04296266, 0.04296266, ..., 0.04296266,
+         0.04296266, 0.04296266],
+        ...,
+        [0.00437442, 0.00437442, 0.00437442, ..., 0.00437442,
+         0.00437442, 0.00437442],
+        [0.00488036, 0.00488036, 0.00488036, ..., 0.00488036,
+         0.00488036, 0.00488036],
+        [0.00148375, 0.00148378, 0.00148399, ..., 0.00488036,
+         0.00488036, 0.00488036]],
+
+       [[0.04296037, 0.04296037, 0.04296037, ..., 0.04296037,
+         0.04296037, 0.04296037],
+        [0.04296037, 0.04296037, 0.04296037, ..., 0.04296037,
+         0.04296037, 0.04296037],
+        [0.04296037, 0.04296037, 0.04296037, ..., 0.04296037,
+         0.04296037, 0.04296037],
+...
+        [0.00437438, 0.00437438, 0.00437438, ..., 0.00437438,
+         0.00437438, 0.00437438],
+        [0.00487932, 0.00487932, 0.00487932, ..., 0.00487932,
+         0.00487932, 0.00487932],
+        [0.00147542, 0.00147543, 0.00147545, ..., 0.00487932,
+         0.00487932, 0.00487932]],
+
+       [[0.04296037, 0.04296037, 0.04296037, ..., 0.04296037,
+         0.04296037, 0.04296037],
+        [0.04296037, 0.04296037, 0.04296037, ..., 0.04296037,
+         0.04296037, 0.04296037],
+        [0.04296037, 0.04296037, 0.04296037, ..., 0.04296037,
+         0.04296037, 0.04296037],
+        ...,
+        [0.00437441, 0.00437441, 0.00437441, ..., 0.00437441,
+         0.00437441, 0.00437441],
+        [0.0048801 , 0.0048801 , 0.0048801 , ..., 0.0048801 ,
+         0.0048801 , 0.0048801 ],
+        [0.00147544, 0.00147544, 0.00147546, ..., 0.0048801 ,
+         0.0048801 , 0.0048801 ]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>mortality_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.000274 0.000274 ... 0.000274</div><input id='attrs-e15721cf-5d29-4a61-b8cc-6fbe3e4f1e4a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-e15721cf-5d29-4a61-b8cc-6fbe3e4f1e4a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f3da3611-da93-4d66-8221-e1979a56a4da' class='xr-var-data-in' type='checkbox'><label for='data-f3da3611-da93-4d66-8221-e1979a56a4da' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        ...,
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397]],
+
+       [[0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+...
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397]],
+
+       [[0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        ...,
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397],
+        [0.00027397, 0.00027397, 0.00027397, ..., 0.00027397,
+         0.00027397, 0.00027397]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>energy_avail_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.1077 0.1077 ... -0.004864</div><input id='attrs-1719d26b-b512-4ace-ba5c-4ba2a9ad30d1' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-1719d26b-b512-4ace-ba5c-4ba2a9ad30d1' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-8aab9d2f-3451-4e83-94a8-9a085bbdeb54' class='xr-var-data-in' type='checkbox'><label for='data-8aab9d2f-3451-4e83-94a8-9a085bbdeb54' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[ 0.10767444,  0.10767444,  0.10767444, ...,  0.10767444,
+          0.10767444,  0.10767444],
+        [ 0.10767444,  0.10767444,  0.10767444, ...,  0.10767444,
+          0.10767444,  0.10767444],
+        [ 0.10767444,  0.10767444,  0.10767444, ...,  0.10767444,
+          0.10767444,  0.10767444],
+        ...,
+        [-0.00425479, -0.00425522, -0.00425782, ..., -0.00436373,
+         -0.00436374, -0.00436374],
+        [-0.00487976, -0.00487976, -0.00487976, ..., -0.00487976,
+         -0.00487976, -0.00487976],
+        [-0.00144882, -0.00144898, -0.00144994, ..., -0.00487991,
+         -0.00487991, -0.00487991]],
+
+       [[ 0.10770305,  0.10770305,  0.10770305, ...,  0.10770305,
+          0.10770305,  0.10770305],
+        [ 0.10770305,  0.10770305,  0.10770305, ...,  0.10770305,
+          0.10770305,  0.10770305],
+        [ 0.10770305,  0.10770305,  0.10770305, ...,  0.10770305,
+          0.10770305,  0.10770305],
+...
+        [ 0.00601922,  0.0060083 ,  0.00594142, ..., -0.00184319,
+         -0.00184422, -0.00184483],
+        [-0.00485856, -0.00485856, -0.00485856, ..., -0.00485856,
+         -0.00485856, -0.00485856],
+        [ 0.00090619,  0.00090421,  0.00089205, ..., -0.00486374,
+         -0.00486374, -0.00486374]],
+
+       [[ 0.1076393 ,  0.1076393 ,  0.1076393 , ...,  0.1076393 ,
+          0.1076393 ,  0.1076393 ],
+        [ 0.1076393 ,  0.1076393 ,  0.1076393 , ...,  0.1076393 ,
+          0.1076393 ,  0.1076393 ],
+        [ 0.1076393 ,  0.1076393 ,  0.1076393 , ...,  0.1076393 ,
+          0.1076393 ,  0.1076393 ],
+        ...,
+        [ 0.00602901,  0.0060181 ,  0.00595132, ..., -0.00183633,
+         -0.00183737, -0.00183798],
+        [-0.00485926, -0.00485926, -0.00485926, ..., -0.00485926,
+         -0.00485926, -0.00485926],
+        [ 0.00090796,  0.00090598,  0.00089385, ..., -0.00486446,
+         -0.00486446, -0.00486446]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>growth_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.1076 0.1076 0.1076 ... 0.0 0.0</div><input id='attrs-bc01ee5d-90e5-4918-90ed-cfd49e794699' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-bc01ee5d-90e5-4918-90ed-cfd49e794699' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-687c500e-da1e-4e9f-9338-0e4f9230391b' class='xr-var-data-in' type='checkbox'><label for='data-687c500e-da1e-4e9f-9338-0e4f9230391b' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[0.10761857, 0.10761857, 0.10761857, ..., 0.10761857,
+         0.10761857, 0.10761857],
+        [0.10761857, 0.10761857, 0.10761857, ..., 0.10761857,
+         0.10761857, 0.10761857],
+        [0.10761857, 0.10761857, 0.10761857, ..., 0.10761857,
+         0.10761857, 0.10761857],
+        ...,
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ]],
+
+       [[0.10764718, 0.10764718, 0.10764718, ..., 0.10764718,
+         0.10764718, 0.10764718],
+        [0.10764718, 0.10764718, 0.10764718, ..., 0.10764718,
+         0.10764718, 0.10764718],
+        [0.10764718, 0.10764718, 0.10764718, ..., 0.10764718,
+         0.10764718, 0.10764718],
+...
+        [0.00567828, 0.00566734, 0.00560033, ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ]],
+
+       [[0.10756332, 0.10756332, 0.10756332, ..., 0.10756332,
+         0.10756332, 0.10756332],
+        [0.10756332, 0.10756332, 0.10756332, ..., 0.10756332,
+         0.10756332, 0.10756332],
+        [0.10756332, 0.10756332, 0.10756332, ..., 0.10756332,
+         0.10756332, 0.10756332],
+        ...,
+        [0.00568808, 0.00567716, 0.00561024, ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>reproduction_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... 0.0 0.0 0.0 0.0</div><input id='attrs-49010861-3084-4758-ac4c-36c276ad7ed0' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-49010861-3084-4758-ac4c-36c276ad7ed0' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a04f3115-7968-41cf-8bd9-2b3a87c12035' class='xr-var-data-in' type='checkbox'><label for='data-a04f3115-7968-41cf-8bd9-2b3a87c12035' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        ...,
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ]],
+
+       [[0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+...
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.00045319, 0.00045219, 0.0004461 , ..., 0.        ,
+         0.        , 0.        ]],
+
+       [[0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        ...,
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.        , 0.        , 0.        , ..., 0.        ,
+         0.        , 0.        ],
+        [0.00045408, 0.00045309, 0.000447  , ..., 0.        ,
+         0.        , 0.        ]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>recruitment_flux</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>1.453e-09 1.453e-09 ... 0.0 0.0</div><input id='attrs-ef7a2d30-1cd4-483b-9a46-a70b1ea10369' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-ef7a2d30-1cd4-483b-9a46-a70b1ea10369' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-4d55a3ed-a203-43d0-9207-9bddbd94aefa' class='xr-var-data-in' type='checkbox'><label for='data-4d55a3ed-a203-43d0-9207-9bddbd94aefa' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[1.45336987e-09, 1.45336987e-09, 1.45336987e-09, ...,
+         1.45335750e-09, 1.45335750e-09, 1.45335750e-09],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        ...,
+        [1.07618568e-06, 1.07618568e-06, 1.07618568e-06, ...,
+         1.07618568e-06, 1.07618568e-06, 1.07618568e-06],
+        [1.52760051e-07, 1.52760050e-07, 1.52760050e-07, ...,
+         1.52757553e-07, 1.52757553e-07, 1.52757553e-07],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[1.61078411e-09, 1.61078411e-09, 1.61078411e-09, ...,
+         1.61077040e-09, 1.61077040e-09, 1.61077040e-09],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+...
+        [1.01609016e-06, 1.01603176e-06, 1.01568006e-06, ...,
+         1.00740802e-06, 1.00740802e-06, 1.00740802e-06],
+        [4.83147500e-06, 4.83147507e-06, 4.83147556e-06, ...,
+         4.83173548e-06, 4.83173548e-06, 4.83173548e-06],
+        [1.79166228e-06, 1.78807607e-06, 1.76612177e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[5.90102830e-08, 5.90102837e-08, 5.90102884e-08, ...,
+         5.90120491e-08, 5.90120491e-08, 5.90120491e-08],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [1.02199215e-09, 1.01665039e-09, 9.84311969e-10, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        ...,
+        [1.01637051e-06, 1.01631154e-06, 1.01595632e-06, ...,
+         1.00757800e-06, 1.00757800e-06, 1.00757800e-06],
+        [4.85000944e-06, 4.85000951e-06, 4.85000998e-06, ...,
+         4.85027228e-06, 4.85027228e-06, 4.85027228e-06],
+        [1.80050581e-06, 1.79691285e-06, 1.77491690e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>fish_catch_rate</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 ... 0.0008219 0.0008219</div><input id='attrs-a61ae593-8d59-4dd1-a51e-1a1995f4e85f' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-a61ae593-8d59-4dd1-a51e-1a1995f4e85f' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-e918b917-ddbb-46a8-aee1-421b5507f937' class='xr-var-data-in' type='checkbox'><label for='data-e918b917-ddbb-46a8-aee1-421b5507f937' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        ...,
+        [8.21917808e-05, 8.21917808e-05, 8.21917808e-05, ...,
+         8.21917808e-05, 8.21917808e-05, 8.21917808e-05],
+        [8.21917808e-04, 8.21917808e-04, 8.21917808e-04, ...,
+         8.21917808e-04, 8.21917808e-04, 8.21917808e-04],
+        [8.21917808e-04, 8.21917808e-04, 8.21917808e-04, ...,
+         8.21917808e-04, 8.21917808e-04, 8.21917808e-04]],
+
+       [[0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+...
+        [8.21917808e-05, 8.21917808e-05, 8.21917808e-05, ...,
+         8.21917808e-05, 8.21917808e-05, 8.21917808e-05],
+        [8.21917808e-04, 8.21917808e-04, 8.21917808e-04, ...,
+         8.21917808e-04, 8.21917808e-04, 8.21917808e-04],
+        [8.21917808e-04, 8.21917808e-04, 8.21917808e-04, ...,
+         8.21917808e-04, 8.21917808e-04, 8.21917808e-04]],
+
+       [[0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        ...,
+        [8.21917808e-05, 8.21917808e-05, 8.21917808e-05, ...,
+         8.21917808e-05, 8.21917808e-05, 8.21917808e-05],
+        [8.21917808e-04, 8.21917808e-04, 8.21917808e-04, ...,
+         8.21917808e-04, 8.21917808e-04, 8.21917808e-04],
+        [8.21917808e-04, 8.21917808e-04, 8.21917808e-04, ...,
+         8.21917808e-04, 8.21917808e-04, 8.21917808e-04]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>encounter_rate_link</span></div><div class='xr-var-dims'>(time, feeding_link, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>2.288 2.288 2.288 ... 0.0 0.0 0.0</div><input id='attrs-030a23b8-5e45-4252-9906-d8fb8732f4f0' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-030a23b8-5e45-4252-9906-d8fb8732f4f0' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-15f8d5e0-4980-4bfe-af6e-f4024f06336f' class='xr-var-data-in' type='checkbox'><label for='data-15f8d5e0-4980-4bfe-af6e-f4024f06336f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[2.28846851e+00, 2.28846851e+00, 2.28846851e+00, ...,
+         2.28846851e+00, 2.28846851e+00, 2.28846851e+00],
+        [2.28846851e+00, 2.28846851e+00, 2.28846851e+00, ...,
+         2.28846851e+00, 2.28846851e+00, 2.28846851e+00],
+        [2.28846851e+00, 2.28846851e+00, 2.28846851e+00, ...,
+         2.28846851e+00, 2.28846851e+00, 2.28846851e+00],
+        ...,
+        [1.78534899e-07, 1.78537927e-07, 1.78556597e-07, ...,
+         4.29277342e-07, 4.29277342e-07, 4.29277342e-07],
+        [2.38046532e-07, 2.38050569e-07, 2.38075463e-07, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [4.99548814e-05, 4.97735637e-05, 4.86838866e-05, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[2.29359731e+00, 2.29359731e+00, 2.29359731e+00, ...,
+         2.29359731e+00, 2.29359731e+00, 2.29359731e+00],
+        [2.29359731e+00, 2.29359731e+00, 2.29359731e+00, ...,
+         2.29359731e+00, 2.29359731e+00, 2.29359731e+00],
+        [2.29359731e+00, 2.29359731e+00, 2.29359731e+00, ...,
+         2.29359731e+00, 2.29359731e+00, 2.29359731e+00],
+...
+        [5.64083033e-06, 5.64084159e-06, 5.64091106e-06, ...,
+         1.36172833e-05, 1.36172833e-05, 1.36172833e-05],
+        [7.47998611e-06, 7.47944527e-06, 7.47608981e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [1.49915233e-02, 1.49365904e-02, 1.46064598e-02, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[2.28329703e+00, 2.28329703e+00, 2.28329703e+00, ...,
+         2.28329703e+00, 2.28329703e+00, 2.28329703e+00],
+        [2.28329703e+00, 2.28329703e+00, 2.28329703e+00, ...,
+         2.28329703e+00, 2.28329703e+00, 2.28329703e+00],
+        [2.28329703e+00, 2.28329703e+00, 2.28329703e+00, ...,
+         2.28329703e+00, 2.28329703e+00, 2.28329703e+00],
+        ...,
+        [5.65857483e-06, 5.65858613e-06, 5.65865586e-06, ...,
+         1.36616455e-05, 1.36616455e-05, 1.36616455e-05],
+        [7.50399516e-06, 7.50345315e-06, 7.50009068e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [1.50409924e-02, 1.49858781e-02, 1.46546572e-02, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>encounter_rate_total</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>2.288 2.288 ... 2.239e-05 2.239e-05</div><input id='attrs-da4a6445-3dca-446e-a1fb-4b7fb3a6e6bb' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-da4a6445-3dca-446e-a1fb-4b7fb3a6e6bb' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-22668c1a-4435-4a6f-9cbe-4dcf984f85b3' class='xr-var-data-in' type='checkbox'><label for='data-22668c1a-4435-4a6f-9cbe-4dcf984f85b3' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[2.28846851e+00, 2.28846851e+00, 2.28846851e+00, ...,
+         2.28846851e+00, 2.28846851e+00, 2.28846851e+00],
+        [2.28846851e+00, 2.28846851e+00, 2.28846851e+00, ...,
+         2.28846851e+00, 2.28846851e+00, 2.28846851e+00],
+        [2.28846851e+00, 2.28846851e+00, 2.28846851e+00, ...,
+         2.28846851e+00, 2.28846851e+00, 2.28846851e+00],
+        ...,
+        [1.72321332e-04, 1.71692958e-04, 1.67916578e-04, ...,
+         1.52824433e-05, 1.52752813e-05, 1.52710408e-05],
+        [8.58554684e-07, 8.58554684e-07, 8.58554684e-07, ...,
+         8.58554684e-07, 8.58554684e-07, 8.58554684e-07],
+        [5.04607302e-05, 5.02794211e-05, 4.91897970e-05, ...,
+         6.43916013e-07, 6.43916013e-07, 6.43916013e-07]],
+
+       [[2.29359731e+00, 2.29359731e+00, 2.29359731e+00, ...,
+         2.29359731e+00, 2.29359731e+00, 2.29359731e+00],
+        [2.29359731e+00, 2.29359731e+00, 2.29359731e+00, ...,
+         2.29359731e+00, 2.29359731e+00, 2.29359731e+00],
+        [2.29359731e+00, 2.29359731e+00, 2.29359731e+00, ...,
+         2.29359731e+00, 2.29359731e+00, 2.29359731e+00],
+...
+        [5.19282864e-02, 5.17379043e-02, 5.05937631e-02, ...,
+         4.37718084e-03, 4.37501351e-03, 4.37373026e-03],
+        [2.97392800e-05, 2.97392800e-05, 2.97392805e-05, ...,
+         2.97393183e-05, 2.97393183e-05, 2.97393183e-05],
+        [1.50082427e-02, 1.49533093e-02, 1.46231754e-02, ...,
+         2.23044888e-05, 2.23044888e-05, 2.23044888e-05]],
+
+       [[2.28329703e+00, 2.28329703e+00, 2.28329703e+00, ...,
+         2.28329703e+00, 2.28329703e+00, 2.28329703e+00],
+        [2.28329703e+00, 2.28329703e+00, 2.28329703e+00, ...,
+         2.28329703e+00, 2.28329703e+00, 2.28329703e+00],
+        [2.28329703e+00, 2.28329703e+00, 2.28329703e+00, ...,
+         2.28329703e+00, 2.28329703e+00, 2.28329703e+00],
+        ...,
+        [5.20996241e-02, 5.19086132e-02, 5.07606935e-02, ...,
+         4.39160841e-03, 4.38943394e-03, 4.38814646e-03],
+        [2.98535277e-05, 2.98535278e-05, 2.98535283e-05, ...,
+         2.98535667e-05, 2.98535667e-05, 2.98535667e-05],
+        [1.50577703e-02, 1.50026555e-02, 1.46714313e-02, ...,
+         2.23901751e-05, 2.23901751e-05, 2.23901751e-05]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>consumption_rate_max_pred</span></div><div class='xr-var-dims'>(time, fish, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.2375 0.2375 ... 0.01062 0.01062</div><input id='attrs-e425da9c-dba7-4a2e-9f82-f8de3fe3b19e' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-e425da9c-dba7-4a2e-9f82-f8de3fe3b19e' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b8c9415a-9761-4340-bb1e-3b566b3c9107' class='xr-var-data-in' type='checkbox'><label for='data-b8c9415a-9761-4340-bb1e-3b566b3c9107' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[0.23753216, 0.23753216, 0.23753216, ..., 0.23753216,
+         0.23753216, 0.23753216],
+        [0.23753216, 0.23753216, 0.23753216, ..., 0.23753216,
+         0.23753216, 0.23753216],
+        [0.23753216, 0.23753216, 0.23753216, ..., 0.23753216,
+         0.23753216, 0.23753216],
+        ...,
+        [0.02079372, 0.02079372, 0.02079372, ..., 0.02079372,
+         0.02079372, 0.02079372],
+        [0.01062276, 0.01062276, 0.01062276, ..., 0.01062276,
+         0.01062276, 0.01062276],
+        [0.00441797, 0.00441804, 0.0044185 , ..., 0.01062276,
+         0.01062276, 0.01062276]],
+
+       [[0.23752284, 0.23752284, 0.23752284, ..., 0.23752284,
+         0.23752284, 0.23752284],
+        [0.23752284, 0.23752284, 0.23752284, ..., 0.23752284,
+         0.23752284, 0.23752284],
+        [0.23752284, 0.23752284, 0.23752284, ..., 0.23752284,
+         0.23752284, 0.23752284],
+...
+        [0.02079356, 0.02079356, 0.02079356, ..., 0.02079356,
+         0.02079356, 0.02079356],
+        [0.0106211 , 0.0106211 , 0.0106211 , ..., 0.0106211 ,
+         0.0106211 , 0.0106211 ],
+        [0.00439969, 0.0043997 , 0.00439975, ..., 0.0106211 ,
+         0.0106211 , 0.0106211 ]],
+
+       [[0.23752284, 0.23752284, 0.23752284, ..., 0.23752284,
+         0.23752284, 0.23752284],
+        [0.23752284, 0.23752284, 0.23752284, ..., 0.23752284,
+         0.23752284, 0.23752284],
+        [0.23752284, 0.23752284, 0.23752284, ..., 0.23752284,
+         0.23752284, 0.23752284],
+        ...,
+        [0.02079368, 0.02079368, 0.02079368, ..., 0.02079368,
+         0.02079368, 0.02079368],
+        [0.01062234, 0.01062234, 0.01062234, ..., 0.01062234,
+         0.01062234, 0.01062234],
+        [0.00439972, 0.00439973, 0.00439978, ..., 0.01062234,
+         0.01062234, 0.01062234]]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>consumption_rate_link</span></div><div class='xr-var-dims'>(time, feeding_link, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.2152 0.2152 0.2152 ... 0.0 0.0</div><input id='attrs-0ce4a773-8fea-4c7f-a9b5-4ab19ab48ff6' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-0ce4a773-8fea-4c7f-a9b5-4ab19ab48ff6' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-4d8a515f-03f6-4df9-a1ae-35459d6d787a' class='xr-var-data-in' type='checkbox'><label for='data-4d8a515f-03f6-4df9-a1ae-35459d6d787a' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[2.15195849e-01, 2.15195849e-01, 2.15195849e-01, ...,
+         2.15195849e-01, 2.15195849e-01, 2.15195849e-01],
+        [2.15195849e-01, 2.15195849e-01, 2.15195849e-01, ...,
+         2.15195849e-01, 2.15195849e-01, 2.15195849e-01],
+        [2.15195849e-01, 2.15195849e-01, 2.15195849e-01, ...,
+         2.15195849e-01, 2.15195849e-01, 2.15195849e-01],
+        ...,
+        [1.76518754e-07, 1.76528944e-07, 1.76590670e-07, ...,
+         4.29251322e-07, 4.29251322e-07, 4.29251322e-07],
+        [2.35358338e-07, 2.35371925e-07, 2.35454226e-07, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [4.93907547e-05, 4.92134908e-05, 4.81478718e-05, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[2.15233463e-01, 2.15233463e-01, 2.15233463e-01, ...,
+         2.15233463e-01, 2.15233463e-01, 2.15233463e-01],
+        [2.15233463e-01, 2.15233463e-01, 2.15233463e-01, ...,
+         2.15233463e-01, 2.15233463e-01, 2.15233463e-01],
+        [2.15233463e-01, 2.15233463e-01, 2.15233463e-01, ...,
+         2.15233463e-01, 2.15233463e-01, 2.15233463e-01],
+...
+        [1.27875085e-06, 1.28238512e-06, 1.30466877e-06, ...,
+         1.35887467e-05, 1.35887467e-05, 1.35887467e-05],
+        [1.69567919e-06, 1.70037203e-06, 1.72912156e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [3.39851086e-03, 3.39567437e-03, 3.37828265e-03, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]],
+
+       [[2.15142387e-01, 2.15142387e-01, 2.15142387e-01, ...,
+         2.15142387e-01, 2.15142387e-01, 2.15142387e-01],
+        [2.15142387e-01, 2.15142387e-01, 2.15142387e-01, ...,
+         2.15142387e-01, 2.15142387e-01, 2.15142387e-01],
+        [2.15142387e-01, 2.15142387e-01, 2.15142387e-01, ...,
+         2.15142387e-01, 2.15142387e-01, 2.15142387e-01],
+        ...,
+        [1.27951408e-06, 1.28315324e-06, 1.30546725e-06, ...,
+         1.36329095e-05, 1.36329095e-05, 1.36329095e-05],
+        [1.69679959e-06, 1.70149928e-06, 1.73029126e-06, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00],
+        [3.40106161e-03, 3.39823017e-03, 3.38086917e-03, ...,
+         0.00000000e+00, 0.00000000e+00, 0.00000000e+00]]])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-fb9e5e2d-f808-4bfa-9b8a-ca2482d6d197' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-fb9e5e2d-f808-4bfa-9b8a-ca2482d6d197' class='xr-section-summary'  title='Expand/collapse section'>Attributes: <span>(0)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'></dl></div></li></ul></div></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">nsteps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">check_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">nsteps</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">test_ds</span> <span class="o">=</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">make_plot</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">check_key</span> <span class="o">=</span> <span class="s2">&quot;day1&quot;</span>
+    <span class="n">test_ds</span> <span class="o">=</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;T_habitat&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;T_habitat&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 1.8199e+01 | 1.8199e+01 | 0.0000e+00 |
+| Sp | 1.8199e+01 | 1.8199e+01 | 0.0000e+00 |
+| Sd | 1.8199e+01 | 1.8199e+01 | 0.0000e+00 |
+| Mf | 1.8199e+01 | 1.8199e+01 | 0.0000e+00 |
+| Mp | 1.8199e+01 | 1.8199e+01 | 0.0000e+00 |
+| Md | 4.2000e+00 | 4.2000e+00 | 0.0000e+00 |
+| Lp | 1.8199e+01 | 1.8199e+01 | 0.0000e+00 |
+| Ld | 4.2086e+00 | 4.2086e+00 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;metabolism&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;metabolism_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 4.2960e-02 | 4.2960e-02 | 0.0000e+00 |
+| Sp | 4.2960e-02 | 4.2960e-02 | 0.0000e+00 |
+| Sd | 4.2960e-02 | 4.2960e-02 | 0.0000e+00 |
+| Mf | 1.4479e-02 | 1.4479e-02 | 2.3961e-16 |
+| Mp | 1.4479e-02 | 1.4479e-02 | 2.3961e-16 |
+| Md | 4.3744e-03 | 4.3744e-03 | 0.0000e+00 |
+| Lp | 4.8801e-03 | 4.8801e-03 | 0.0000e+00 |
+| Ld | 1.4754e-03 | 1.4754e-03 | 2.9393e-16 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;encounter&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;encounter_rate_link&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| feeding_link | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf_Zoo | 2.2833e+00 | 2.2833e+00 | 1.9449e-16 |
+| Sp_Zoo | 2.2833e+00 | 2.2833e+00 | 1.9449e-16 |
+| Sd_Zoo | 2.2833e+00 | 2.2833e+00 | 1.9449e-16 |
+| Mf_Zoo | 2.9647e-01 | 2.9647e-01 | 5.6172e-16 |
+| Mf_Sf | 3.4993e-06 | 3.4993e-06 | 2.4206e-16 |
+| Mf_Sp | 1.8581e-06 | 1.8581e-06 | 3.4190e-16 |
+| Mf_Sd | 1.8743e-06 | 1.8743e-06 | 3.3894e-16 |
+| Mp_Zoo | 2.9647e-01 | 2.9647e-01 | 5.6172e-16 |
+| Mp_Sf | 3.4993e-06 | 3.4993e-06 | 2.4206e-16 |
+| Mp_Sp | 1.8581e-06 | 1.8581e-06 | 3.4190e-16 |
+| Mp_Sd | 1.8743e-06 | 1.8743e-06 | 3.3894e-16 |
+| Md_benthic_prey | 5.2100e-02 | 5.2100e-02 | 1.3319e-16 |
+| Lp_Mf | 1.1638e-05 | 1.1638e-05 | 4.3669e-16 |
+| Lp_Mp | 1.8216e-05 | 1.8216e-05 | 0.0000e+00 |
+| Lp_Md | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Ld_Mf | 3.6153e-06 | 3.6153e-06 | 1.1715e-16 |
+| Ld_Mp | 5.6586e-06 | 5.6586e-06 | 1.4969e-16 |
+| Ld_Md | 7.5040e-06 | 7.5040e-06 | 0.0000e+00 |
+| Ld_benthic_prey | 1.5041e-02 | 1.5041e-02 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;consumption&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;consumption_rate_link&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| feeding_link | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf_Zoo | 2.1514e-01 | 2.1514e-01 | 0.0000e+00 |
+| Sp_Zoo | 2.1514e-01 | 2.1514e-01 | 0.0000e+00 |
+| Sd_Zoo | 2.1514e-01 | 2.1514e-01 | 0.0000e+00 |
+| Mf_Zoo | 4.2952e-02 | 4.2952e-02 | 1.6155e-16 |
+| Mf_Sf | 5.0697e-07 | 5.0697e-07 | 2.0885e-16 |
+| Mf_Sp | 2.6920e-07 | 2.6920e-07 | 1.9666e-16 |
+| Mf_Sd | 2.7154e-07 | 2.7154e-07 | 1.9496e-16 |
+| Mp_Zoo | 4.2952e-02 | 4.2952e-02 | 1.6155e-16 |
+| Mp_Sf | 5.0697e-07 | 5.0697e-07 | 2.0885e-16 |
+| Mp_Sp | 2.6920e-07 | 2.6920e-07 | 1.9666e-16 |
+| Mp_Sd | 2.7154e-07 | 2.7154e-07 | 1.9496e-16 |
+| Md_benthic_prey | 1.4862e-02 | 1.4862e-02 | 2.3344e-16 |
+| Lp_Mf | 1.1605e-05 | 1.1605e-05 | 1.4597e-16 |
+| Lp_Mp | 1.8164e-05 | 1.8164e-05 | 3.7305e-16 |
+| Lp_Md | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Ld_Mf | 8.1749e-07 | 8.1749e-07 | 0.0000e+00 |
+| Ld_Mp | 1.2795e-06 | 1.2795e-06 | 1.6550e-16 |
+| Ld_Md | 1.6968e-06 | 1.6968e-06 | 2.4960e-16 |
+| Ld_benthic_prey | 3.4011e-03 | 3.4011e-03 | 1.2751e-16 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;ingestion&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;ingestion_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 2.1514e-01 | 2.1514e-01 | 0.0000e+00 |
+| Sp | 2.1514e-01 | 2.1514e-01 | 0.0000e+00 |
+| Sd | 2.1514e-01 | 2.1514e-01 | 0.0000e+00 |
+| Mf | 4.2953e-02 | 4.2953e-02 | 1.6155e-16 |
+| Mp | 4.2953e-02 | 4.2953e-02 | 1.6155e-16 |
+| Md | 1.4862e-02 | 1.4862e-02 | 2.3344e-16 |
+| Lp | 2.9770e-05 | 2.9770e-05 | 2.2762e-16 |
+| Ld | 3.4049e-03 | 3.4049e-03 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;predation&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;predation_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 2.0833e-05 | 2.0833e-05 | 1.6263e-16 |
+| Sp | 2.0833e-05 | 2.0833e-05 | 1.6263e-16 |
+| Sd | 2.0833e-05 | 2.0833e-05 | 1.6263e-16 |
+| Mf | 1.3917e-05 | 1.3917e-05 | 6.0864e-16 |
+| Mp | 2.7834e-05 | 2.7834e-05 | 7.3036e-16 |
+| Md | 1.2065e-06 | 1.2065e-06 | 5.2656e-16 |
+| Lp | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Ld | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;mortality&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;mortality_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+| Sp | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+| Sd | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+| Mf | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+| Mp | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+| Md | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+| Lp | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+| Ld | 2.7397e-04 | 2.7397e-04 | 1.9787e-16 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;fishing&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;fish_catch_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Sp | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Sd | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Mf | 8.2192e-04 | 8.2192e-04 | 0.0000e+00 |
+| Mp | 8.2192e-05 | 8.2192e-05 | 1.6489e-16 |
+| Md | 8.2192e-05 | 8.2192e-05 | 1.6489e-16 |
+| Lp | 8.2192e-04 | 8.2192e-04 | 0.0000e+00 |
+| Ld | 8.2192e-04 | 8.2192e-04 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;avail_energy&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;energy_avail_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 1.0764e-01 | 1.0764e-01 | 3.8679e-16 |
+| Sp | 1.0764e-01 | 1.0764e-01 | 3.8679e-16 |
+| Sd | 1.0764e-01 | 1.0764e-01 | 3.8679e-16 |
+| Mf | 1.5588e-02 | 1.5588e-02 | 6.6773e-16 |
+| Mp | 1.5588e-02 | 1.5588e-02 | 6.6773e-16 |
+| Md | 6.0290e-03 | 6.0290e-03 | 2.8773e-16 |
+| Lp | -4.8593e-03 | -4.8593e-03 | -0.0000e+00 |
+| Ld | 9.0796e-04 | 9.0796e-04 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;growth&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;growth_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 1.0756e-01 | 1.0756e-01 | 3.8706e-16 |
+| Sp | 1.0756e-01 | 1.0756e-01 | 3.8706e-16 |
+| Sd | 1.0756e-01 | 1.0756e-01 | 3.8706e-16 |
+| Mf | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Mp | 1.5239e-02 | 1.5239e-02 | 3.4150e-16 |
+| Md | 5.6881e-03 | 5.6881e-03 | 3.0497e-16 |
+| Lp | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Ld | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;reproduction&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;reproduction_rate&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Sp | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Sd | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Mf | 1.4510e-02 | 1.4510e-02 | 4.7820e-16 |
+| Mp | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Md | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Lp | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Ld | 4.5408e-04 | 4.5408e-04 | 1.1938e-16 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;recruitment&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;recruitment_flux&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| fish | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 5.9010e-08 | 5.9010e-08 | 3.3642e-16 |
+| Sp | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| Sd | 1.0220e-09 | 1.0220e-09 | 0.0000e+00 |
+| Mf | 1.8975e-06 | 1.8975e-06 | 4.4638e-16 |
+| Mp | 1.0076e-06 | 1.0076e-06 | 2.1017e-16 |
+| Md | 1.0164e-06 | 1.0164e-06 | 4.1669e-16 |
+| Lp | 4.8500e-06 | 4.8500e-06 | 3.4929e-16 |
+| Ld | 1.8005e-06 | 1.8005e-06 | 5.8805e-16 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
+    <span class="n">baselines</span><span class="p">[</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span>
+    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span>
+    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| group | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf | 1.7696e-05 | 1.7696e-05 | 3.8292e-16 |
+| Sp | 9.3653e-06 | 9.3653e-06 | 0.0000e+00 |
+| Sd | 9.4480e-06 | 9.4480e-06 | 0.0000e+00 |
+| Mf | 4.0856e-04 | 4.0856e-04 | 1.3269e-16 |
+| Mp | 3.1926e-04 | 3.1926e-04 | 3.3960e-16 |
+| Md | 3.1755e-04 | 3.1755e-04 | 1.7071e-16 |
+| Lp | 4.7386e-04 | 4.7386e-04 | 4.5760e-16 |
+| Ld | 2.2672e-04 | 2.2672e-04 | 1.1955e-16 |
+| benthic_prey | 6.3447e-01 | 6.3447e-01 | 0.0000e+00 |
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-miniconda3-dev-feisty-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-miniconda3-dev-feisty-py",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-miniconda3-dev-feisty-py'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Colleen Petrik and Matthew C. Long<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
