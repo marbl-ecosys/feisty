@@ -1,0 +1,49 @@
+name: CI
+on:
+  push:
+    branches:
+      - 'main'
+  schedule:
+    - cron: '0 0 * * *' # Daily “At 00:00”
+  workflow_dispatch: # allows you to trigger manually
+
+jobs:
+  build-docs-push-ghpages:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        # python-version: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+
+      # Install dependencies
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          channels: conda-forge
+          channel-priority: strict
+          mamba-version: '*'
+          activate-environment: dev-feisty
+          auto-update-conda: false
+          python-version: 3.8
+          use-only-tar-bz2: true
+
+      - name: Set up conda environment
+        run: |
+          mamba env update -f ci/environment.yml
+          conda list
+
+      # Build the book
+      - name: Build the book
+        run: |
+          jupyter-book build docs/ --all
+
+      # Deploy the book's HTML to gh-pages branch
+      - name: GitHub Pages action
+        uses: peaceiris/actions-gh-pages@v3.6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html
