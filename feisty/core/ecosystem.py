@@ -377,19 +377,6 @@ class reproduction_routing(object):
                 self.efficiency[i],
             )
 
-    # def __next__(self):
-    #     if self._index == len(self):
-    #         raise StopIteration
-    #     i = self._index
-    #     self._index += 1
-    #     return reproduction_link(
-    #         self.ndx_from[i],
-    #         self.i_fish_from[i],
-    #         self.i_fish[i],
-    #         self.is_larval[i],
-    #         self.efficiency[i],
-    #     )
-
 
 class reproduction_link(object):
     """Data structure with the information pertaining to a specific link in
