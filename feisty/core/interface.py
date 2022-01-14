@@ -471,7 +471,6 @@ class feisty_instance_type(object):
         self._compute_ingestion()
         self._compute_predation()
         self._compute_mortality()
-
         self._compute_fish_catch()
         self._compute_energy_avail()
         self._compute_growth()

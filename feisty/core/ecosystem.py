@@ -331,8 +331,6 @@ class reproduction_routing(object):
 
     def __init__(self, routing_settings, fish_list, all_groups):
 
-        # TODO: ASSERT THAT "from" IS UNIQUE!
-
         if isinstance(all_groups, xr.DataArray):
             all_groups = all_groups.values
         elif isinstance(all_groups, list):
