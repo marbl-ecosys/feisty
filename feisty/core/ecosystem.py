@@ -69,13 +69,14 @@ def init_module_variables(
         functional_types.keys()
     ), f'unknown functional type specified in `pelagic_demersal_coupling_type_keys` list: {pelagic_demersal_coupling_type_keys}'
 
-    assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
-        functional_types.keys()
-    ), f'unknown functional type specified in `pelagic_demersal_coupling_apply_pref_type_keys` list: {pelagic_demersal_coupling_apply_pref_type_keys}'
+    if pelagic_demersal_coupling_apply_pref_type_keys:
+        assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
+            functional_types.keys()
+        ), f'unknown functional type specified in `pelagic_demersal_coupling_apply_pref_type_keys` list: {pelagic_demersal_coupling_apply_pref_type_keys}'
 
-    assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
-        pelagic_demersal_coupling_type_keys
-    ), f'pelagic_demersal_coupling_apply_pref_types specifies types not found in pelagic_demersal_coupling_type_keys: {pelagic_demersal_coupling_apply_pref_type_keys}'
+        assert not set(pelagic_demersal_coupling_apply_pref_type_keys) - set(
+            pelagic_demersal_coupling_type_keys
+        ), f'pelagic_demersal_coupling_apply_pref_types specifies types not found in pelagic_demersal_coupling_type_keys: {pelagic_demersal_coupling_apply_pref_type_keys}'
 
     assert not set(pelagic_functional_type_keys) - set(
         functional_types.keys()
@@ -113,9 +114,12 @@ def init_module_variables(
 
     _zooplankton_functional_type_keys = set(zooplankton_functional_type_keys)
 
-    _pdc_apply_pref_func_types = [
-        functional_types[k] for k in pelagic_demersal_coupling_apply_pref_type_keys
-    ]
+    if pelagic_demersal_coupling_apply_pref_type_keys:
+        _pdc_apply_pref_func_types = [
+            functional_types[k] for k in pelagic_demersal_coupling_apply_pref_type_keys
+        ]
+    else:
+        _pdc_apply_pref_func_types = []
     PI_be_cutoff = benthic_pelagic_depth_cutoff
 
 
@@ -261,6 +265,11 @@ class fish_type(object):
         """Return `True` if key is a demersal functional type"""
         return self.functional_type_key in _demersal_functional_type_keys
 
+    @property
+    def is_small(self):
+        """Return `True` if size_class is small"""
+        return self.size_class == 'small'
+
 
 class zooplankton_type(object):
     """Data structure containing zooplankton parameters."""
@@ -270,6 +279,7 @@ class zooplankton_type(object):
         self.functional_type_key = 'zooplankton'
         self.functional_type = functional_types['zooplankton']
         self.is_demersal = False
+        self.is_small = False
         self.is_zooplankton = True
         for key, default_value in _zooplankton_defaults.items():
             assign_key = key
@@ -287,6 +297,7 @@ class benthic_prey_type(object):
         self.functional_type_key = 'benthic_prey'
         self.functional_type = functional_types['benthic_prey']
         self.is_zooplankton = False
+        self.is_small = False
 
         for key, default_value in _benthic_prey_defaults.items():
             assign_key = key
@@ -296,7 +307,7 @@ class benthic_prey_type(object):
         if kwargs:
             raise ValueError(f'unknown parameters: {kwargs}')
 
-        self.lcarrying_capacity = self.carrying_capacity == 0.0
+        self.lcarrying_capacity = not self.carrying_capacity == 0.0
 
     @property
     def is_demersal(self):
@@ -328,10 +339,14 @@ class reproduction_routing(object):
         self._n_links = len(routing_settings)
         self._index = 0
 
+        # index (of "from" part of link) into groups; used for biomass
         self.ndx_from = [np.where(link['from'] == all_groups)[0][0] for link in routing_settings]
 
         fish_names = np.array([f.name for f in fish_list], dtype=object)
+        # indices of "to" and "from" part of links into fish; used from rest of terms
+        # (reproduction rate, growth rate, actual recruitment rate)
         self.i_fish = [np.where(link['to'] == fish_names)[0][0] for link in routing_settings]
+        self.i_fish_from = [np.where(link['from'] == fish_names)[0][0] for link in routing_settings]
 
         self.is_larval = []
         self.efficiency = []
@@ -353,28 +368,27 @@ class reproduction_routing(object):
         return self._n_links
 
     def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self._index == len(self):
-            raise StopIteration
-        i = self._index
-        self._index += 1
-        return reproduction_link(
-            self.ndx_from[i], self.i_fish[i], self.is_larval[i], self.efficiency[i]
-        )
+        for i in range(self._n_links):
+            yield reproduction_link(
+                self.ndx_from[i],
+                self.i_fish_from[i],
+                self.i_fish[i],
+                self.is_larval[i],
+                self.efficiency[i],
+            )
 
 
 class reproduction_link(object):
     """Data structure with the information pertaining to a specific link in
     reproduction routing list."""
 
-    def __init__(self, ndx_from, i_fish, is_larval, efficiency):
+    def __init__(self, ndx_from, i_fish_from, i_fish, is_larval, efficiency):
         assert np.isscalar(ndx_from)
         assert np.isscalar(i_fish)
         assert np.isscalar(is_larval)
         assert np.isscalar(efficiency) or efficiency is None
         self.ndx_from = ndx_from
+        self.i_fish_from = i_fish_from
         self.i_fish = i_fish
         self.is_larval = is_larval
         self.efficiency = efficiency

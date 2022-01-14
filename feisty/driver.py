@@ -93,6 +93,10 @@ class simulation(object):
             'reproduction_rate',
             'recruitment_flux',
             'fish_catch_rate',
+            'encounter_rate_link',
+            'encounter_rate_total',
+            'consumption_rate_max_pred',
+            'consumption_rate_link',
         ]
 
         self.obj = feisty_instance_type(
@@ -107,7 +111,7 @@ class simulation(object):
 
     def _init_output_arrays(self, nt):
         self.time = xr.DataArray(
-            np.arange(1.0, nt + 1.0, 1.0),
+            np.arange(0.0, nt, 1.0),
             dims=('time'),
             name='time',
             attrs={'long_name': 'time'},
@@ -145,7 +149,6 @@ class simulation(object):
 
         state_t = self.obj.get_prognostic().copy()
         self._init_output_arrays(nt)
-        print('here')
         if method == 'euler':
             self._solve_foward_euler(nt, state_t)
 
@@ -160,6 +163,9 @@ class simulation(object):
         for n in range(nt):
             dfdt = self._compute_tendency(self.time[n], state_t)
             state_t[self.obj.prog_ndx_fish, :] = state_t[self.obj.prog_ndx_fish, :] + dfdt * self.dt
+            state_t[self.obj.prog_ndx_benthic_prey, :] = self.obj.biomass.isel(
+                group=self.obj.ndx_benthic_prey
+            )
             self._post_data(n, state_t)
 
     def _solve_scipy(self, nt, state_t, method):

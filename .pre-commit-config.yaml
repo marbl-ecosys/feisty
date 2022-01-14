@@ -41,15 +41,3 @@ repos:
         additional_dependencies: [pyupgrade==2.7.3]
       - id: nbqa-isort
         additional_dependencies: [isort==5.8.0]
-
-  - repo: https://github.com/deathbeds/prenotebook
-    rev: f5bdb72a400f1a56fe88109936c83aa12cc349fa
-    hooks:
-      - id: prenotebook
-        args:
-          [
-            '--keep-output',
-            '--keep-metadata',
-            '--keep-execution-count',
-            '--keep-empty',
-          ]

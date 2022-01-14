@@ -105,6 +105,8 @@ fish:
     mortality_type: constant
     mortality_coeff_per_yr: 0.1
     assim_efficiency: 0.7
+    #school_pred_avoid: 0.5
+    #generalist_reduct: 0.75
   members:
     - name: Sf
       size_class: small
@@ -144,7 +146,7 @@ fish:
       functional_type: piscivore
       t_frac_pelagic_static: 1.
       pelagic_demersal_coupling: false
-      harvest_selectivity: 1.
+      harvest_selectivity: 0.1
       energy_frac_somatic_growth: 1.
 
     - name: Md
@@ -152,7 +154,7 @@ fish:
       functional_type: demersal
       t_frac_pelagic_static: 0.
       pelagic_demersal_coupling: false
-      harvest_selectivity: 1.
+      harvest_selectivity: 0.1
       energy_frac_somatic_growth: 1.
 
     # large
@@ -160,7 +162,7 @@ fish:
       size_class: large
       functional_type: piscivore
       t_frac_pelagic_static: 1.
-      pelagic_demersal_coupling: true
+      pelagic_demersal_coupling: false # param.pdc = 1 => false here and true in Ld
       harvest_selectivity: 1.
       energy_frac_somatic_growth: 0.5
 
@@ -168,7 +170,7 @@ fish:
       size_class: large
       functional_type: demersal
       t_frac_pelagic_static: 0.
-      pelagic_demersal_coupling: true
+      pelagic_demersal_coupling: true # param.pdc = 1 => true here and false in Lp
       harvest_selectivity: 1.
       energy_frac_somatic_growth: 0.5
 
@@ -247,7 +249,7 @@ food_web:
   # large piscivore
   - predator: Lp
     prey: Mf
-    preference: 1.
+    preference: 0.5 #should be A (school_avoid)
 
   - predator: Lp
     prey: Mp
@@ -260,11 +262,11 @@ food_web:
   # large demersal
   - predator: Ld
     prey: Mf
-    preference: 1.
+    preference: 0.375 #should be A*D = (school_avoid * generalist_reduct)
 
   - predator: Ld
     prey: Mp
-    preference: 1.
+    preference: 0.75 #should be D (generalist_reduct)
 
   - predator: Ld
     prey: Md

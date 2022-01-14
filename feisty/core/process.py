@@ -171,7 +171,8 @@ def compute_encounter(
         else:
             t_frac_pelagic_pred = t_frac_pelagic.isel(fish=link.i_fish)
             t_frac_prey_pred = t_frac_pelagic_pred
-            if link.prey.is_demersal:
+            if link.prey.is_demersal and not link.prey.is_small:
+                # small demersal class is larval, which stays in pelagic
                 t_frac_prey_pred = 1.0 - t_frac_pelagic_pred
 
             bio = biomass.isel(group=link.ndx_prey)
@@ -202,7 +203,7 @@ def compute_consumption(
     """
 
     for i, link in enumerate(food_web):
-        enc = consumption_rate_link[i, :]
+        enc = encounter_rate_link[i, :]
         cmax = consumption_rate_max_pred[link.i_fish, :]
         enc_total = encounter_rate_total[link.i_fish, :]
         consumption_rate_link[i, :] = cmax * enc / (cmax + enc_total)
@@ -450,11 +451,11 @@ def compute_recruitment(
         if link.is_larval:
             recruitment_flux[link.i_fish, :] = (
                 link.efficiency
-                * reproduction_rate[link.i_fish, :]
+                * reproduction_rate[link.i_fish_from, :]
                 * biomass.isel(group=link.ndx_from)
             )
         else:
-            recruitment_flux[link.i_fish, :] = growth_rate[link.i_fish, :] * biomass.isel(
+            recruitment_flux[link.i_fish, :] = growth_rate[link.i_fish_from, :] * biomass.isel(
                 group=link.ndx_from
             )
 

@@ -16,6 +16,7 @@ execute:
   execute_notebooks: force
   exclude_patterns:
     - 'driver-example.ipynb'
+    - 'matlab-comparison.ipynb'
 
 # Define the name of the latex output file for PDF builds
 latex:

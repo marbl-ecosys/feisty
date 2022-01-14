@@ -16,7 +16,7 @@ def annual_harmonic(t, mu, a1, phi1=0.0, a2=0.0, phi2=0.0):
 def gen_idealized_cycle(name, nt, mu, a1, phi1=0.0, a2=0.0, phi2=0.0):
     """Generate a xarray.DataArray from a harmonic function."""
     time = xr.DataArray(
-        np.arange(0.0, nt + 1.0, 1.0),
+        np.arange(0.0, nt, 1.0),
         dims=('time'),
         name='time',
     )
@@ -162,21 +162,19 @@ def forcing_cyclic(domain_dict, nt=365, zoo_spec=None):
         The dataset with forcing variable.  For example::
 
             <xarray.Dataset>
-            Dimensions:              (time: 366, X: 22, zooplankton: 1)
+            Dimensions:          (time: 365, X: 22, zooplankton: 1)
             Coordinates:
-              * time                 (time) float64 0.0 1.0 2.0 ... 363.0 364.0 365.0
-              * X                    (X) float64 -0.5 -0.2381 ... 4.476 4.738 5.0
-                zooplankton_biomass  (zooplankton) <U3 'Zoo'
-                mu                   (zooplankton) float64 4.0
-                amp_fraction         (zooplankton) float64 0.2
-                phase                (zooplankton) float64 0.0
-            Dimensions without coordinates: zooplankton
+              * time             (time) float64 0.0 1.0 2.0 3.0 ... 361.0 362.0 363.0 364.0
+              * X                (X) float64 -0.5 -0.2381 0.02381 0.2857 ... 4.476 4.738 5.0
+              * zooplankton      (zooplankton) <U3 'Zoo'
             Data variables:
-                T_pelagic            (time, X) float64 18.2 18.2 ... 18.2 18.2 18.2
-                T_bottom             (time, X) float64 4.2 4.2 4.2 ... 4.2 4.2 4.2 4.2
-                poc_flux_bottom      (time, X) float64 0.02775 ... 0.002347 0.002346
-                zooC                 (zooplankton, time, X) float64 4.8 4.8 ... 4.8 4.8
-                zoo_mort              (zooplankton, time, X) float64 2.3 2.3 ... 2.3 2.3
+                T_pelagic        (time, X) float64 18.2 18.2 18.2 18.2 ... 18.2 18.2 18.2
+                T_bottom         (time, X) float64 4.2 4.2 4.2 4.2 4.2 ... 4.2 4.2 4.2 4.2
+                poc_flux_bottom  (time, X) float64 0.02785 0.02775 ... 0.002347 0.002346
+                zooC             (zooplankton, time, X) float64 3.329 3.329 ... 3.321 3.321
+                zoo_mort         (zooplankton, time, X) float64 0.7756 0.7756 ... 0.7722
+            Attributes:
+                note:     Idealized cyclic forcing for FEISTY model.
     """
 
     zooC = cycle_zooplankton(nt, domain_dict, zoo_spec)
