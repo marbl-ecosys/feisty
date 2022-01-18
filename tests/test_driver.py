@@ -78,7 +78,7 @@ def test_simulate_testcase_init_2():
     testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
 
     testcase._init_output_arrays(365)
-    assert (testcase.time == np.arange(1.0, 366.0, 1.0)).all()
+    assert (testcase.time == np.arange(0.0, 365.0, 1.0)).all()
     assert isinstance(testcase.ds, xr.Dataset)
     assert set(testcase.ds.data_vars) == {'biomass'}.union(testcase._diagnostic_names)
     assert len(testcase.ds.group) == len(testcase.obj.ndx_prognostic)
