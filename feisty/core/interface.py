@@ -70,7 +70,7 @@ class feisty_instance_type(object):
         self._init_benthic_prey_settings(self.settings_dict['benthic_prey'])
 
         fish_ic_data = 1e-5 if fish_ic_data is None else fish_ic_data
-        benthic_prey_ic_data = 1e-5 if benthic_prey_ic_data is None else benthic_prey_ic_data
+        benthic_prey_ic_data = 2e-3 if benthic_prey_ic_data is None else benthic_prey_ic_data
         self._init_biomass(fish_ic_data, benthic_prey_ic_data)
 
         self._init_food_web(self.settings_dict['food_web'])
@@ -152,10 +152,11 @@ class feisty_instance_type(object):
         self.ndx_zoo = np.arange(0, self.n_zoo)
         self.ndx_fish = np.arange(self.n_zoo, self.n_zoo + self.n_fish)
         self.ndx_benthic_prey = np.arange(self.n_zoo + self.n_fish, n)
-
         self.ndx_prognostic = np.concatenate((self.ndx_fish, self.ndx_benthic_prey))
+
         self.prog_ndx_fish = np.arange(0, self.n_fish)
         self.prog_ndx_benthic_prey = np.arange(self.n_fish, self.n_fish + self.n_benthic_prey)
+        self.prog_ndx_prognostic = np.concatenate((self.prog_ndx_fish, self.prog_ndx_benthic_prey))
 
         # TODO: make private
         self.biomass = domain.init_array_2d('group', group_coord, name='biomass')
@@ -186,6 +187,7 @@ class feisty_instance_type(object):
             self.zooplankton,
             self.fish,
             self.benthic_prey,
+            self.member_obj_list,
             self.food_web,
         )
 
@@ -277,17 +279,6 @@ class feisty_instance_type(object):
                 self.gcm_state.T_bottom,
                 self.tendency_data.t_frac_pelagic[i, :],
             )
-
-    def _update_benthic_biomass(self):
-        process.compute_benthic_biomass_update(
-            self.tendency_data.benthic_biomass_new,
-            self.tendency_data.consumption_rate_link,
-            self.benthic_prey,
-            self.biomass,
-            self.food_web,
-            self.gcm_state.poc_flux,
-        )
-        self._set_benthic_prey_biomass(self.tendency_data.benthic_biomass_new)
 
     def _compute_pred_encounter_consumption_max(self):
         process.compute_pred_encounter_consumption_max(
@@ -416,7 +407,10 @@ class feisty_instance_type(object):
             self.tendency_data.predation_flux,
             self.tendency_data.fish_catch_rate,
             self.biomass,
-            self.fish,
+            self.tendency_data.consumption_rate_link,
+            self.food_web,
+            self.gcm_state.poc_flux,
+            self.member_obj_list,
         )
 
     def compute_tendencies(
@@ -455,9 +449,6 @@ class feisty_instance_type(object):
         self._set_zoo_mortality(zoo_mortality_data)
         self.gcm_state.update(**gcm_state_update_kwargs)
 
-        # advance benthic prey concentrations
-        self._update_benthic_biomass()
-
         # compute temperature terms
         self._compute_t_frac_pelagic()
         self._compute_temperature()
@@ -483,12 +474,13 @@ class feisty_instance_type(object):
         return self.tendency_data.total_tendency
 
 
-def _init_tendency_data(zoo_list, fish_list, benthic_prey_list, food_web):
+def _init_tendency_data(zoo_list, fish_list, benthic_prey_list, member_obj_list, food_web):
     """Return an xarray.Dataset with initialized tendency data arrays."""
 
     fish_names = [f.name for f in fish_list]
     zoo_names = [z.name for z in zoo_list]
     benthic_prey_names = [b.name for b in benthic_prey_list]
+    member_obj_names = [mo.name for mo in member_obj_list]
 
     pred_names = [link.predator.name for link in food_web]
     prey_names = [link.prey.name for link in food_web]
@@ -599,7 +591,7 @@ def _init_tendency_data(zoo_list, fish_list, benthic_prey_list, food_web):
     # TODO: include benthic_prey once timestepping has been moved out of feisty
     ds['total_tendency'] = domain.init_array_2d(
         coord_name='group',
-        coord_values=fish_names,
+        coord_values=member_obj_names,
         name='total_tendency',
         attrs={'long_name': 'Total time tendency'},
     )

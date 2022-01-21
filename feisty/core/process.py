@@ -351,45 +351,6 @@ def compute_natural_mortality(mortality_rate, fish_list, T_habitat, mortality_ty
             raise ValueError(f'unknown mortality type {fish.mortality_type}')
 
 
-def compute_benthic_biomass_update(
-    benthic_biomass_new, consumption_rate_link, benthic_prey_list, biomass, food_web, poc_flux
-):
-    """
-    bio_in = benthic biomass
-    det = poc_flux flux to bottom (g/m2/d)
-    con = biomass specific consumption rate by MD & LD
-    bio = biomass of MD & LD
-    """
-
-    for i, benthic_prey in enumerate(benthic_prey_list):
-        # eaten = consumption * biomass_pred
-        # pred = sum(eaten, 2)
-        biomass_bent = biomass.sel(group=benthic_prey.name)
-        predation = (
-            biomass.isel(group=food_web.prey_ndx_pred[benthic_prey.name])
-            * food_web.get_consumption(consumption_rate_link, prey=benthic_prey.name)
-        ).sum('group')
-
-        # Needs to be in units of per time (g/m2/d) * (g/m2)
-        growth = benthic_prey.benthic_efficiency * poc_flux
-
-        if not benthic_prey.lcarrying_capacity:  # no carrying capacity
-            benthic_biomass_new[i, :] = biomass_bent + growth - predation
-        else:
-            # logistic
-            benthic_biomass_new[i, :] = (
-                biomass_bent
-                + growth * (1.0 - biomass_bent / benthic_prey.carrying_capacity)
-                - predation
-            )
-
-    benthic_biomass_new[:, :] = np.where(
-        benthic_biomass_new < 0.0,
-        constants.eps,
-        benthic_biomass_new,
-    )
-
-
 def compute_energy_avail(energy_avail_rate, ingestion_rate, metabolism_rate, fish_list):
     """Compute energy available for growth (nu)."""
 
@@ -470,7 +431,10 @@ def compute_total_tendency(
     predation_flux,
     fish_catch_rate,
     biomass,
-    fish_list,
+    consumption_rate_link,
+    food_web,
+    poc_flux,
+    member_obj_list,
 ):
     """
     Compute the total time tendency of fish.
@@ -497,24 +461,48 @@ def compute_total_tendency(
 
     biomass : array_like
 
-    fish_list : list
+    member_obj_list : list
       List of feisty.ecosystem.fish object.
     """
-    for i, fish in enumerate(fish_list):
-        total_tendency[i, :] = (
-            recruitment_flux[i, :]
-            + biomass.sel(group=fish.name)
-            * (
-                (
-                    energy_avail_rate[i, :]
-                    - reproduction_rate[i, :]
-                    - growth_rate[i, :]
-                    - mortality_rate[i, :]
-                    - fish_catch_rate[i, :]
+    for i, member_obj in enumerate(member_obj_list):
+        if type(member_obj) == ecosystem.fish_type:
+            # TODO: figure out index in fish_list (this kludge relies on single zooplankton)
+            fish_i = i - 1
+            total_tendency[i, :] = (
+                recruitment_flux[fish_i, :]
+                + biomass.sel(group=member_obj.name)
+                * (
+                    (
+                        energy_avail_rate[fish_i, :]
+                        - reproduction_rate[fish_i, :]
+                        - growth_rate[fish_i, :]
+                        - mortality_rate[fish_i, :]
+                        - fish_catch_rate[fish_i, :]
+                    )
                 )
+                - predation_flux[fish_i, :]
             )
-            - predation_flux[i, :]
-        )
+        elif type(member_obj) == ecosystem.benthic_prey_type:
+            # eaten = consumption * biomass_pred
+            # pred = sum(eaten, 2)
+
+            predation = (
+                biomass.isel(group=food_web.prey_ndx_pred[member_obj.name])
+                * food_web.get_consumption(consumption_rate_link, prey=member_obj.name)
+            ).sum('group')
+
+            # Needs to be in units of per time (g/m2/d) * (g/m2)
+            growth = member_obj.benthic_efficiency * poc_flux
+
+            if not member_obj.lcarrying_capacity:  # no carrying capacity
+                total_tendency[i, :] = growth - predation
+            else:
+                # logistic
+                total_tendency[i, :] = (
+                    growth
+                    * (1.0 - biomass.sel(group=member_obj.name) / member_obj.carrying_capacity)
+                    - predation
+                )
 
 
 def compute_fish_catch(fish_catch_rate, fishing_rate, fish_list):
