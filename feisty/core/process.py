@@ -470,15 +470,13 @@ def compute_total_tendency(
             fish_i = i - 1
             total_tendency[i, :] = (
                 recruitment_flux[fish_i, :]
-                + biomass.sel(group=member_obj.name)
+                + biomass[i, :]
                 * (
-                    (
-                        energy_avail_rate[fish_i, :]
-                        - reproduction_rate[fish_i, :]
-                        - growth_rate[fish_i, :]
-                        - mortality_rate[fish_i, :]
-                        - fish_catch_rate[fish_i, :]
-                    )
+                    energy_avail_rate[fish_i, :]
+                    - reproduction_rate[fish_i, :]
+                    - growth_rate[fish_i, :]
+                    - mortality_rate[fish_i, :]
+                    - fish_catch_rate[fish_i, :]
                 )
                 - predation_flux[fish_i, :]
             )
