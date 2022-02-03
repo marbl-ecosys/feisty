@@ -13,10 +13,12 @@ path_to_here = os.path.dirname(os.path.realpath(__file__))
 
 _test_domain = dict(
     tanh_shelf=testcase.domain_tanh_shelf,
+    from_disk=testcase.domain_from_netcdf,
 )
 
 _test_forcing = dict(
     cyclic=testcase.forcing_cyclic,
+    from_disk=testcase.forcing_from_netcdf,
 )
 
 
