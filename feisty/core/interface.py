@@ -411,6 +411,7 @@ class feisty_instance_type(object):
             self.food_web,
             self.gcm_state.poc_flux,
             self.member_obj_list,
+            self.ndx_fish[0],
         )
 
     def compute_tendencies(

@@ -435,6 +435,7 @@ def compute_total_tendency(
     food_web,
     poc_flux,
     member_obj_list,
+    first_fish_id,
 ):
     """
     Compute the total time tendency of fish.
@@ -466,8 +467,7 @@ def compute_total_tendency(
     """
     for i, member_obj in enumerate(member_obj_list):
         if type(member_obj) == ecosystem.fish_type:
-            # TODO: figure out index in fish_list (this kludge relies on single zooplankton)
-            fish_i = i - 1
+            fish_i = i - first_fish_id
             total_tendency[i, :] = (
                 recruitment_flux[fish_i, :]
                 + biomass[i, :]
