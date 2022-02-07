@@ -60,7 +60,7 @@ def compute_t_frac_pelagic(
             t_frac_pelagic[i, :] = xr.where(
                 domain.ocean_depth < PI_be_cutoff,
                 prey_pelagic / (prey_pelagic + prey_demersal),
-                1.0,
+                0.0,
             )
 
 
