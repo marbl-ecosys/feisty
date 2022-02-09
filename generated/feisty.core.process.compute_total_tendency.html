@@ -339,11 +339,6 @@
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="feisty.core.process.compute_benthic_biomass_update.html">
-     feisty.core.process.compute_benthic_biomass_update
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="feisty.core.process.compute_energy_avail.html">
      feisty.core.process.compute_energy_avail
     </a>
@@ -487,7 +482,7 @@
 <h1>feisty.core.process.compute_total_tendency<a class="headerlink" href="#feisty-core-process-compute-total-tendency" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="feisty.core.process.compute_total_tendency">
-<code class="sig-prename descclassname"><span class="pre">feisty.core.process.</span></code><code class="sig-name descname"><span class="pre">compute_total_tendency</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_tendency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recruitment_flux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_avail_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">growth_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reproduction_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mortality_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predation_flux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fish_catch_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biomass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fish_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.process.compute_total_tendency" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">feisty.core.process.</span></code><code class="sig-name descname"><span class="pre">compute_total_tendency</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_tendency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recruitment_flux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_avail_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">growth_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reproduction_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mortality_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predation_flux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fish_catch_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biomass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consumption_rate_link</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">food_web</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poc_flux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_obj_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_fish_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.process.compute_total_tendency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the total time tendency of fish.</p>
 <p>Inputs with “_rate” suffix are specific rates (1/d); inputs with “_flux” suffix are actually mass fluxes (g/d).</p>
 <dl class="field-list simple">
@@ -502,7 +497,7 @@
 <li><p><strong>predation_flux</strong> (<em>array_like</em>) – </p></li>
 <li><p><strong>fish_catch_rate</strong> (<em>array_like</em>) – </p></li>
 <li><p><strong>biomass</strong> (<em>array_like</em>) – </p></li>
-<li><p><strong>fish_list</strong> (<em>list</em>) – List of feisty.ecosystem.fish object.</p></li>
+<li><p><strong>member_obj_list</strong> (<em>list</em>) – List of feisty.ecosystem.fish object.</p></li>
 </ul>
 </dd>
 </dl>
