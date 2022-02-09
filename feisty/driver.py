@@ -161,10 +161,10 @@ class simulation(object):
     def _solve_foward_euler(self, nt, state_t):
         """use forward-euler to solve feisty model"""
         for n in range(nt):
-            dfdt = self._compute_tendency(self.time[n], state_t)
-            state_t[self.obj.prog_ndx_fish, :] = state_t[self.obj.prog_ndx_fish, :] + dfdt * self.dt
-            state_t[self.obj.prog_ndx_benthic_prey, :] = self.obj.biomass.isel(
-                group=self.obj.ndx_benthic_prey
+            dsdt = self._compute_tendency(self.time[n], state_t)
+            state_t[self.obj.prog_ndx_prognostic, :] = (
+                state_t[self.obj.prog_ndx_prognostic, :]
+                + dsdt[self.obj.ndx_prognostic, :] * self.dt
             )
             self._post_data(n, state_t)
 

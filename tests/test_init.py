@@ -398,7 +398,7 @@ def test_init_tendency_arrays():
             checked.append(key)
         elif key in group_coord_vars:
             assert da.dims == ('group', 'X')
-            assert da.shape == (n_fish, NX)  # TODO: fix when benthic prey are folded in
+            assert da.shape == (n_zoo + n_fish + n_benthic_prey, NX)
             checked.append(key)
         elif key in benthic_prey_coord_vars:
             assert da.dims == ('benthic_prey', 'X')

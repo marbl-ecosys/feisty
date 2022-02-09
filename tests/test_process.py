@@ -146,15 +146,6 @@ def test_t_frac_pelagic():
         assert (fish.t_frac_pelagic == fish_settings['members'][i]['t_frac_pelagic_static']).all()
 
 
-@pytest.mark.weak
-def test_update_benthic_prey():
-    """test benthic update
-
-    Add regression data
-    """
-    F._update_benthic_biomass()
-
-
 def test_compute_metabolism():
     F.gcm_state.update(
         T_pelagic=10.0,
