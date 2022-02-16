@@ -41,7 +41,7 @@ def compute_t_frac_pelagic(
 
     for i, fish in enumerate(fish_list):
         if reset:
-            t_frac_pelagic.data[i, :] = fish.t_frac_pelagic_static.data
+            t_frac_pelagic.data[i, :] = fish.t_frac_pelagic_static
 
         elif fish.pelagic_demersal_coupling:
             prey_pelagic = food_web.get_prey_biomass(
