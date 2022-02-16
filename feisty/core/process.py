@@ -41,7 +41,7 @@ def compute_t_frac_pelagic(
 
     for i, fish in enumerate(fish_list):
         if reset:
-            t_frac_pelagic[i, :] = fish.t_frac_pelagic_static
+            t_frac_pelagic.data[i, :] = fish.t_frac_pelagic_static.data
 
         elif fish.pelagic_demersal_coupling:
             prey_pelagic = food_web.get_prey_biomass(
@@ -49,15 +49,15 @@ def compute_t_frac_pelagic(
                 fish.name,
                 prey_functional_type=pelagic_functional_types,
                 apply_preference=fish.pdc_apply_pref,
-            )
+            ).data
             prey_demersal = food_web.get_prey_biomass(
                 biomass,
                 fish.name,
                 prey_functional_type=demersal_functional_types,
                 apply_preference=fish.pdc_apply_pref,
-            )
+            ).data
 
-            t_frac_pelagic[i, :] = xr.where(
+            t_frac_pelagic[i, :] = np.where(
                 domain.ocean_depth < PI_be_cutoff,
                 prey_pelagic / (prey_pelagic + prey_demersal),
                 0.0,
@@ -99,9 +99,13 @@ def compute_metabolism(metabolism_rate, fish_list, T_habitat):
 
     for i, fish in enumerate(fish_list):
         # Metabolism with its own coeff, temp-sens, mass-sens
-        metabolism_rate[i, :] = (
+        metabolism_rate.data[i, :] = (
             compute_rate_T_mass_scaling(
-                T_habitat[i, :], fish.mass, fish.k_metabolism, fish.a_metabolism, fish.b_metabolism
+                T_habitat.data[i, :],
+                fish.mass,
+                fish.k_metabolism,
+                fish.a_metabolism,
+                fish.b_metabolism,
             )
             / 365.0
         )
@@ -113,9 +117,9 @@ def compute_pred_encounter_consumption_max(
     """Compute predator encounter and maximum consumption rates."""
     for i, fish in enumerate(fish_list):
 
-        encounter_rate_pred[i, :] = (
+        encounter_rate_pred.data[i, :] = (
             compute_rate_T_mass_scaling(
-                T_habitat[i, :],
+                T_habitat.data[i, :],
                 fish.mass,
                 fish.k_encounter,
                 fish.a_encounter,
@@ -123,9 +127,9 @@ def compute_pred_encounter_consumption_max(
             )
             / 365.0
         )
-        consumption_rate_max_pred[i, :] = (
+        consumption_rate_max_pred.data[i, :] = (
             compute_rate_T_mass_scaling(
-                T_habitat[i, :],
+                T_habitat.data[i, :],
                 fish.mass,
                 fish.k_consumption,
                 fish.a_consumption,
@@ -167,27 +171,29 @@ def compute_encounter(
 
     for i, link in enumerate(food_web):
         if link.preference == 0:
-            encounter_rate_link[i, :] = 0.0
+            encounter_rate_link.data[i, :] = 0.0
         else:
-            t_frac_pelagic_pred = t_frac_pelagic.isel(fish=link.i_fish)
+            t_frac_pelagic_pred = t_frac_pelagic.isel(fish=link.i_fish).data
             t_frac_prey_pred = t_frac_pelagic_pred
             if link.prey.is_demersal and not link.prey.is_small:
                 # small demersal class is larval, which stays in pelagic
                 t_frac_prey_pred = 1.0 - t_frac_pelagic_pred
 
-            bio = biomass.isel(group=link.ndx_prey)
+            bio = biomass.isel(group=link.ndx_prey).data
             pref = link.preference
-            enc = encounter_rate_pred[link.i_fish, :]
-            encounter_rate_link[i, :] = xr.where(
+            enc = encounter_rate_pred.data[link.i_fish, :]
+            encounter_rate_link.data[i, :] = np.where(
                 t_frac_prey_pred > 0,
                 bio * pref * enc,
                 0.0,
             )
 
     for i, name in enumerate(food_web.fish_names):
-        encounter_rate_total[i, :] = encounter_rate_link.isel(
-            feeding_link=food_web.pred_link_ndx[name]
-        ).sum('feeding_link')
+        encounter_rate_total.data[i, :] = (
+            encounter_rate_link.isel(feeding_link=food_web.pred_link_ndx[name])
+            .sum('feeding_link')
+            .data
+        )
 
 
 def compute_consumption(
@@ -203,10 +209,10 @@ def compute_consumption(
     """
 
     for i, link in enumerate(food_web):
-        enc = encounter_rate_link[i, :]
-        cmax = consumption_rate_max_pred[link.i_fish, :]
-        enc_total = encounter_rate_total[link.i_fish, :]
-        consumption_rate_link[i, :] = cmax * enc / (cmax + enc_total)
+        enc = encounter_rate_link.data[i, :]
+        cmax = consumption_rate_max_pred.data[link.i_fish, :]
+        enc_total = encounter_rate_total.data[link.i_fish, :]
+        consumption_rate_link.data[i, :] = cmax * enc / (cmax + enc_total)
 
 
 def compute_rescale_zoo_consumption(
@@ -256,8 +262,8 @@ def compute_ingestion(ingestion_rate, consumption_rate_link, food_web):
       Food web object.
     """
     for i, name in enumerate(food_web.fish_names):
-        ingestion_rate[i, :] = food_web.get_consumption(consumption_rate_link, predator=name).sum(
-            'group'
+        ingestion_rate.data[i, :] = (
+            food_web.get_consumption(consumption_rate_link, predator=name).sum('group').data
         )
 
 
@@ -282,15 +288,19 @@ def compute_predation(predation_flux, predation_zoo_flux, consumption_rate_link,
             continue
 
         ndx = food_web.prey_ndx_pred[name]
-        predation_flux[i, :] = (
-            food_web.get_consumption(consumption_rate_link, prey=name) * biomass[ndx, :]
-        ).sum('group')
+        predation_flux.data[i, :] = (
+            (food_web.get_consumption(consumption_rate_link, prey=name) * biomass[ndx, :])
+            .sum('group')
+            .data
+        )
 
     for i, name in enumerate(food_web.zoo_names):
         ndx = food_web.prey_ndx_pred[name]
-        predation_zoo_flux[i, :] = (
-            food_web.get_consumption(consumption_rate_link, prey=name) * biomass[ndx, :]
-        ).sum('group')
+        predation_zoo_flux.data[i, :] = (
+            (food_web.get_consumption(consumption_rate_link, prey=name) * biomass[ndx, :])
+            .sum('group')
+            .data
+        )
 
 
 def compute_natural_mortality(mortality_rate, fish_list, T_habitat, mortality_types):
@@ -311,41 +321,45 @@ def compute_natural_mortality(mortality_rate, fish_list, T_habitat, mortality_ty
     for i, fish in enumerate(fish_list):
 
         if fish.mortality_type == mortality_types['none']:
-            mortality_rate[i, :] = 0.0
+            mortality_rate.data[i, :] = 0.0
 
         elif fish.mortality_type == mortality_types['constant']:
-            mortality_rate[i, :] = fish.mortality_coeff
+            mortality_rate.data[i, :] = fish.mortality_coeff
 
         elif fish.mortality_type == mortality_types['Hartvig']:
-            mortality_rate[i, :] = (
-                np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 0.84 * fish.mass ** (-0.25) / 365.0
+            mortality_rate.data[i, :] = (
+                np.exp(0.063 * (T_habitat.data[i, :] - 10.0)) * 0.84 * fish.mass ** (-0.25) / 365.0
             )
 
         elif fish.mortality_type == mortality_types['Mizer']:
-            mortality_rate[i, :] = (
-                np.exp(0.063 * (T_habitat[i, :] - 10.0)) * 3.0 * fish.mass ** (-0.25) / 365.0
+            mortality_rate.data[i, :] = (
+                np.exp(0.063 * (T_habitat.data[i, :] - 10.0)) * 3.0 * fish.mass ** (-0.25) / 365.0
             )
 
         elif fish.mortality_type == mortality_types['Jennings & Collingridge']:
             # TODO: clean up here
-            temp2 = T_habitat[i, :] + 273.0
+            temp2 = T_habitat.data[i, :] + 273.0
             Tref = 283.0
             E = 0.6
             k = 8.62e-5
             tfact = np.exp((-1 * E / k) * ((1.0 / temp2) - (1.0 / Tref)))
-            mortality_rate[i, :] = tfact * 0.5 * fish.mass ** (-0.33) / 365.0
+            mortality_rate.data[i, :] = tfact * 0.5 * fish.mass ** (-0.33) / 365.0
 
         elif fish.mortality_type == mortality_types['Peterson & Wrob']:
             # Peterson & Wroblewski (daily & uses dry weight)
-            mortality_rate[i, :] = (
-                np.exp(0.063 * (T_habitat[i, :] - 15.0)) * 5.26e-3 * (fish.mass / 9.0) ** (-0.25)
+            mortality_rate.data[i, :] = (
+                np.exp(0.063 * (T_habitat.data[i, :] - 15.0))
+                * 5.26e-3
+                * (fish.mass / 9.0) ** (-0.25)
             )
 
         elif fish.mortality_type == mortality_types['temperature-dependent']:
-            mortality_rate[i, :] = np.exp(0.063 * (T_habitat[i, :] - 10.0)) * fish.mortality_coeff
+            mortality_rate.data[i, :] = (
+                np.exp(0.063 * (T_habitat.data[i, :] - 10.0)) * fish.mortality_coeff
+            )
 
         elif fish.mortality_type == mortality_types['weight-dependent']:
-            mortality_rate[i, :] = 0.5 * fish.mass ** (-0.25) / 365.0
+            mortality_rate.data[i, :] = 0.5 * fish.mass ** (-0.25) / 365.0
 
         else:
             raise ValueError(f'unknown mortality type {fish.mortality_type}')
@@ -355,9 +369,9 @@ def compute_energy_avail(energy_avail_rate, ingestion_rate, metabolism_rate, fis
     """Compute energy available for growth (nu)."""
 
     for i, fish in enumerate(fish_list):
-        energy_avail_rate[i, :] = (ingestion_rate[i, :] * fish.assim_efficiency) - metabolism_rate[
-            i, :
-        ]
+        energy_avail_rate.data[i, :] = (
+            ingestion_rate.data[i, :] * fish.assim_efficiency
+        ) - metabolism_rate.data[i, :]
 
 
 def compute_growth(
@@ -371,15 +385,17 @@ def compute_growth(
     """
 
     for i, fish in enumerate(fish_list):
-        death = predation_rate[i, :] + mortality_rate[i, :] + fish_catch_rate[i, :]
-        somatic_growth_potential = fish.energy_frac_somatic_growth * energy_avail_rate[i, :]
+        death = predation_rate.data[i, :] + mortality_rate.data[i, :] + fish_catch_rate.data[i, :]
+        somatic_growth_potential = fish.energy_frac_somatic_growth * energy_avail_rate.data[i, :]
 
         gg = (somatic_growth_potential - death) / (
             1.0 - (fish.size_class_bnds_ratio ** (1.0 - (death / somatic_growth_potential)))
         )
-        growth_rate[i, :] = xr.where(gg < energy_avail_rate[i, :], gg, energy_avail_rate[i, :])
+        growth_rate.data[i, :] = np.where(
+            gg < energy_avail_rate.data[i, :], gg, energy_avail_rate.data[i, :]
+        )
         lndx = np.isnan(gg) | (gg < 0)
-        growth_rate[i, lndx] = 0.0
+        growth_rate.data[i, lndx] = 0.0
 
 
 def compute_reproduction(reproduction_rate, growth_rate, energy_avail_rate, fish_list):
@@ -387,17 +403,17 @@ def compute_reproduction(reproduction_rate, growth_rate, energy_avail_rate, fish
     for i, fish in enumerate(fish_list):
 
         if fish.energy_frac_somatic_growth == 1.0:
-            reproduction_rate[i, :] = 0.0
+            reproduction_rate.data[i, :] = 0.0
         else:
             # energy available
-            rho = xr.where(
-                energy_avail_rate[i, :] > 0.0,
-                (1.0 - fish.energy_frac_somatic_growth) * energy_avail_rate[i, :],
+            rho = np.where(
+                energy_avail_rate.data[i, :] > 0.0,
+                (1.0 - fish.energy_frac_somatic_growth) * energy_avail_rate.data[i, :],
                 0.0,
             )
             # add what would be growth to next size up as repro
-            reproduction_rate[i, :] = rho + growth_rate[i, :]
-            growth_rate[i, :] = 0.0
+            reproduction_rate.data[i, :] = rho + growth_rate.data[i, :]
+            growth_rate.data[i, :] = 0.0
 
 
 def compute_recruitment(
@@ -410,14 +426,14 @@ def compute_recruitment(
     """Compute "recruitment" from reproduction (i.e., larval production) or growth."""
     for link in reproduction_routing:
         if link.is_larval:
-            recruitment_flux[link.i_fish, :] = (
+            recruitment_flux.data[link.i_fish, :] = (
                 link.efficiency
-                * reproduction_rate[link.i_fish_from, :]
-                * biomass.isel(group=link.ndx_from)
+                * reproduction_rate.data[link.i_fish_from, :]
+                * biomass.isel(group=link.ndx_from).data
             )
         else:
-            recruitment_flux[link.i_fish, :] = growth_rate[link.i_fish_from, :] * biomass.isel(
-                group=link.ndx_from
+            recruitment_flux.data[link.i_fish, :] = (
+                growth_rate.data[link.i_fish_from, :] * biomass.isel(group=link.ndx_from).data
             )
 
 
@@ -468,37 +484,41 @@ def compute_total_tendency(
     for i, member_obj in enumerate(member_obj_list):
         if type(member_obj) == ecosystem.fish_type:
             fish_i = i - first_fish_id
-            total_tendency[i, :] = (
-                recruitment_flux[fish_i, :]
-                + biomass[i, :]
+            total_tendency.data[i, :] = (
+                recruitment_flux.data[fish_i, :]
+                + biomass.data[i, :]
                 * (
-                    energy_avail_rate[fish_i, :]
-                    - reproduction_rate[fish_i, :]
-                    - growth_rate[fish_i, :]
-                    - mortality_rate[fish_i, :]
-                    - fish_catch_rate[fish_i, :]
+                    energy_avail_rate.data[fish_i, :]
+                    - reproduction_rate.data[fish_i, :]
+                    - growth_rate.data[fish_i, :]
+                    - mortality_rate.data[fish_i, :]
+                    - fish_catch_rate.data[fish_i, :]
                 )
-                - predation_flux[fish_i, :]
+                - predation_flux.data[fish_i, :]
             )
         elif type(member_obj) == ecosystem.benthic_prey_type:
             # eaten = consumption * biomass_pred
             # pred = sum(eaten, 2)
 
             predation = (
-                biomass.isel(group=food_web.prey_ndx_pred[member_obj.name])
-                * food_web.get_consumption(consumption_rate_link, prey=member_obj.name)
-            ).sum('group')
+                (
+                    biomass.isel(group=food_web.prey_ndx_pred[member_obj.name])
+                    * food_web.get_consumption(consumption_rate_link, prey=member_obj.name)
+                )
+                .sum('group')
+                .data
+            )
 
             # Needs to be in units of per time (g/m2/d) * (g/m2)
-            growth = member_obj.benthic_efficiency * poc_flux
+            growth = member_obj.benthic_efficiency * poc_flux.data
 
             if not member_obj.lcarrying_capacity:  # no carrying capacity
-                total_tendency[i, :] = growth - predation
+                total_tendency.data[i, :] = growth - predation
             else:
                 # logistic
-                total_tendency[i, :] = (
+                total_tendency.data[i, :] = (
                     growth
-                    * (1.0 - biomass.sel(group=member_obj.name) / member_obj.carrying_capacity)
+                    * (1.0 - biomass.sel(group=member_obj.name).data / member_obj.carrying_capacity)
                     - predation
                 )
 
