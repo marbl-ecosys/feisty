@@ -1,5 +1,6 @@
 import os
 
+import cftime
 import numpy as np
 import xarray as xr
 import yaml
@@ -53,6 +54,7 @@ class simulation(object):
         self,
         domain_dict,
         forcing,
+        start_date,
         settings_in={},
         fish_ic_data=None,
         benthic_prey_ic_data=None,
@@ -68,6 +70,11 @@ class simulation(object):
         forcing : xarray.Dataset
           Forcing data to run the model.
 
+        start_date : str or cftime obj
+          Model year to start simulation.
+          If str, format 'YYYY-MM-DD',
+          if tuple format (Y, M, D) (all ints)
+
         settings_in : dict
           Settings to overwrite defaults.
 
@@ -79,6 +86,15 @@ class simulation(object):
         """
         self.domain_dict = domain_dict
         self.forcing = forcing
+        date_tuple = None
+        if isinstance(start_date, str):
+            date_tuple = [int(date_comp) for date_comp in start_date.split('-')]
+        elif isinstance(start_date, tuple):
+            date_tuple = start_date
+        if date_tuple:
+            self.start_date = cftime.DatetimeNoLeap(date_tuple[0], date_tuple[1], date_tuple[2])
+        else:
+            self.start_date = start_date
         self.settings_in = settings_in
         self.dt = 1.0  # day
 
@@ -112,16 +128,12 @@ class simulation(object):
         return self.forcing.interp(time=t)
 
     def _init_output_arrays(self, nt):
-        self.time = xr.DataArray(
-            np.arange(0.0, nt, 1.0),
-            dims=('time'),
-            name='time',
-            attrs={'long_name': 'time'},
-        )
-        zeros = xr.full_like(self.time, fill_value=0.0)
+        self.time = xr.cftime_range(start=self.start_date, periods=nt)
+        zeros = xr.DataArray(np.zeros(nt), dims=('time'), name='zero')
         ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
         ds_prog = zeros * self.obj.get_prognostic().to_dataset()
         self._ds = xr.merge((ds_prog, ds_diag))
+        self.ds['time'] = self.time
 
     def _post_data(self, n, state_t):
         self._ds.biomass[n, :] = state_t
@@ -208,6 +220,7 @@ class simulation(object):
 def simulate_testcase(
     domain_name,
     forcing_name,
+    start_date='0001-01-01',
     settings_in={},
     fish_ic_data=None,
     benthic_prey_ic_data=None,
@@ -296,6 +309,7 @@ def simulate_testcase(
     return simulation(
         domain_dict,
         forcing,
+        start_date,
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,

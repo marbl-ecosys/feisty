@@ -1,3 +1,4 @@
+import cftime
 import numpy as np
 import xarray as xr
 
@@ -15,13 +16,9 @@ def annual_harmonic(t, mu, a1, phi1=0.0, a2=0.0, phi2=0.0):
 
 def gen_idealized_cycle(name, nt, mu, a1, phi1=0.0, a2=0.0, phi2=0.0):
     """Generate a xarray.DataArray from a harmonic function."""
-    time = xr.DataArray(
-        np.arange(0.0, nt, 1.0),
-        dims=('time'),
-        name='time',
-    )
+    time = xr.cftime_range(start=cftime.DatetimeNoLeap(1, 1, 1), periods=nt)
     return xr.DataArray(
-        annual_harmonic(time, mu, a1, phi1, a2, phi2),
+        annual_harmonic(np.arange(nt), mu, a1, phi1, a2, phi2),
         dims=('time',),
         name=name,
         coords={'time': time},
