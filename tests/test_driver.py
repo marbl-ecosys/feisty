@@ -96,5 +96,5 @@ def test_cyclic_interpolation():
     testcase1 = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
     testcase2 = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic', start_date='0002-01-01')
     testcase1.run(1)
-    testcase2.run(1)
+    testcase2.run(1, cyclic_forcing=True)
     assert (testcase1.ds['biomass'].data == testcase2.ds['biomass'].data).all()

@@ -124,8 +124,15 @@ class simulation(object):
             benthic_prey_ic_data=benthic_prey_ic_data,
         )
 
-    def _forcing_t(self, t):
-        return self.forcing.interp(time=t)
+    def _forcing_t(self, t, ignore_year):
+        if ignore_year:
+            units = 'days since 0001-01-01 00:00:00'
+            interp_time = cftime.num2date(
+                cftime.date2num(t, units) % 365, units, calendar=t.calendar
+            )
+        else:
+            interp_time = t
+        return self.forcing.interp(time=interp_time)
 
     def _init_output_arrays(self, nt):
         self.time = xr.cftime_range(start=self.start_date, periods=nt)
@@ -145,9 +152,9 @@ class simulation(object):
         """Data comprising the output from a ``feisty`` simulation."""
         return self._ds
 
-    def _compute_tendency(self, t, state_t):
+    def _compute_tendency(self, t, state_t, cyclic_forcing):
         """Return the feisty time tendency."""
-        gcm_data_t = self._forcing_t(t)
+        gcm_data_t = self._forcing_t(t, cyclic_forcing)
         return self.obj.compute_tendencies(
             state_t.isel(group=self.obj.prog_ndx_fish),
             state_t.isel(group=self.obj.prog_ndx_benthic_prey),
@@ -158,35 +165,35 @@ class simulation(object):
             poc_flux=gcm_data_t.poc_flux_bottom,
         )
 
-    def _solve(self, nt, method):
+    def _solve(self, nt, method, cyclic_forcing):
         """Call a numerical ODE solver to integrate the feisty model in time."""
 
         state_t = self.obj.get_prognostic().copy()
         self._init_output_arrays(nt)
         if method == 'euler':
-            self._solve_foward_euler(nt, state_t)
+            self._solve_foward_euler(nt, state_t, cyclic_forcing)
 
         elif method in ['Radau', 'RK45']:
             # TODO: make input arguments
-            self._solve_scipy(nt, state_t, method)
+            self._solve_scipy(nt, state_t, method, cyclic_forcing)
         else:
             raise ValueError(f'unknown method: {method}')
 
-    def _solve_foward_euler(self, nt, state_t):
+    def _solve_foward_euler(self, nt, state_t, cyclic_forcing):
         """use forward-euler to solve feisty model"""
         for n in range(nt):
-            dsdt = self._compute_tendency(self.time[n], state_t)
+            dsdt = self._compute_tendency(self.time[n], state_t, cyclic_forcing)
             state_t[self.obj.prog_ndx_prognostic, :] = (
                 state_t[self.obj.prog_ndx_prognostic, :]
                 + dsdt[self.obj.ndx_prognostic, :] * self.dt
             )
             self._post_data(n, state_t)
 
-    def _solve_scipy(self, nt, state_t, method):
+    def _solve_scipy(self, nt, state_t, method, cyclic_forcing):
         """use a SciPy solver to integrate the model equation."""
         raise NotImplementedError('scipy solvers not implemented')
 
-    def run(self, nt, file_out=None, method='euler'):
+    def run(self, nt, file_out=None, method='euler', cyclic_forcing=False):
         """Integrate the FEISTY model.
 
         Parameters
@@ -205,7 +212,7 @@ class simulation(object):
              Only ``method='euler'`` is supported currently.
 
         """
-        self._solve(nt, method)
+        self._solve(nt, method, cyclic_forcing)
         self._shutdown(file_out)
 
     def _shutdown(self, file_out):

@@ -388,12 +388,15 @@ def compute_growth(
         death = predation_rate.data[i, :] + mortality_rate.data[i, :] + fish_catch_rate.data[i, :]
         somatic_growth_potential = fish.energy_frac_somatic_growth * energy_avail_rate.data[i, :]
 
-        gg = (somatic_growth_potential - death) / (
-            1.0 - (fish.size_class_bnds_ratio ** (1.0 - (death / somatic_growth_potential)))
+        exp_in_denom = np.log10(fish.size_class_bnds_ratio) * (
+            1.0 - (death / somatic_growth_potential)
         )
+        exp_in_denom = np.where(exp_in_denom < 300, exp_in_denom, 300)
+        gg = (somatic_growth_potential - death) / (1.0 - (10.0 ** exp_in_denom))
         growth_rate.data[i, :] = np.where(
             gg < energy_avail_rate.data[i, :], gg, energy_avail_rate.data[i, :]
         )
+        # print(f"{log_of_exp} -> {gg}")
         lndx = np.isnan(gg) | (gg < 0)
         growth_rate.data[i, lndx] = 0.0
 
