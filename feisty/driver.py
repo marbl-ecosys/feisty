@@ -120,10 +120,10 @@ class simulation(object):
         forcing : xarray.Dataset
           Forcing data to run the model.
 
-        start_date : str or cftime obj
+        start_date : str, tuple, or cftime object
           Model year to start simulation.
-          If str, format 'YYYY-MM-DD',
-          if tuple format (Y, M, D) (all ints)
+          If str, format 'YYYY-MM-DD';
+          if tuple format (Y, M, D) (all ints).
 
         settings_in : dict
           Settings to overwrite defaults.
@@ -296,6 +296,9 @@ def config_testcase(
     forcing_name : string
       Name of forcing testcase.
 
+    start_date : str (or tuple or cftime object)
+      Model year to start simulation.
+
     settings_in : dict
       Settings to overwrite defaults.
 
@@ -386,6 +389,9 @@ def config_from_netcdf(
 
     Parameters
     ----------
+
+    start_date : str (or tuple or cftime object)
+      Model year to start simulation.
 
     settings_in : dict
       Settings to overwrite defaults.
