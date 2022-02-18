@@ -28,7 +28,7 @@ def test_forcing_cyclic():
 
 def test_not_implemented():
     """ensure appropriate failures with bad method."""
-    testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
+    testcase = feisty.driver.config_testcase('tanh_shelf', 'cyclic')
     with pytest.raises(ValueError):
         testcase.run(1, method='intuition')
     with pytest.raises(NotImplementedError):
@@ -57,8 +57,8 @@ def test_read_settings():
     os.remove(file_in)
 
 
-def test_simulate_testcase_init_1():
-    testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
+def test_config_testcase_init_1():
+    testcase = feisty.driver.config_testcase('tanh_shelf', 'cyclic')
     assert isinstance(testcase, feisty.driver.simulation)
     for attr in ['obj', 'domain_dict', 'forcing', 'settings_in', 'run']:
         assert hasattr(testcase, attr)
@@ -75,8 +75,8 @@ def test_simulate_testcase_init_1():
         assert (testcase.forcing[v] == expected_forcing[v]).all()
 
 
-def test_simulate_testcase_init_2():
-    testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
+def test_config_testcase_init_2():
+    testcase = feisty.driver.config_testcase('tanh_shelf', 'cyclic')
 
     testcase._init_output_arrays(365)
     assert (
@@ -87,14 +87,14 @@ def test_simulate_testcase_init_2():
     assert len(testcase.ds.group) == len(testcase.obj.ndx_prognostic)
 
 
-def test_simulate_testcase_run():
-    testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
+def test_config_testcase_run():
+    testcase = feisty.driver.config_testcase('tanh_shelf', 'cyclic')
     testcase.run(3)
 
 
 def test_cyclic_interpolation():
-    testcase1 = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
-    testcase2 = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic', start_date='0002-01-01')
+    testcase1 = feisty.driver.config_testcase('tanh_shelf', 'cyclic')
+    testcase2 = feisty.driver.config_testcase('tanh_shelf', 'cyclic', start_date='0002-01-01')
     testcase1.run(1)
     testcase2.run(1, cyclic_forcing=True)
     assert (testcase1.ds['biomass'].data == testcase2.ds['biomass'].data).all()

@@ -14,12 +14,10 @@ path_to_here = os.path.dirname(os.path.realpath(__file__))
 
 _test_domain = dict(
     tanh_shelf=testcase.domain_tanh_shelf,
-    from_disk=testcase.domain_from_netcdf,
 )
 
 _test_forcing = dict(
     cyclic=testcase.forcing_cyclic,
-    from_disk=testcase.forcing_from_netcdf,
 )
 
 
@@ -47,6 +45,58 @@ def _read_domain(domain_in, test_case=None):
 
 def _read_fish_init(fich_ic_in):
     pass
+
+
+def _domain_from_netcdf(forcing_yaml, forcing_key):
+    """Read domain information from netcdf file"""
+    with open(forcing_yaml) as f:
+        forcing_dict = yaml.safe_load(f)[forcing_key]
+    ds = xr.open_dataset(forcing_dict['path'])
+    if 'dimnames' in forcing_dict:
+        for (newdim, olddim) in forcing_dict['dimnames'].items():
+            ds = ds.rename({olddim: newdim})
+    try:
+        bathymetry = ds[forcing_dict['varnames']['bathymetry']]
+    except:
+        bathymetry = ds['bathymetry']
+    x = np.arange(bathymetry.size).reshape(bathymetry.shape)
+    return dict(
+        bathymetry=xr.DataArray(
+            bathymetry.data,
+            dims=('X'),
+            name='bathymetry',
+            attrs={'long_name': 'depth', 'units': 'm'},
+            coords={'X': x},
+        ),
+        NX=len(bathymetry.data),
+    )
+
+
+def _forcing_from_netcdf(domain_dict, forcing_yaml, forcing_key, allow_negative=False):
+    """Read forcing fields from netcdf file"""
+    with open(forcing_yaml) as f:
+        forcing_dict = yaml.safe_load(f)[forcing_key]
+    ds = xr.open_dataset(forcing_dict['path'])
+    if 'dimnames' in forcing_dict:
+        for (newdim, olddim) in forcing_dict['dimnames'].items():
+            ds = ds.rename({olddim: newdim})
+    da_list = []
+    for varname in ['T_pelagic', 'T_bottom', 'poc_flux_bottom', 'zooC', 'zoo_mort']:
+        try:
+            netcdf_varname = forcing_dict['varnames'][varname]
+            da_list.append(ds[netcdf_varname].rename(varname))
+        except:
+            da_list.append(ds[varname])
+    ds = xr.merge(da_list)
+    if not allow_negative:
+        for varname in ['poc_flux_bottom', 'zooC', 'zoo_mort']:
+            ds[varname].data = np.where(ds[varname].data > 0, ds[varname].data, 0)
+    if 'zooplankton' not in ds.dims:
+        ds['zooC'] = ds['zooC'].expand_dims('zooplankton')
+        ds['zoo_mort'] = ds['zoo_mort'].expand_dims('zooplankton')
+        ds['zooplankton'] = xr.DataArray(['Zoo'], dims='zooplankton')
+
+    return ds
 
 
 class simulation(object):
@@ -224,7 +274,7 @@ class simulation(object):
             self._ds.to_netcdf(file_out)
 
 
-def simulate_testcase(
+def config_testcase(
     domain_name,
     forcing_name,
     start_date='0001-01-01',
@@ -312,6 +362,94 @@ def simulate_testcase(
 
     domain_dict = _test_domain[domain_name](**domain_kwargs)
     forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
+
+    return simulation(
+        domain_dict,
+        forcing,
+        start_date,
+        settings_in,
+        fish_ic_data,
+        benthic_prey_ic_data,
+    )
+
+
+def config_from_netcdf(
+    start_date='0001-01-01',
+    settings_in={},
+    fish_ic_data=None,
+    benthic_prey_ic_data=None,
+    domain_kwargs={},
+    forcing_kwargs={},
+):
+
+    """Return an instance of ``feisty.driver.simulation`` for ``testcase`` data.
+
+    Parameters
+    ----------
+
+    settings_in : dict
+      Settings to overwrite defaults.
+
+    fish_ic_data : numeric, array_like
+      Initial conditions.
+
+    benthic_prey_ic_data : numeric, array_like
+      Initial conditions.
+
+    domain_kwargs : dict
+      Keyword arguments to pass to domain generation function.
+
+    forcing_kwargs : dict
+      Keyword arguments to pass to forcing generation function.
+
+    Returns
+    -------
+
+    sim : feisty.driver.simulation
+      An instance of the ``feisty.driver.simulation`` ready for integration.
+
+    Examples
+    --------
+
+    Instantiate a ``simulation``::
+
+      >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
+
+    Integrate the model for 365 days::
+
+       >>> testcase.run(365)
+
+    Access the output::
+
+      >>> testcase.ds.info()
+      xarray.Dataset {
+      dimensions:
+              X = 22 ;
+              group = 9 ;
+              time = 365 ;
+              fish = 8 ;
+      variables:
+              float64 X(X) ;
+              <U12 group(group) ;
+              float64 biomass(time, group, X) ;
+              <U2 fish(fish) ;
+              float64 T_habitat(time, fish, X) ;
+              float64 ingestion_rate(time, fish, X) ;
+              float64 predation_flux(time, fish, X) ;
+              float64 predation_rate(time, fish, X) ;
+              float64 metabolism_rate(time, fish, X) ;
+              float64 mortality_rate(time, fish, X) ;
+              float64 energy_avail_rate(time, fish, X) ;
+              float64 growth_rate(time, fish, X) ;
+              float64 reproduction_rate(time, fish, X) ;
+              float64 recruitment_flux(time, fish, X) ;
+              float64 fish_catch_rate(time, fish, X) ;
+      // global attributes:
+        }
+    """
+
+    domain_dict = _domain_from_netcdf(**domain_kwargs)
+    forcing = _forcing_from_netcdf(domain_dict, **forcing_kwargs)
 
     return simulation(
         domain_dict,
