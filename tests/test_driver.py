@@ -90,3 +90,11 @@ def test_simulate_testcase_init_2():
 def test_simulate_testcase_run():
     testcase = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
     testcase.run(3)
+
+
+def test_cyclic_interpolation():
+    testcase1 = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic')
+    testcase2 = feisty.driver.simulate_testcase('tanh_shelf', 'cyclic', start_date='0002-01-01')
+    testcase1.run(1)
+    testcase2.run(1)
+    assert (testcase1.ds['biomass'].data == testcase2.ds['biomass'].data).all()
