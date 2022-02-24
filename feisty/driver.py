@@ -99,7 +99,7 @@ def _forcing_from_netcdf(domain_dict, forcing_yaml, forcing_key, allow_negative=
     return ds
 
 
-class simulation(object):
+class offline_driver(object):
     def __init__(
         self,
         domain_dict,
@@ -218,7 +218,7 @@ class simulation(object):
 
     @property
     def ds(self):
-        """Data comprising the output from a ``feisty`` simulation."""
+        """Data comprising the output from ``feisty``."""
         return self._ds
 
     def _compute_tendency(self, t, state_t, cyclic_forcing):
@@ -304,7 +304,7 @@ def config_testcase(
     forcing_kwargs={},
 ):
 
-    """Return an instance of ``feisty.driver.simulation`` for ``testcase`` data.
+    """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
 
     Parameters
     ----------
@@ -336,13 +336,13 @@ def config_testcase(
     Returns
     -------
 
-    sim : feisty.driver.simulation
-      An instance of the ``feisty.driver.simulation`` ready for integration.
+    sim : feisty.driver.offline_driver
+      An instance of the ``feisty.driver.offline_driver`` ready for integration.
 
     Examples
     --------
 
-    Instantiate a ``simulation``::
+    Instantiate a ``offline_driver``::
 
       >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
 
@@ -389,7 +389,7 @@ def config_testcase(
     domain_dict = _test_domain[domain_name](**domain_kwargs)
     forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
 
-    return simulation(
+    return offline_driver(
         domain_dict,
         forcing,
         start_date,
@@ -410,7 +410,7 @@ def config_from_netcdf(
     cyclic_forcing=False,
 ):
 
-    """Return an instance of ``feisty.driver.simulation`` for ``testcase`` data.
+    """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
 
     Parameters
     ----------
@@ -436,13 +436,13 @@ def config_from_netcdf(
     Returns
     -------
 
-    sim : feisty.driver.simulation
-      An instance of the ``feisty.driver.simulation`` ready for integration.
+    sim : feisty.driver.offline_driver
+      An instance of the ``feisty.driver.offline_driver`` ready for integration.
 
     Examples
     --------
 
-    Instantiate a ``simulation``::
+    Instantiate a ``offline_driver``::
 
       >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
 
@@ -482,7 +482,7 @@ def config_from_netcdf(
     domain_dict = _domain_from_netcdf(**domain_kwargs)
     forcing = _forcing_from_netcdf(domain_dict, **forcing_kwargs)
 
-    return simulation(
+    return offline_driver(
         domain_dict,
         forcing,
         start_date,

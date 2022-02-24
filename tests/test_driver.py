@@ -59,7 +59,7 @@ def test_read_settings():
 
 def test_config_testcase_init_1():
     testcase = feisty.driver.config_testcase('tanh_shelf', 'cyclic')
-    assert isinstance(testcase, feisty.driver.simulation)
+    assert isinstance(testcase, feisty.driver.offline_driver)
     for attr in ['obj', 'domain_dict', 'forcing', 'settings_in', 'run']:
         assert hasattr(testcase, attr)
 
