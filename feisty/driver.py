@@ -105,6 +105,7 @@ class simulation(object):
         domain_dict,
         forcing,
         start_date,
+        cyclic_forcing,
         settings_in={},
         fish_ic_data=None,
         benthic_prey_ic_data=None,
@@ -135,7 +136,25 @@ class simulation(object):
           Initial conditions.
         """
         self.domain_dict = domain_dict
-        self.forcing = forcing
+        self.cyclic_forcing = cyclic_forcing
+        if self.cyclic_forcing:
+            # TODO: better cyclic forcing: first_forcing['time'] should be the date of forcing.isel(time=-1) but in the
+            #       year before forcing.isel(time=0); last_forcing['time'] should be the date of forcing.isel(time=0)
+            #       but in the year after forcing.isel(time=-1)
+            units = 'days since 0001-01-01 00:00:00'
+            first_forcing = forcing.isel(time=-1)
+            old_data = forcing['time'].data[-1]
+            first_forcing['time'].data = cftime.num2date(
+                cftime.date2num(old_data, units) % 365 - 365, units, calendar=old_data.calendar
+            )
+            last_forcing = forcing.isel(time=0)
+            old_data = forcing['time'].data[0]
+            last_forcing['time'].data = cftime.num2date(
+                cftime.date2num(old_data, units) % 365 + 365, units, calendar=old_data.calendar
+            )
+            self.forcing = xr.concat([first_forcing, forcing, last_forcing], dim='time')
+        else:
+            self.forcing = forcing
         date_tuple = None
         if isinstance(start_date, str):
             date_tuple = [int(date_comp) for date_comp in start_date.split('-')]
@@ -243,7 +262,7 @@ class simulation(object):
         """use a SciPy solver to integrate the model equation."""
         raise NotImplementedError('scipy solvers not implemented')
 
-    def run(self, nt, file_out=None, method='euler', cyclic_forcing=False):
+    def run(self, nt, file_out=None, method='euler'):
         """Integrate the FEISTY model.
 
         Parameters
@@ -262,7 +281,7 @@ class simulation(object):
              Only ``method='euler'`` is supported currently.
 
         """
-        self._solve(nt, method, cyclic_forcing)
+        self._solve(nt, method, self.cyclic_forcing)
         self._shutdown(file_out)
 
     def _shutdown(self, file_out):
@@ -363,6 +382,10 @@ def config_testcase(
     assert domain_name in _test_domain
     assert forcing_name in _test_forcing
 
+    # Enable cyclic forcing for certain tests
+    cyclic_forcing = forcing_name in ['cyclic']
+
+    # Set up domain_dict and forcing
     domain_dict = _test_domain[domain_name](**domain_kwargs)
     forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
 
@@ -370,6 +393,7 @@ def config_testcase(
         domain_dict,
         forcing,
         start_date,
+        cyclic_forcing,
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,
@@ -383,6 +407,7 @@ def config_from_netcdf(
     benthic_prey_ic_data=None,
     domain_kwargs={},
     forcing_kwargs={},
+    cyclic_forcing=False,
 ):
 
     """Return an instance of ``feisty.driver.simulation`` for ``testcase`` data.
@@ -461,6 +486,7 @@ def config_from_netcdf(
         domain_dict,
         forcing,
         start_date,
+        cyclic_forcing,
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,
