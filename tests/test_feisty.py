@@ -19,7 +19,7 @@ def test_1day_testcase():
 def test_1day_locs3():
     kwargs = {'forcing_yaml': 'tests/test_forcing.yaml', 'forcing_key': 'test_locs3'}
     testcase = feisty.config_from_netcdf(
-        cyclic_forcing=True, domain_kwargs=kwargs, forcing_kwargs=kwargs
+        ignore_year_in_forcing=True, domain_kwargs=kwargs, forcing_kwargs=kwargs
     )
     testcase.run(1)
     baseline_file = os.path.join('tests', 'baselines', 'test_locs3_1day.nc')

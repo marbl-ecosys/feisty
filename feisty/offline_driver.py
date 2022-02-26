@@ -8,6 +8,7 @@ import yaml
 from . import testcase
 from .core import settings as settings_mod
 from .core.interface import feisty_instance_type
+from .utils import make_forcing_cyclic
 
 path_to_here = os.path.dirname(os.path.realpath(__file__))
 
@@ -105,7 +106,7 @@ class offline_driver(object):
         domain_dict,
         forcing,
         start_date,
-        cyclic_forcing,
+        ignore_year_in_forcing=False,
         settings_in={},
         fish_ic_data=None,
         benthic_prey_ic_data=None,
@@ -136,25 +137,8 @@ class offline_driver(object):
           Initial conditions.
         """
         self.domain_dict = domain_dict
-        self.cyclic_forcing = cyclic_forcing
-        if self.cyclic_forcing:
-            # TODO: better cyclic forcing: first_forcing['time'] should be the date of forcing.isel(time=-1) but in the
-            #       year before forcing.isel(time=0); last_forcing['time'] should be the date of forcing.isel(time=0)
-            #       but in the year after forcing.isel(time=-1)
-            units = 'days since 0001-01-01 00:00:00'
-            first_forcing = forcing.isel(time=-1)
-            old_data = forcing['time'].data[-1]
-            first_forcing['time'].data = cftime.num2date(
-                cftime.date2num(old_data, units) % 365 - 365, units, calendar=old_data.calendar
-            )
-            last_forcing = forcing.isel(time=0)
-            old_data = forcing['time'].data[0]
-            last_forcing['time'].data = cftime.num2date(
-                cftime.date2num(old_data, units) % 365 + 365, units, calendar=old_data.calendar
-            )
-            self.forcing = xr.concat([first_forcing, forcing, last_forcing], dim='time')
-        else:
-            self.forcing = forcing
+        self.forcing = forcing
+        self.ignore_year = ignore_year_in_forcing
         date_tuple = None
         if isinstance(start_date, str):
             date_tuple = [int(date_comp) for date_comp in start_date.split('-')]
@@ -193,8 +177,8 @@ class offline_driver(object):
             benthic_prey_ic_data=benthic_prey_ic_data,
         )
 
-    def _forcing_t(self, t, ignore_year):
-        if ignore_year:
+    def _forcing_t(self, t):
+        if self.ignore_year:
             units = 'days since 0001-01-01 00:00:00'
             interp_time = cftime.num2date(
                 cftime.date2num(t, units) % 365, units, calendar=t.calendar
@@ -221,9 +205,9 @@ class offline_driver(object):
         """Data comprising the output from ``feisty``."""
         return self._ds
 
-    def _compute_tendency(self, t, state_t, cyclic_forcing):
+    def _compute_tendency(self, t, state_t):
         """Return the feisty time tendency."""
-        gcm_data_t = self._forcing_t(t, cyclic_forcing)
+        gcm_data_t = self._forcing_t(t)
         return self.obj.compute_tendencies(
             state_t.isel(group=self.obj.prog_ndx_fish),
             state_t.isel(group=self.obj.prog_ndx_benthic_prey),
@@ -234,31 +218,31 @@ class offline_driver(object):
             poc_flux=gcm_data_t.poc_flux_bottom,
         )
 
-    def _solve(self, nt, method, cyclic_forcing):
+    def _solve(self, nt, method):
         """Call a numerical ODE solver to integrate the feisty model in time."""
 
         state_t = self.obj.get_prognostic().copy()
         self._init_output_arrays(nt)
         if method == 'euler':
-            self._solve_foward_euler(nt, state_t, cyclic_forcing)
+            self._solve_foward_euler(nt, state_t)
 
         elif method in ['Radau', 'RK45']:
             # TODO: make input arguments
-            self._solve_scipy(nt, state_t, method, cyclic_forcing)
+            self._solve_scipy(nt, state_t, method)
         else:
             raise ValueError(f'unknown method: {method}')
 
-    def _solve_foward_euler(self, nt, state_t, cyclic_forcing):
+    def _solve_foward_euler(self, nt, state_t):
         """use forward-euler to solve feisty model"""
         for n in range(nt):
-            dsdt = self._compute_tendency(self.time[n], state_t, cyclic_forcing)
+            dsdt = self._compute_tendency(self.time[n], state_t)
             state_t[self.obj.prog_ndx_prognostic, :] = (
                 state_t[self.obj.prog_ndx_prognostic, :]
                 + dsdt[self.obj.ndx_prognostic, :] * self.dt
             )
             self._post_data(n, state_t)
 
-    def _solve_scipy(self, nt, state_t, method, cyclic_forcing):
+    def _solve_scipy(self, nt, state_t, method):
         """use a SciPy solver to integrate the model equation."""
         raise NotImplementedError('scipy solvers not implemented')
 
@@ -281,7 +265,7 @@ class offline_driver(object):
              Only ``method='euler'`` is supported currently.
 
         """
-        self._solve(nt, method, self.cyclic_forcing)
+        self._solve(nt, method)
         self._shutdown(file_out)
 
     def _shutdown(self, file_out):
@@ -382,18 +366,20 @@ def config_testcase(
     assert domain_name in _test_domain
     assert forcing_name in _test_forcing
 
-    # Enable cyclic forcing for certain tests
-    cyclic_forcing = forcing_name in ['cyclic']
-
     # Set up domain_dict and forcing
     domain_dict = _test_domain[domain_name](**domain_kwargs)
     forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
+
+    # Enable cyclic forcing for certain tests
+    ignore_year_in_forcing = forcing_name in ['cyclic']
+    if ignore_year_in_forcing:
+        forcing = make_forcing_cyclic(forcing)
 
     return offline_driver(
         domain_dict,
         forcing,
         start_date,
-        cyclic_forcing,
+        ignore_year_in_forcing,
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,
@@ -402,12 +388,12 @@ def config_testcase(
 
 def config_from_netcdf(
     start_date='0001-01-01',
+    ignore_year_in_forcing=False,
     settings_in={},
     fish_ic_data=None,
     benthic_prey_ic_data=None,
     domain_kwargs={},
     forcing_kwargs={},
-    cyclic_forcing=False,
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -481,12 +467,14 @@ def config_from_netcdf(
 
     domain_dict = _domain_from_netcdf(**domain_kwargs)
     forcing = _forcing_from_netcdf(domain_dict, **forcing_kwargs)
+    if ignore_year_in_forcing:
+        forcing = make_forcing_cyclic(forcing)
 
     return offline_driver(
         domain_dict,
         forcing,
         start_date,
-        cyclic_forcing,
+        ignore_year_in_forcing,
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,
