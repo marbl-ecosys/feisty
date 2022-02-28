@@ -131,7 +131,7 @@ def test_t_frac_pelagic():
             t_frac_pelagic = np.where(
                 ocean_depth < PI_be_cutoff,
                 prey_pelagic.data / (prey_pelagic.data + prey_demersal.data),
-                1.0,
+                0.0,
             )
         # we should have successfully reconstructed the prey ratio
         assert (F.tendency_data.t_frac_pelagic.data[i, :] == t_frac_pelagic).all()

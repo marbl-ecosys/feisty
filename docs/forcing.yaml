@@ -1,0 +1,10 @@
+test_locs3:
+  path: ../input_files/feisty_input_climatol_daily_locs3.nc
+  dimnames:
+    X: loc
+  varnames:
+    bathymetry: dep
+    T_pelagic: Tp
+    T_bottom: Tb
+    poc_flux_bottom: POC
+    zooC: zoo

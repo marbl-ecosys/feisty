@@ -7,6 +7,7 @@ except DistributionNotFound:
     # package is not installed
     __version__ = '0.0.0'
 
-from . import driver, testcase
+from . import offline_driver as offline_driver_mod, testcase
 from .core import settings
 from .core.interface import feisty_instance_type
+from .offline_driver import config_from_netcdf, config_testcase, offline_driver

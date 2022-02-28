@@ -3,4 +3,5 @@ pydata-sphinx-theme
 nbsphinx
 ipython
 ipykernel
+nc-time-axis
 - r ../requirements.txt

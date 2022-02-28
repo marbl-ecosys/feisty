@@ -1,5 +1,6 @@
 import os
 
+import cftime
 import numpy as np
 import xarray as xr
 import yaml
@@ -7,6 +8,7 @@ import yaml
 from . import testcase
 from .core import settings as settings_mod
 from .core.interface import feisty_instance_type
+from .utils import make_forcing_cyclic
 
 path_to_here = os.path.dirname(os.path.realpath(__file__))
 
@@ -46,11 +48,65 @@ def _read_fish_init(fich_ic_in):
     pass
 
 
-class simulation(object):
+def _domain_from_netcdf(forcing_yaml, forcing_key):
+    """Read domain information from netcdf file"""
+    with open(forcing_yaml) as f:
+        forcing_dict = yaml.safe_load(f)[forcing_key]
+    ds = xr.open_dataset(forcing_dict['path'])
+    if 'dimnames' in forcing_dict:
+        for (newdim, olddim) in forcing_dict['dimnames'].items():
+            ds = ds.rename({olddim: newdim})
+    try:
+        bathymetry = ds[forcing_dict['varnames']['bathymetry']]
+    except:
+        bathymetry = ds['bathymetry']
+    x = np.arange(bathymetry.size).reshape(bathymetry.shape)
+    return dict(
+        bathymetry=xr.DataArray(
+            bathymetry.data,
+            dims=('X'),
+            name='bathymetry',
+            attrs={'long_name': 'depth', 'units': 'm'},
+            coords={'X': x},
+        ),
+        NX=len(bathymetry.data),
+    )
+
+
+def _forcing_from_netcdf(domain_dict, forcing_yaml, forcing_key, allow_negative=False):
+    """Read forcing fields from netcdf file"""
+    with open(forcing_yaml) as f:
+        forcing_dict = yaml.safe_load(f)[forcing_key]
+    ds = xr.open_dataset(forcing_dict['path'])
+    if 'dimnames' in forcing_dict:
+        for (newdim, olddim) in forcing_dict['dimnames'].items():
+            ds = ds.rename({olddim: newdim})
+    da_list = []
+    for varname in ['T_pelagic', 'T_bottom', 'poc_flux_bottom', 'zooC', 'zoo_mort']:
+        try:
+            netcdf_varname = forcing_dict['varnames'][varname]
+            da_list.append(ds[netcdf_varname].rename(varname))
+        except:
+            da_list.append(ds[varname])
+    ds = xr.merge(da_list)
+    if not allow_negative:
+        for varname in ['poc_flux_bottom', 'zooC', 'zoo_mort']:
+            ds[varname].data = np.where(ds[varname].data > 0, ds[varname].data, 0)
+    if 'zooplankton' not in ds.dims:
+        ds['zooC'] = ds['zooC'].expand_dims('zooplankton')
+        ds['zoo_mort'] = ds['zoo_mort'].expand_dims('zooplankton')
+        ds['zooplankton'] = xr.DataArray(['Zoo'], dims='zooplankton')
+
+    return ds
+
+
+class offline_driver(object):
     def __init__(
         self,
         domain_dict,
         forcing,
+        start_date,
+        ignore_year_in_forcing=False,
         settings_in={},
         fish_ic_data=None,
         benthic_prey_ic_data=None,
@@ -66,6 +122,11 @@ class simulation(object):
         forcing : xarray.Dataset
           Forcing data to run the model.
 
+        start_date : str, tuple, or cftime object
+          Model year to start simulation.
+          If str, format 'YYYY-MM-DD';
+          if tuple format (Y, M, D) (all ints).
+
         settings_in : dict
           Settings to overwrite defaults.
 
@@ -77,6 +138,16 @@ class simulation(object):
         """
         self.domain_dict = domain_dict
         self.forcing = forcing
+        self.ignore_year = ignore_year_in_forcing
+        date_tuple = None
+        if isinstance(start_date, str):
+            date_tuple = [int(date_comp) for date_comp in start_date.split('-')]
+        elif isinstance(start_date, tuple):
+            date_tuple = start_date
+        if date_tuple:
+            self.start_date = cftime.DatetimeNoLeap(date_tuple[0], date_tuple[1], date_tuple[2])
+        else:
+            self.start_date = start_date
         self.settings_in = settings_in
         self.dt = 1.0  # day
 
@@ -107,19 +178,22 @@ class simulation(object):
         )
 
     def _forcing_t(self, t):
-        return self.forcing.interp(time=t)
+        if self.ignore_year:
+            units = 'days since 0001-01-01 00:00:00'
+            interp_time = cftime.num2date(
+                cftime.date2num(t, units) % 365, units, calendar=t.calendar
+            )
+        else:
+            interp_time = t
+        return self.forcing.interp(time=interp_time)
 
     def _init_output_arrays(self, nt):
-        self.time = xr.DataArray(
-            np.arange(0.0, nt, 1.0),
-            dims=('time'),
-            name='time',
-            attrs={'long_name': 'time'},
-        )
-        zeros = xr.full_like(self.time, fill_value=0.0)
+        self.time = xr.cftime_range(start=self.start_date, periods=nt)
+        zeros = xr.DataArray(np.zeros(nt), dims=('time'), name='zero')
         ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
         ds_prog = zeros * self.obj.get_prognostic().to_dataset()
         self._ds = xr.merge((ds_prog, ds_diag))
+        self.ds['time'] = self.time
 
     def _post_data(self, n, state_t):
         self._ds.biomass[n, :] = state_t
@@ -128,7 +202,7 @@ class simulation(object):
 
     @property
     def ds(self):
-        """Data comprising the output from a ``feisty`` simulation."""
+        """Data comprising the output from ``feisty``."""
         return self._ds
 
     def _compute_tendency(self, t, state_t):
@@ -203,9 +277,10 @@ class simulation(object):
             self._ds.to_netcdf(file_out)
 
 
-def simulate_testcase(
+def config_testcase(
     domain_name,
     forcing_name,
+    start_date='0001-01-01',
     settings_in={},
     fish_ic_data=None,
     benthic_prey_ic_data=None,
@@ -213,7 +288,7 @@ def simulate_testcase(
     forcing_kwargs={},
 ):
 
-    """Return an instance of ``feisty.driver.simulation`` for ``testcase`` data.
+    """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
 
     Parameters
     ----------
@@ -223,6 +298,9 @@ def simulate_testcase(
 
     forcing_name : string
       Name of forcing testcase.
+
+    start_date : str (or tuple or cftime object)
+      Model year to start simulation.
 
     settings_in : dict
       Settings to overwrite defaults.
@@ -242,13 +320,13 @@ def simulate_testcase(
     Returns
     -------
 
-    sim : feisty.driver.simulation
-      An instance of the ``feisty.driver.simulation`` ready for integration.
+    sim : feisty.driver.offline_driver
+      An instance of the ``feisty.driver.offline_driver`` ready for integration.
 
     Examples
     --------
 
-    Instantiate a ``simulation``::
+    Instantiate a ``offline_driver``::
 
       >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
 
@@ -288,12 +366,115 @@ def simulate_testcase(
     assert domain_name in _test_domain
     assert forcing_name in _test_forcing
 
+    # Set up domain_dict and forcing
     domain_dict = _test_domain[domain_name](**domain_kwargs)
     forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
 
-    return simulation(
+    # Enable cyclic forcing for certain tests
+    ignore_year_in_forcing = forcing_name in ['cyclic']
+    if ignore_year_in_forcing:
+        forcing = make_forcing_cyclic(forcing)
+
+    return offline_driver(
         domain_dict,
         forcing,
+        start_date,
+        ignore_year_in_forcing,
+        settings_in,
+        fish_ic_data,
+        benthic_prey_ic_data,
+    )
+
+
+def config_from_netcdf(
+    start_date='0001-01-01',
+    ignore_year_in_forcing=False,
+    settings_in={},
+    fish_ic_data=None,
+    benthic_prey_ic_data=None,
+    domain_kwargs={},
+    forcing_kwargs={},
+):
+
+    """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
+
+    Parameters
+    ----------
+
+    start_date : str (or tuple or cftime object)
+      Model year to start simulation.
+
+    settings_in : dict
+      Settings to overwrite defaults.
+
+    fish_ic_data : numeric, array_like
+      Initial conditions.
+
+    benthic_prey_ic_data : numeric, array_like
+      Initial conditions.
+
+    domain_kwargs : dict
+      Keyword arguments to pass to domain generation function.
+
+    forcing_kwargs : dict
+      Keyword arguments to pass to forcing generation function.
+
+    Returns
+    -------
+
+    sim : feisty.driver.offline_driver
+      An instance of the ``feisty.driver.offline_driver`` ready for integration.
+
+    Examples
+    --------
+
+    Instantiate a ``offline_driver``::
+
+      >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
+
+    Integrate the model for 365 days::
+
+       >>> testcase.run(365)
+
+    Access the output::
+
+      >>> testcase.ds.info()
+      xarray.Dataset {
+      dimensions:
+              X = 22 ;
+              group = 9 ;
+              time = 365 ;
+              fish = 8 ;
+      variables:
+              float64 X(X) ;
+              <U12 group(group) ;
+              float64 biomass(time, group, X) ;
+              <U2 fish(fish) ;
+              float64 T_habitat(time, fish, X) ;
+              float64 ingestion_rate(time, fish, X) ;
+              float64 predation_flux(time, fish, X) ;
+              float64 predation_rate(time, fish, X) ;
+              float64 metabolism_rate(time, fish, X) ;
+              float64 mortality_rate(time, fish, X) ;
+              float64 energy_avail_rate(time, fish, X) ;
+              float64 growth_rate(time, fish, X) ;
+              float64 reproduction_rate(time, fish, X) ;
+              float64 recruitment_flux(time, fish, X) ;
+              float64 fish_catch_rate(time, fish, X) ;
+      // global attributes:
+        }
+    """
+
+    domain_dict = _domain_from_netcdf(**domain_kwargs)
+    forcing = _forcing_from_netcdf(domain_dict, **forcing_kwargs)
+    if ignore_year_in_forcing:
+        forcing = make_forcing_cyclic(forcing)
+
+    return offline_driver(
+        domain_dict,
+        forcing,
+        start_date,
+        ignore_year_in_forcing,
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,

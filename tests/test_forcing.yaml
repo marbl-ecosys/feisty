@@ -1,0 +1,4 @@
+test_locs3:
+  path: tests/baselines/test_locs3_1day.nc
+  varnames:
+    bathymetry: dep
