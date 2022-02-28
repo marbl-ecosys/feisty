@@ -169,44 +169,17 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1">
   <a class="reference internal" href="api-driver.html">
    FEISTY Driver
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.driver.simulation.html">
-     feisty.driver.simulation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.driver.simulation.run.html">
-     feisty.driver.simulation.run
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.driver.simulation.ds.html">
-     feisty.driver.simulation.ds
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="generated/feisty.driver.simulate_testcase.html">
-     feisty.driver.simulate_testcase
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="settings.html">
    FEISTY Settings
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -234,8 +207,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="api-internal.html">
    Internal API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -526,6 +499,7 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">import</span> <span class="nn">feisty</span>
@@ -539,48 +513,68 @@ const thebe_selector_output = ".output, .cell_output"
 That will require refactoring the yaml file and also changing test_ds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;matlab_first_timestep.yaml&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">baselines</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_comparison</span><span class="p">(</span><span class="n">matlab_vals</span><span class="p">,</span> <span class="n">py_vals</span><span class="p">,</span> <span class="n">row_name</span><span class="p">,</span> <span class="n">full_table</span><span class="p">,</span> <span class="n">seps</span><span class="p">):</span>
+    <span class="n">nstep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">matlab_vals</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">py_vals</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)])</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">matlab_vals</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">py_vals</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)])</span>
+    <span class="n">matlab_vals</span> <span class="o">=</span> <span class="n">matlab_vals</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nstep</span><span class="p">),</span> <span class="n">X</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">py_vals</span> <span class="o">=</span> <span class="n">py_vals</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nstep</span><span class="p">),</span> <span class="n">X</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">rel_err_denom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">matlab_vals</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">matlab_vals</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="p">)</span>  <span class="c1"># avoid dividing by 0 in next np.where() statement</span>
+    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">matlab_vals</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">py_vals</span> <span class="o">-</span> <span class="n">matlab_vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">rel_err_denom</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">),</span> <span class="n">py_vals</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rel_errs</span><span class="p">)</span>
+    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">),</span> <span class="n">py_vals</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">rel_errs</span><span class="p">)</span>
+    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">),</span> <span class="n">py_vals</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">rel_errs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">full_table</span> <span class="ow">or</span> <span class="n">rel_err</span> <span class="o">&gt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+        <span class="n">max_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">)))</span>
+        <span class="n">t_ind</span> <span class="o">=</span> <span class="n">max_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x_ind</span> <span class="o">=</span> <span class="n">max_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">matlab_val</span> <span class="o">=</span> <span class="n">matlab_vals</span><span class="p">[</span><span class="n">t_ind</span><span class="p">][</span><span class="n">x_ind</span><span class="p">]</span>
+        <span class="n">py_val</span> <span class="o">=</span> <span class="n">py_vals</span><span class="p">[</span><span class="n">t_ind</span><span class="p">][</span><span class="n">x_ind</span><span class="p">]</span>
+        <span class="n">rel_err</span> <span class="o">=</span> <span class="n">rel_errs</span><span class="p">[</span><span class="n">t_ind</span><span class="p">][</span><span class="n">x_ind</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}{</span><span class="n">row_name</span><span class="si">}</span><span class="s2"> (t=</span><span class="si">{</span><span class="n">t_ind</span><span class="si">}</span><span class="s2">, X=</span><span class="si">{</span><span class="n">x_ind</span><span class="si">}</span><span class="s2">)</span><span class="si">{</span><span class="n">seps</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}{</span><span class="n">matlab_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">py_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}{</span><span class="n">rel_err</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">baselines_dict</span><span class="p">,</span> <span class="n">da_or_ds</span><span class="p">,</span> <span class="n">full_table</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">compare_nc</span><span class="p">(</span><span class="n">baseline_ds</span><span class="p">,</span> <span class="n">test_da_or_ds</span><span class="p">,</span> <span class="n">full_table</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">markdown_formatting</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">test_da_or_ds</span><span class="p">)</span> <span class="o">==</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">test_da_or_ds</span>
+        <span class="n">da</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">baseline_da</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">table_header</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">da</span> <span class="o">=</span> <span class="n">test_da_or_ds</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">da_dims</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;fish&quot;</span><span class="p">]</span>
+        <span class="n">da_dim</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">dad</span> <span class="ow">in</span> <span class="n">da_dims</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dad</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                <span class="n">da_dim</span> <span class="o">=</span> <span class="n">dad</span>
+                <span class="k">break</span>
+        <span class="n">baseline_da</span> <span class="o">=</span> <span class="n">baseline_ds</span><span class="p">[</span><span class="n">da</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">table_header</span> <span class="o">=</span> <span class="n">da_dim</span>
     <span class="k">if</span> <span class="n">markdown_formatting</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;dimname&quot;</span> <span class="ow">in</span> <span class="n">baselines_dict</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">baselines_dict</span><span class="p">[</span><span class="s1">&#39;dimname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> | Matlab Value | Python Value | Rel Err |&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;|  | Matlab Value | Python Value | Rel Err |&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">table_header</span><span class="si">}</span><span class="s2"> | Matlab Value | Python Value | Rel Err |&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;| --- | --- | --- | --- |&quot;</span><span class="p">)</span>
         <span class="n">seps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;| &quot;</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="s2">&quot; |&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">seps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;dimname&quot;</span> <span class="ow">in</span> <span class="n">baselines_dict</span><span class="p">:</span>
-        <span class="n">all_vars</span> <span class="o">=</span> <span class="n">da_or_ds</span><span class="p">[</span><span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;dimname&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">if</span> <span class="n">da</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">dimname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">da</span><span class="p">[</span><span class="n">da_dim</span><span class="p">]):</span>
+            <span class="n">_comparison</span><span class="p">(</span>
+                <span class="n">baseline_da</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">da_dim</span><span class="p">:</span> <span class="n">n</span><span class="p">}),</span> <span class="n">da</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">da_dim</span><span class="p">:</span> <span class="n">n</span><span class="p">}),</span> <span class="n">dimname</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">full_table</span><span class="p">,</span> <span class="n">seps</span>
+            <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">all_vars</span> <span class="o">=</span> <span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">all_vars</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;dimname&quot;</span> <span class="ow">in</span> <span class="n">baselines_dict</span><span class="p">:</span>
-            <span class="n">da</span> <span class="o">=</span> <span class="n">da_or_ds</span>
-            <span class="n">sel_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;dimname&quot;</span><span class="p">]:</span> <span class="n">var</span><span class="p">}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">da</span> <span class="o">=</span> <span class="n">da_or_ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
-            <span class="n">sel_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">matlab_val</span> <span class="o">=</span> <span class="n">baselines_dict</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="n">var</span><span class="p">]</span>
-        <span class="n">py_val</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">sel_dict</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">if</span> <span class="n">matlab_val</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">rel_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">py_val</span> <span class="o">-</span> <span class="n">matlab_val</span><span class="p">)</span> <span class="o">/</span> <span class="n">matlab_val</span>
-            <span class="k">if</span> <span class="n">rel_err</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rel_err</span> <span class="o">=</span> <span class="o">-</span><span class="n">rel_err</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">py_val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rel_err</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">elif</span> <span class="n">py_val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rel_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-            <span class="k">elif</span> <span class="n">py_val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">rel_err</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-        <span class="k">if</span> <span class="n">full_table</span> <span class="ow">or</span> <span class="n">rel_err</span> <span class="o">&gt;</span> <span class="mf">1e-2</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}{</span><span class="n">var</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}{</span><span class="n">matlab_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">py_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}{</span><span class="n">rel_err</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">_comparison</span><span class="p">(</span>
+                <span class="n">baseline_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">zooplankton</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="n">varname</span><span class="p">],</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">zooplankton</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="n">varname</span><span class="p">],</span>
+                <span class="n">varname</span><span class="p">,</span>
+                <span class="n">full_table</span><span class="p">,</span>
+                <span class="n">seps</span><span class="p">,</span>
             <span class="p">)</span>
 </pre></div>
 </div>
@@ -588,22 +582,43 @@ That will require refactoring the yaml file and also changing test_ds.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">matlab_script</span> <span class="o">=</span> <span class="s2">&quot;test_case&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># matlab_script = &quot;test_case&quot; ; force_nonnegative=True</span>
+<span class="n">matlab_script</span><span class="p">,</span> <span class="n">force_nonnegative</span> <span class="o">=</span> <span class="s2">&quot;test_locs3&quot;</span><span class="p">,</span> <span class="kc">True</span>
+
+<span class="n">baselines_from_nc</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../matlab_baselines/</span><span class="si">{</span><span class="n">matlab_script</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_case&quot;</span><span class="p">:</span>
-    <span class="n">testcase</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">simulate_testcase</span><span class="p">(</span><span class="s2">&quot;tanh_shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;cyclic&quot;</span><span class="p">)</span>
+    <span class="n">nyears</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">testcase</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_testcase</span><span class="p">(</span><span class="s2">&quot;tanh_shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;cyclic&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_locs3&quot;</span><span class="p">:</span>
+    <span class="n">nyears</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;forcing_yaml&#39;</span><span class="p">:</span> <span class="s1">&#39;./forcing.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;forcing_key&#39;</span><span class="p">:</span> <span class="n">matlab_script</span><span class="p">}</span>
+    <span class="n">testcase</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_from_netcdf</span><span class="p">(</span>
+        <span class="n">ignore_year_in_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">domain_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="n">forcing_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown matlab_script &#39;</span><span class="si">{</span><span class="n">matlab_script</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Set negative forcing values to zero</span>
+<span class="k">if</span> <span class="n">force_nonnegative</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;poc_flux_bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;zooC&#39;</span><span class="p">,</span> <span class="s1">&#39;zoo_mort&#39;</span><span class="p">]:</span>
+        <span class="n">baselines_from_nc</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">baselines_from_nc</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">baselines_from_nc</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
-    <span class="n">baselines</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s2">&quot;day1&quot;</span><span class="p">][</span><span class="s2">&quot;forcing&quot;</span><span class="p">],</span>
-    <span class="n">testcase</span><span class="o">.</span><span class="n">forcing</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zooplankton</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_nc</span><span class="p">(</span>
+    <span class="n">baselines_from_nc</span><span class="p">,</span>
+    <span class="n">testcase</span><span class="o">.</span><span class="n">forcing</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;zooplankton&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Max diff in depth: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="p">[</span><span class="s1">&#39;dep&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">testcase</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">domain_dict</span><span class="p">[</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -611,11 +626,13 @@ That will require refactoring the yaml file and also changing test_ds.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>|  | Matlab Value | Python Value | Rel Err |
 | --- | --- | --- | --- |
-| T_pelagic | 1.8200e+01 | 1.8200e+01 | 0.0000e+00 |
-| T_bottom | 4.2000e+00 | 4.2000e+00 | 0.0000e+00 |
-| zooC | 3.3287e+00 | 3.3287e+00 | 0.0000e+00 |
-| poc_flux_bottom | 2.7847e-02 | 2.7847e-02 | 1.2459e-16 |
-| zoo_mort | 7.7564e-01 | 7.7564e-01 | 0.0000e+00 |
+| T_pelagic (t=0, X=0) | 4.7453e+00 | 4.7453e+00 | 0.0000e+00 |
+| T_bottom (t=0, X=0) | 4.7647e+00 | 4.7647e+00 | 0.0000e+00 |
+| poc_flux_bottom (t=0, X=0) | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
+| zooC (t=0, X=0) | 7.0175e+00 | 7.0175e+00 | 0.0000e+00 |
+| zoo_mort (t=0, X=0) | 5.2470e-02 | 5.2470e-02 | 0.0000e+00 |
+
+Max diff in depth: 0.0
 </pre></div>
 </div>
 </div>
@@ -625,60 +642,53 @@ That will require refactoring the yaml file and also changing test_ds.</p>
 <h2>Run the model<a class="headerlink" href="#run-the-model" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-
-<span class="n">nsteps</span> <span class="o">=</span> <span class="mi">365</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nsteps</span> <span class="o">=</span> <span class="n">nyears</span> <span class="o">*</span> <span class="mi">365</span>
 <span class="n">make_plot</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">testcase</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nsteps</span><span class="p">)</span>
+<span class="o">%</span><span class="k">time</span> testcase.run(nsteps)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 41s, sys: 82.2 ms, total: 1min 41s
-Wall time: 1min 46s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 38.7 s, sys: 64 ms, total: 38.8 s
+Wall time: 40.1 s
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;day</span><span class="si">{</span><span class="n">nsteps</span><span class="si">}</span><span class="s2">&quot;</span>
-
-<span class="k">if</span> <span class="n">nsteps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">nsteps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">make_plot</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_case&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_locs3&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">5e-6</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-
-<span class="n">test_ds</span> <span class="o">=</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span><span class="p">(</span>
-    <span class="n">baselines</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="n">check_key</span><span class="p">][</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span>
-    <span class="n">test_ds</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span>
-    <span class="n">markdown_formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_nc</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="p">,</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span> <span class="n">nsteps</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| group | Matlab Value | Python Value | Rel Err |
 | --- | --- | --- | --- |
-| Sf | 1.7696e-05 | 1.7696e-05 | 0.0000e+00 |
-| Sp | 9.3653e-06 | 9.3653e-06 | 0.0000e+00 |
-| Sd | 9.4481e-06 | 9.4481e-06 | 0.0000e+00 |
-| Mf | 4.0856e-04 | 4.0856e-04 | 1.3269e-16 |
-| Mp | 3.1926e-04 | 3.1926e-04 | 0.0000e+00 |
-| Md | 3.1755e-04 | 3.1755e-04 | 1.7071e-16 |
-| Lp | 4.7386e-04 | 4.7386e-04 | 0.0000e+00 |
-| Ld | 2.2687e-04 | 2.2687e-04 | 7.1683e-16 |
-| benthic_prey | 6.3646e-01 | 6.3646e-01 | 0.0000e+00 |
+| Sf (t=535, X=0) | 1.7784e-05 | 1.7784e-05 | 5.7154e-16 |
+| Sp (t=0, X=0) | 9.9989e-06 | 9.9989e-06 | 0.0000e+00 |
+| Sd (t=706, X=1) | 8.7526e-06 | 8.7526e-06 | 1.9355e-16 |
+| Mf (t=642, X=0) | 5.2255e-04 | 5.2255e-04 | 4.1497e-16 |
+| Mp (t=4, X=2) | 1.5865e-05 | 1.5865e-05 | 2.1356e-16 |
+| Md (t=258, X=0) | 1.5325e-04 | 1.5325e-04 | 3.5373e-16 |
+| Lp (t=187, X=2) | 3.0789e-04 | 3.0789e-04 | 3.5214e-16 |
+| Ld (t=214, X=1) | 2.0739e-05 | 2.0739e-05 | 1.7971e-15 |
+| benthic_prey (t=370, X=1) | 3.3466e-01 | 3.3466e-01 | 1.9905e-15 |
 </pre></div>
 </div>
 </div>
