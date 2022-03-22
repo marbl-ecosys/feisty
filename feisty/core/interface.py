@@ -53,6 +53,7 @@ class feisty_instance_type(object):
         settings_dict={},
         fish_ic_data=None,
         benthic_prey_ic_data=None,
+        biomass_init='constant',
     ):
         """Initialize the ``feisty_instance_type``."""
 
@@ -69,8 +70,11 @@ class feisty_instance_type(object):
         self._init_fish_settings(self.settings_dict['fish'])
         self._init_benthic_prey_settings(self.settings_dict['benthic_prey'])
 
-        fish_ic_data = 1e-5 if fish_ic_data is None else fish_ic_data
-        benthic_prey_ic_data = 2e-3 if benthic_prey_ic_data is None else benthic_prey_ic_data
+        if biomass_init == 'constant':
+            fish_ic_data = 1e-5 if fish_ic_data is None else fish_ic_data
+            benthic_prey_ic_data = 2e-3 if benthic_prey_ic_data is None else benthic_prey_ic_data
+        else:
+            raise NotImplementedError(f'biomass_init = {biomass_init} is not supported')
         self._init_biomass(fish_ic_data, benthic_prey_ic_data)
 
         self._init_food_web(self.settings_dict['food_web'])

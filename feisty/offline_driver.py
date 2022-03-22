@@ -48,16 +48,14 @@ def _read_fish_init(fich_ic_in):
     pass
 
 
-def _domain_from_netcdf(forcing_yaml, forcing_key):
+def _domain_from_netcdf(input_dict):
     """Read domain information from netcdf file"""
-    with open(forcing_yaml) as f:
-        forcing_dict = yaml.safe_load(f)[forcing_key]
-    ds = xr.open_dataset(forcing_dict['path'])
-    if 'dimnames' in forcing_dict:
-        for (newdim, olddim) in forcing_dict['dimnames'].items():
+    ds = xr.open_dataset(input_dict['path'])
+    if 'dimnames' in input_dict:
+        for (newdim, olddim) in input_dict['dimnames'].items():
             ds = ds.rename({olddim: newdim})
     try:
-        bathymetry = ds[forcing_dict['varnames']['bathymetry']]
+        bathymetry = ds[input_dict['varnames']['bathymetry']]
     except:
         bathymetry = ds['bathymetry']
     x = np.arange(bathymetry.size).reshape(bathymetry.shape)
@@ -73,18 +71,17 @@ def _domain_from_netcdf(forcing_yaml, forcing_key):
     )
 
 
-def _forcing_from_netcdf(domain_dict, forcing_yaml, forcing_key, allow_negative=False):
+def _forcing_from_netcdf(input_dict):
     """Read forcing fields from netcdf file"""
-    with open(forcing_yaml) as f:
-        forcing_dict = yaml.safe_load(f)[forcing_key]
-    ds = xr.open_dataset(forcing_dict['path'])
-    if 'dimnames' in forcing_dict:
-        for (newdim, olddim) in forcing_dict['dimnames'].items():
+    allow_negative = input_dict.get('allow_negative', False)
+    ds = xr.open_dataset(input_dict['path'])
+    if 'dimnames' in input_dict:
+        for (newdim, olddim) in input_dict['dimnames'].items():
             ds = ds.rename({olddim: newdim})
     da_list = []
     for varname in ['T_pelagic', 'T_bottom', 'poc_flux_bottom', 'zooC', 'zoo_mort']:
         try:
-            netcdf_varname = forcing_dict['varnames'][varname]
+            netcdf_varname = input_dict['varnames'][varname]
             da_list.append(ds[netcdf_varname].rename(varname))
         except:
             da_list.append(ds[varname])
@@ -110,6 +107,7 @@ class offline_driver(object):
         settings_in={},
         fish_ic_data=None,
         benthic_prey_ic_data=None,
+        biomass_init='constant',
     ):
         """Run an integration with the FEISTY model.
 
@@ -175,6 +173,7 @@ class offline_driver(object):
             settings_dict=self.settings_in,
             fish_ic_data=fish_ic_data,
             benthic_prey_ic_data=benthic_prey_ic_data,
+            biomass_init=biomass_init,
         )
 
     def _forcing_t(self, t):
@@ -387,19 +386,25 @@ def config_testcase(
 
 
 def config_from_netcdf(
+    input_yaml,
+    input_key,
     start_date='0001-01-01',
     ignore_year_in_forcing=False,
     settings_in={},
     fish_ic_data=None,
     benthic_prey_ic_data=None,
-    domain_kwargs={},
-    forcing_kwargs={},
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
 
     Parameters
     ----------
+
+    input_yaml : str
+      File name of a YAML file containing configuration information
+
+    input_key : str
+      Top-level key in input_yaml specifying which run is being configured
 
     start_date : str (or tuple or cftime object)
       Model year to start simulation.
@@ -412,12 +417,6 @@ def config_from_netcdf(
 
     benthic_prey_ic_data : numeric, array_like
       Initial conditions.
-
-    domain_kwargs : dict
-      Keyword arguments to pass to domain generation function.
-
-    forcing_kwargs : dict
-      Keyword arguments to pass to forcing generation function.
 
     Returns
     -------
@@ -464,9 +463,13 @@ def config_from_netcdf(
       // global attributes:
         }
     """
+    # Determine location of initial conditions
+    # "constant" => 1e-5 for fish, 2e-3 for benthic prey
+    with open(input_yaml) as f:
+        input_dict = yaml.safe_load(f)[input_key]
 
-    domain_dict = _domain_from_netcdf(**domain_kwargs)
-    forcing = _forcing_from_netcdf(domain_dict, **forcing_kwargs)
+    domain_dict = _domain_from_netcdf(input_dict)
+    forcing = _forcing_from_netcdf(input_dict)
     if ignore_year_in_forcing:
         forcing = make_forcing_cyclic(forcing)
 
@@ -478,4 +481,5 @@ def config_from_netcdf(
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,
+        input_dict.get('biomass_init', 'constant'),
     )
