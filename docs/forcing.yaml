@@ -8,3 +8,8 @@ test_locs3:
     T_bottom: Tb
     poc_flux_bottom: POC
     zooC: zoo
+FOSI_cesm:
+  path: ../input_files/feisty_input_from_FOSI_daily.nc
+  biomass_init: ../input_files/FOSI_cesm_init.nc
+  varnames:
+    bathymetry: dep

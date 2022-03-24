@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import xarray as xr
 
@@ -66,15 +68,23 @@ class feisty_instance_type(object):
 
         self._init_model_settings(self.settings_dict['model_settings'])
 
-        self._init_zooplankton(self.settings_dict['zooplankton'])
-        self._init_fish_settings(self.settings_dict['fish'])
-        self._init_benthic_prey_settings(self.settings_dict['benthic_prey'])
+        self._init_zooplankton(self.settings_dict['zooplankton'], 0)
+        self._init_fish_settings(self.settings_dict['fish'], self.n_zoo)
+        self._init_benthic_prey_settings(
+            self.settings_dict['benthic_prey'], self.n_zoo + self.n_fish
+        )
 
         if biomass_init == 'constant':
             fish_ic_data = 1e-5 if fish_ic_data is None else fish_ic_data
             benthic_prey_ic_data = 2e-3 if benthic_prey_ic_data is None else benthic_prey_ic_data
+        elif os.path.isfile(biomass_init):
+            ic_ds = xr.open_dataset(biomass_init)
+            fish_ic_data = ic_ds['fish_ic']
+            benthic_prey_ic_data = ic_ds['bent_ic']
         else:
-            raise NotImplementedError(f'biomass_init = {biomass_init} is not supported')
+            raise NotImplementedError(
+                f'biomass_init must be "constant" or a valid file name, "{biomass_init}" is not valid'
+            )
         self._init_biomass(fish_ic_data, benthic_prey_ic_data)
 
         self._init_food_web(self.settings_dict['food_web'])
@@ -92,14 +102,15 @@ class feisty_instance_type(object):
         """initialize model settings"""
         ecosystem.init_module_variables(**model_settings)
 
-    def _init_zooplankton(self, zooplankton_settings):
+    def _init_zooplankton(self, zooplankton_settings, glob_id):
 
         ecosystem.init_zooplankton_defaults(**zooplankton_settings['defaults'])
 
         self.zooplankton = []
         self.zoo_names = []
         for z_settings in zooplankton_settings['members']:
-            zoo_i = ecosystem.zooplankton_type(**z_settings)
+            zoo_i = ecosystem.zooplankton_type(glob_id, **z_settings)
+            glob_id = glob_id + 1
             self.zooplankton.append(zoo_i)
             self.zoo_names.append(zoo_i.name)
 
@@ -114,7 +125,7 @@ class feisty_instance_type(object):
         else:
             self.zoo_mortality = None
 
-    def _init_fish_settings(self, fish_settings):
+    def _init_fish_settings(self, fish_settings, glob_id):
         """initialize fish"""
 
         ecosystem.init_fish_defaults(**fish_settings['defaults'])
@@ -122,7 +133,8 @@ class feisty_instance_type(object):
         self.fish = []
         self.fish_names = []
         for fish_parameters in fish_settings['members']:
-            fish_i = ecosystem.fish_type(**fish_parameters)
+            fish_i = ecosystem.fish_type(glob_id, **fish_parameters)
+            glob_id = glob_id + 1
             self.fish.append(fish_i)
             self.fish_names.append(fish_i.name)
 
@@ -130,14 +142,15 @@ class feisty_instance_type(object):
 
         self.n_fish = len(self.fish)
 
-    def _init_benthic_prey_settings(self, benthic_prey_settings):
+    def _init_benthic_prey_settings(self, benthic_prey_settings, glob_id):
 
         ecosystem.init_benthic_prey_defaults(**benthic_prey_settings['defaults'])
 
         self.benthic_prey = []
         self.benthic_prey_names = []
         for b_settings in benthic_prey_settings['members']:
-            bprey_i = ecosystem.benthic_prey_type(**b_settings)
+            bprey_i = ecosystem.benthic_prey_type(glob_id, **b_settings)
+            glob_id = glob_id + 1
             self.benthic_prey.append(bprey_i)
             self.benthic_prey_names.append(bprey_i.name)
 
@@ -346,8 +359,10 @@ class feisty_instance_type(object):
             self.biomass,
             self.food_web,
         )
-        self.tendency_data.predation_rate[:, :] = (
-            self.tendency_data.predation_flux.data / self.biomass.isel(group=self.ndx_fish).data
+        self.tendency_data.predation_rate[
+            :, :
+        ] = self.tendency_data.predation_flux.data / np.maximum(
+            self.biomass.data[self.ndx_fish, :], 1e-300
         )
 
     def _compute_mortality(self):

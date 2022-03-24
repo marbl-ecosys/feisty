@@ -196,17 +196,17 @@ food_web:
   # small forage
   - predator: Sf
     prey: Zoo
-    preference: 1.
+    preference: 1. # [params.MZ]
 
   # small piscivore
   - predator: Sp
     prey: Zoo
-    preference: 1.
+    preference: 1. # [params.MZ]
 
   # small demersal
   - predator: Sd
     prey: Zoo
-    preference: 1.
+    preference: 1. # [params.MZ]
 
   # medium forage
   - predator: Mf

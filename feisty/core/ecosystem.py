@@ -170,6 +170,7 @@ def init_benthic_prey_defaults(benthic_efficiency, carrying_capacity):
 class fish_type(object):
     def __init__(
         self,
+        glob_id,
         name,
         size_class,
         functional_type,
@@ -212,6 +213,7 @@ class fish_type(object):
         ), 'energy_frac_somatic_growth must be between 0. and 1.'
 
         self.name = name
+        self.glob_id = glob_id
         self.functional_type_key = functional_type
         self.functional_type = functional_types[functional_type]
         self.size_class = size_class
@@ -274,8 +276,9 @@ class fish_type(object):
 class zooplankton_type(object):
     """Data structure containing zooplankton parameters."""
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, glob_id, name, **kwargs):
         self.name = name
+        self.glob_id = glob_id
         self.functional_type_key = 'zooplankton'
         self.functional_type = functional_types['zooplankton']
         self.is_demersal = False
@@ -292,8 +295,9 @@ class zooplankton_type(object):
 class benthic_prey_type(object):
     """Data structure containing benthic prey parameters."""
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, glob_id, name, **kwargs):
         self.name = name
+        self.glob_id = glob_id
         self.functional_type_key = 'benthic_prey'
         self.functional_type = functional_types['benthic_prey']
         self.is_zooplankton = False
@@ -502,6 +506,13 @@ class food_web(object):
             if ft == functional_types['zooplankton']
         ]
 
+        self.zoo_ids = dict()
+        for g in self.zoo_names:
+            for o in member_obj_list:
+                if o.name == g:
+                    self.zoo_ids[g] = o.glob_id
+                    break
+
     def _pred_ndx_prey_filt(self, predator, prey_functional_type=None):
         """Return the index of a predator's prey in the `biomass` array;
         optionally filter by the functional type of the prey.
@@ -596,26 +607,29 @@ class food_web(object):
         )
 
         if predator is not None and prey is None:
-            return (
-                consumption.isel(feeding_link=ndx)
-                .reset_index(
-                    ['feeding_link'],
-                    drop=True,
-                )
-                .set_index(feeding_link='prey')
-                .rename(feeding_link='group')
-            )
+            return consumption.data[ndx, :]
+            # return (
+            #     consumption.isel(feeding_link=ndx)
+            #     .reset_index(
+            #         ['feeding_link'],
+            #         drop=True,
+            #     )
+            #     .set_index(feeding_link='prey')
+            #     .rename(feeding_link='group')
+            # )
 
         elif predator is None and prey is not None:
-            return (
-                consumption.isel(feeding_link=ndx)
-                .reset_index('feeding_link', drop=True)
-                .set_index(feeding_link='predator')
-                .rename(feeding_link='group')
-            )
+            return consumption.data[ndx, :]
+            # return (
+            #     consumption.isel(feeding_link=ndx)
+            #     .reset_index('feeding_link', drop=True)
+            #     .set_index(feeding_link='predator')
+            #     .rename(feeding_link='group')
+            # )
 
         else:
-            return consumption.isel(feeding_link=ndx)
+            return consumption.data[ndx, :]
+            # return consumption.isel(feeding_link=ndx)
 
     def _get_biomass_zoo_pred(self, biomass, zoo_name):
         return biomass.isel(group=self.prey_ndx_pred[zoo_name])
