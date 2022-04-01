@@ -179,7 +179,7 @@ fish:
 benthic_prey:
   defaults:
     benthic_efficiency: 0.075 # transfer efficiency of detritus to benthic prey
-    carrying_capacity: 0.
+    carrying_capacity: 80. # value used for FOSI
   members:
     - name: benthic_prey
 
@@ -196,17 +196,17 @@ food_web:
   # small forage
   - predator: Sf
     prey: Zoo
-    preference: 1. # [params.MZ]
+    preference: 0.9 # [params.MZ]
 
   # small piscivore
   - predator: Sp
     prey: Zoo
-    preference: 1. # [params.MZ]
+    preference: 0.9 # [params.MZ]
 
   # small demersal
   - predator: Sd
     prey: Zoo
-    preference: 1. # [params.MZ]
+    preference: 0.9 # [params.MZ]
 
   # medium forage
   - predator: Mf
