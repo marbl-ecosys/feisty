@@ -108,6 +108,7 @@ class offline_driver(object):
         fish_ic_data=None,
         benthic_prey_ic_data=None,
         biomass_init='constant',
+        allow_negative_forcing=False,
     ):
         """Run an integration with the FEISTY model.
 
@@ -136,6 +137,7 @@ class offline_driver(object):
         """
         self.domain_dict = domain_dict
         self.forcing = forcing
+        self.allow_negative_forcing = allow_negative_forcing
         self.ignore_year = ignore_year_in_forcing
         date_tuple = None
         if isinstance(start_date, str):
@@ -176,18 +178,27 @@ class offline_driver(object):
             biomass_init=biomass_init,
         )
 
-    def _forcing_t(self, t):
+    def _init_output_arrays(self, nt):
+        self.time = xr.cftime_range(start=self.start_date, periods=nt, calendar='noleap')
         if self.ignore_year:
             units = 'days since 0001-01-01 00:00:00'
-            interp_time = cftime.num2date(
-                cftime.date2num(t, units) % 365, units, calendar=t.calendar
+            self._forcing_time = np.array(
+                [
+                    cftime.num2date(cftime.date2num(t, units) % 365, units, calendar=t.calendar)
+                    for t in self.time
+                ]
             )
         else:
-            interp_time = t
-        return self.forcing.interp(time=interp_time)
-
-    def _init_output_arrays(self, nt):
-        self.time = xr.cftime_range(start=self.start_date, periods=nt)
+            self._forcing_time = np.where(
+                self.time > self.forcing['time'].data[0],
+                self.time,
+                self.forcing['time'].data[0],
+            )
+            self._forcing_time = np.where(
+                self._forcing_time < self.forcing['time'].data[-1],
+                self._forcing_time,
+                self.forcing['time'].data[-1],
+            )
         zeros = xr.DataArray(np.zeros(nt), dims=('time'), name='zero')
         ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
         ds_prog = zeros * self.obj.get_prognostic().to_dataset()
@@ -204,9 +215,14 @@ class offline_driver(object):
         """Data comprising the output from ``feisty``."""
         return self._ds
 
-    def _compute_tendency(self, t, state_t):
+    def _compute_tendency(self, forcing_t, state_t):
         """Return the feisty time tendency."""
-        gcm_data_t = self._forcing_t(t)
+        # print(f"Forcing for {t} comes from {forcing_t}")
+        gcm_data_t = self.forcing.interp(time=forcing_t)
+        if not self.allow_negative_forcing:
+            gcm_data_t['poc_flux_bottom'].data = np.maximum(gcm_data_t['poc_flux_bottom'].data, 0)
+            gcm_data_t['zooC'].data = np.maximum(gcm_data_t['zooC'].data, 0)
+            gcm_data_t['zoo_mort'].data = np.maximum(gcm_data_t['zoo_mort'].data, 0)
         return self.obj.compute_tendencies(
             state_t.isel(group=self.obj.prog_ndx_fish),
             state_t.isel(group=self.obj.prog_ndx_benthic_prey),
@@ -234,7 +250,7 @@ class offline_driver(object):
     def _solve_foward_euler(self, nt, state_t):
         """use forward-euler to solve feisty model"""
         for n in range(nt):
-            dsdt = self._compute_tendency(self.time[n], state_t)
+            dsdt = self._compute_tendency(self._forcing_time[n], state_t)
             state_t[self.obj.prog_ndx_prognostic, :] = (
                 state_t[self.obj.prog_ndx_prognostic, :]
                 + dsdt[self.obj.ndx_prognostic, :] * self.dt
@@ -482,4 +498,5 @@ def config_from_netcdf(
         fish_ic_data,
         benthic_prey_ic_data,
         input_dict.get('biomass_init', 'constant'),
+        input_dict.get('allow_negative', False),
     )
