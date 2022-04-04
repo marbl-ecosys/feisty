@@ -206,9 +206,9 @@ class offline_driver(object):
         self.ds['time'] = self.time
 
     def _post_data(self, n, state_t):
-        self._ds.biomass[n, :] = state_t
+        self._ds.biomass.data[n, :] = state_t.data
         for v in self._diagnostic_names:
-            self._ds[v][n, :] = self.obj.tendency_data[v]
+            self._ds[v].data[n, :] = self.obj.tendency_data[v].data
 
     @property
     def ds(self):
@@ -217,20 +217,19 @@ class offline_driver(object):
 
     def _compute_tendency(self, forcing_t, state_t):
         """Return the feisty time tendency."""
-        # print(f"Forcing for {t} comes from {forcing_t}")
-        gcm_data_t = self.forcing.interp(time=forcing_t)
+        gcm_data_t = self.forcing.interp(time=forcing_t, assume_sorted=True)
         if not self.allow_negative_forcing:
             gcm_data_t['poc_flux_bottom'].data = np.maximum(gcm_data_t['poc_flux_bottom'].data, 0)
             gcm_data_t['zooC'].data = np.maximum(gcm_data_t['zooC'].data, 0)
             gcm_data_t['zoo_mort'].data = np.maximum(gcm_data_t['zoo_mort'].data, 0)
         return self.obj.compute_tendencies(
-            state_t.isel(group=self.obj.prog_ndx_fish),
-            state_t.isel(group=self.obj.prog_ndx_benthic_prey),
-            gcm_data_t.zooC,
-            gcm_data_t.zoo_mort,
-            T_pelagic=gcm_data_t.T_pelagic,
-            T_bottom=gcm_data_t.T_bottom,
-            poc_flux=gcm_data_t.poc_flux_bottom,
+            state_t.data[self.obj.prog_ndx_fish, :],
+            state_t.data[self.obj.prog_ndx_benthic_prey, :],
+            gcm_data_t.zooC.data,
+            gcm_data_t.zoo_mort.data,
+            T_pelagic=gcm_data_t.T_pelagic.data,
+            T_bottom=gcm_data_t.T_bottom.data,
+            poc_flux=gcm_data_t.poc_flux_bottom.data,
         )
 
     def _solve(self, nt, method):
@@ -251,9 +250,9 @@ class offline_driver(object):
         """use forward-euler to solve feisty model"""
         for n in range(nt):
             dsdt = self._compute_tendency(self._forcing_time[n], state_t)
-            state_t[self.obj.prog_ndx_prognostic, :] = (
-                state_t[self.obj.prog_ndx_prognostic, :]
-                + dsdt[self.obj.ndx_prognostic, :] * self.dt
+            state_t.data[self.obj.prog_ndx_prognostic, :] = (
+                state_t[self.obj.prog_ndx_prognostic, :].data
+                + dsdt.data[self.obj.ndx_prognostic, :] * self.dt
             )
             self._post_data(n, state_t)
 

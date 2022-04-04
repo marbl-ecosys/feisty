@@ -57,7 +57,7 @@ def compute_t_frac_pelagic(
                 apply_preference=fish.pdc_apply_pref,
             ).data
 
-            t_frac_pelagic[i, :] = np.where(
+            t_frac_pelagic.data[i, :] = np.where(
                 domain.ocean_depth < PI_be_cutoff,
                 prey_pelagic / (prey_pelagic + prey_demersal),
                 0.0,
