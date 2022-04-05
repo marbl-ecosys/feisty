@@ -13,6 +13,10 @@ FOSI_cesm:
   biomass_init: ../input_files/FOSI_cesm_init.nc
   varnames:
     bathymetry: dep
+FOSI_spinup:
+  path: ../input_files/feisty_input_from_FOSI_monthly_1year.nc
+  varnames:
+    bathymetry: dep
 FOSI_cesm_daily:
   path: ../input_files/feisty_input_from_FOSI_daily.nc
   biomass_init: ../input_files/FOSI_cesm_init.nc

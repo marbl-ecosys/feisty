@@ -1,4 +1,5 @@
 import os
+import time
 
 import cftime
 import numpy as np
@@ -109,6 +110,7 @@ class offline_driver(object):
         benthic_prey_ic_data=None,
         biomass_init='constant',
         allow_negative_forcing=False,
+        diagnostic_names=[],
     ):
         """Run an integration with the FEISTY model.
 
@@ -152,23 +154,7 @@ class offline_driver(object):
         self.dt = 1.0  # day
 
         # TODO: make this controllable via user input
-        self._diagnostic_names = [
-            'T_habitat',
-            'ingestion_rate',
-            'predation_flux',
-            'predation_rate',
-            'metabolism_rate',
-            'mortality_rate',
-            'energy_avail_rate',
-            'growth_rate',
-            'reproduction_rate',
-            'recruitment_flux',
-            'fish_catch_rate',
-            'encounter_rate_link',
-            'encounter_rate_total',
-            'consumption_rate_max_pred',
-            'consumption_rate_link',
-        ]
+        self._diagnostic_names = diagnostic_names
 
         self.obj = feisty_instance_type(
             domain_dict=self.domain_dict,
@@ -206,7 +192,7 @@ class offline_driver(object):
         self.ds['time'] = self.time
 
     def _post_data(self, n, state_t):
-        self._ds.biomass.data[n, :] = state_t.data
+        self._ds.biomass.data[n, :, :] = state_t.data
         for v in self._diagnostic_names:
             self._ds[v].data[n, :] = self.obj.tendency_data[v].data
 
@@ -249,6 +235,8 @@ class offline_driver(object):
     def _solve_foward_euler(self, nt, state_t):
         """use forward-euler to solve feisty model"""
         for n in range(nt):
+            if n % 365 == 0:
+                print(f'Starting year {n//365+1} at {time.strftime("%H:%M:%S")}')
             dsdt = self._compute_tendency(self._forcing_time[n], state_t)
             state_t.data[self.obj.prog_ndx_prognostic, :] = (
                 state_t[self.obj.prog_ndx_prognostic, :].data
@@ -279,6 +267,7 @@ class offline_driver(object):
              Only ``method='euler'`` is supported currently.
 
         """
+        print(f'Starting solve at {time.strftime("%H:%M:%S")}')
         self._solve(nt, method)
         self._shutdown(file_out)
 
@@ -300,6 +289,7 @@ def config_testcase(
     benthic_prey_ic_data=None,
     domain_kwargs={},
     forcing_kwargs={},
+    diagnostic_names=[],
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -397,6 +387,7 @@ def config_testcase(
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,
+        diagnostic_names=diagnostic_names,
     )
 
 
@@ -408,6 +399,7 @@ def config_from_netcdf(
     settings_in={},
     fish_ic_data=None,
     benthic_prey_ic_data=None,
+    diagnostic_names=[],
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -498,4 +490,5 @@ def config_from_netcdf(
         benthic_prey_ic_data,
         input_dict.get('biomass_init', 'constant'),
         input_dict.get('allow_negative', False),
+        diagnostic_names=diagnostic_names,
     )
