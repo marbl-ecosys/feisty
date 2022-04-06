@@ -1,10 +1,10 @@
 FEISTY Driver
 =============
 
-This page provides an auto-generated summary of the `feisty.driver`.
+This page provides an auto-generated summary of the `feisty.offline_driver`.
 
 
-.. currentmodule:: feisty.driver
+.. currentmodule:: feisty.offline_driver
 
 Driver API
 ~~~~~~~~~~
@@ -13,7 +13,7 @@ Driver API
 .. autosummary::
    :toctree: generated/
 
-   simulation
-   simulation.run
-   simulation.ds
-   simulate_testcase
+   offline_driver
+   offline_driver.run
+   config_testcase
+   config_from_netcdf
