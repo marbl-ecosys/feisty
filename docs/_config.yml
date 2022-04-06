@@ -17,6 +17,7 @@ execute:
   exclude_patterns:
     - 'driver-example.ipynb'
     - 'matlab-comparison.ipynb'
+    - 'FOSI-forcing.ipynb'
 
 # Define the name of the latex output file for PDF builds
 latex:
