@@ -276,9 +276,6 @@ class offline_driver(object):
                 + dsdt.data[self.obj.ndx_prognostic, :] * self.dt
             )
             self._post_data(n, state_t)
-            # if (n%self._max_output_time_dim == self._max_output_time_dim - 1) and (n != nt-1):
-            #     # Reinitialize output!
-            #     print(f'TODO: create a new copy of self.ds for further output')
 
     def _solve_scipy(self, nt, state_t, method):
         """use a SciPy solver to integrate the model equation."""
@@ -332,6 +329,31 @@ class offline_driver(object):
         else:
             print(f'Finished _solve at {time.strftime("%H:%M:%S")}')
 
+    def create_ic_file_from_final_state(self, ic_file, overwrite=False):
+        if os.path.isfile(ic_file):
+            if not overwrite:
+                print(f'{ic_file} exists; set overwrite=True to replace')
+                return
+            print(f'Removing {ic_file} before writing new copy')
+            os.remove(ic_file)
+
+        fish_ic = (
+            self._ds[-1]
+            .isel(time=-1, group=self.obj.prog_ndx_fish)
+            .drop(['X', 'time', 'group'])
+            .biomass.rename({'group': 'nfish'})
+            .to_dataset(name='fish_ic')
+        )
+        bent_ic = (
+            self._ds[-1]
+            .isel(time=-1, group=self.obj.prog_ndx_benthic_prey)
+            .drop(['X', 'time', 'group'])
+            .biomass.rename({'group': 'nb'})
+            .to_dataset(name='bent_ic')
+        )
+        new_ic = xr.merge([fish_ic, bent_ic])
+        new_ic.to_netcdf(ic_file, encoding={v: {'_FillValue': None} for v in new_ic.variables})
+
 
 def config_testcase(
     domain_name,
@@ -343,6 +365,7 @@ def config_testcase(
     domain_kwargs={},
     forcing_kwargs={},
     diagnostic_names=[],
+    max_output_time_dim=365,
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -441,6 +464,7 @@ def config_testcase(
         fish_ic_data,
         benthic_prey_ic_data,
         diagnostic_names=diagnostic_names,
+        max_output_time_dim=max_output_time_dim,
     )
 
 
@@ -453,6 +477,7 @@ def config_from_netcdf(
     fish_ic_data=None,
     benthic_prey_ic_data=None,
     diagnostic_names=[],
+    max_output_time_dim=365,
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -544,4 +569,5 @@ def config_from_netcdf(
         input_dict.get('biomass_init', 'constant'),
         input_dict.get('allow_negative', False),
         diagnostic_names=diagnostic_names,
+        max_output_time_dim=max_output_time_dim,
     )
