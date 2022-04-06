@@ -1,3 +1,4 @@
+import datetime
 import os
 import time
 
@@ -111,6 +112,7 @@ class offline_driver(object):
         biomass_init='constant',
         allow_negative_forcing=False,
         diagnostic_names=[],
+        max_output_time_dim=365,
     ):
         """Run an integration with the FEISTY model.
 
@@ -152,6 +154,7 @@ class offline_driver(object):
             self.start_date = start_date
         self.settings_in = settings_in
         self.dt = 1.0  # day
+        self._max_output_time_dim = max_output_time_dim
 
         # TODO: make this controllable via user input
         self._diagnostic_names = diagnostic_names
@@ -165,41 +168,71 @@ class offline_driver(object):
         )
 
     def _init_output_arrays(self, nt):
-        self.time = xr.cftime_range(start=self.start_date, periods=nt, calendar='noleap')
-        if self.ignore_year:
-            units = 'days since 0001-01-01 00:00:00'
-            self._forcing_time = np.array(
-                [
-                    cftime.num2date(cftime.date2num(t, units) % 365, units, calendar=t.calendar)
-                    for t in self.time
-                ]
-            )
-        else:
-            self._forcing_time = np.where(
-                self.time > self.forcing['time'].data[0],
-                self.time,
-                self.forcing['time'].data[0],
-            )
-            self._forcing_time = np.where(
-                self._forcing_time < self.forcing['time'].data[-1],
-                self._forcing_time,
-                self.forcing['time'].data[-1],
-            )
-        zeros = xr.DataArray(np.zeros(nt), dims=('time'), name='zero')
-        ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
-        ds_prog = zeros * self.obj.get_prognostic().to_dataset()
-        self._ds = xr.merge((ds_prog, ds_diag))
-        self.ds['time'] = self.time
+        """Create self._ds, a list of datasets containing no more than
+        self._max_output_time_dim time levels
+        """
+        self._ds = []
+        start_dates = [self.start_date]
+        days_per_year = [np.min([nt, self._max_output_time_dim])]
+        total_days = nt - days_per_year[0]
+        while total_days != 0:
+            start_dates.append(start_dates[-1] + datetime.timedelta(int(days_per_year[-1])))
+            days_per_year.append(np.min([self._max_output_time_dim, total_days]))
+            total_days = total_days - days_per_year[-1]
+        self._ds_ind = np.zeros(nt, dtype='int')
+        ind_cnt = 0
+        for ind in days_per_year:
+            ind_cnt += ind
+            self._ds_ind[ind_cnt:] += 1
+        forcing_time = []
+        for nt_loc, start_date in zip(days_per_year, start_dates):
+            self.time = xr.cftime_range(start=start_date, periods=nt_loc, calendar='noleap')
+            if self.ignore_year:
+                units = 'days since 0001-01-01 00:00:00'
+                forcing_time.append(
+                    np.array(
+                        [
+                            cftime.num2date(
+                                cftime.date2num(t, units) % 365, units, calendar=t.calendar
+                            )
+                            for t in self.time
+                        ]
+                    )
+                )
+            else:
+                forcing_time.append(
+                    np.where(
+                        self.time > self.forcing['time'].data[0],
+                        self.time,
+                        self.forcing['time'].data[0],
+                    )
+                )
+                forcing_time.append(
+                    np.where(
+                        self._forcing_time < self.forcing['time'].data[-1],
+                        self._forcing_time,
+                        self.forcing['time'].data[-1],
+                    )
+                )
+            zeros = xr.DataArray(np.zeros(nt_loc), dims=('time'), name='zero')
+            ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
+            ds_prog = zeros * self.obj.get_prognostic().to_dataset()
+            self._ds.append(xr.merge((ds_prog, ds_diag)))
+            self._ds[-1]['time'] = self.time
+        self._forcing_time = np.concatenate(forcing_time)
 
     def _post_data(self, n, state_t):
-        self._ds.biomass.data[n, :, :] = state_t.data
+        # Which file do we write to?
+        ds_ind = self._ds_ind[n]
+        data_ind = n % self._max_output_time_dim
+        self._ds[ds_ind].biomass.data[data_ind, :, :] = state_t.data
         for v in self._diagnostic_names:
-            self._ds[v].data[n, :] = self.obj.tendency_data[v].data
+            self._ds[ds_ind][v].data[data_ind, :] = self.obj.tendency_data[v].data
 
-    @property
-    def ds(self):
-        """Data comprising the output from ``feisty``."""
-        return self._ds
+    # @property
+    # def ds(self):
+    #     """Data comprising the output from ``feisty``."""
+    #     return self._ds
 
     def _compute_tendency(self, forcing_t, state_t):
         """Return the feisty time tendency."""
@@ -236,13 +269,16 @@ class offline_driver(object):
         """use forward-euler to solve feisty model"""
         for n in range(nt):
             if n % 365 == 0:
-                print(f'Starting year {n//365+1} at {time.strftime("%H:%M:%S")}')
+                print(f'Starting year {n//365+1} integration at {time.strftime("%H:%M:%S")}')
             dsdt = self._compute_tendency(self._forcing_time[n], state_t)
             state_t.data[self.obj.prog_ndx_prognostic, :] = (
                 state_t[self.obj.prog_ndx_prognostic, :].data
                 + dsdt.data[self.obj.ndx_prognostic, :] * self.dt
             )
             self._post_data(n, state_t)
+            # if (n%self._max_output_time_dim == self._max_output_time_dim - 1) and (n != nt-1):
+            #     # Reinitialize output!
+            #     print(f'TODO: create a new copy of self.ds for further output')
 
     def _solve_scipy(self, nt, state_t, method):
         """use a SciPy solver to integrate the model equation."""
@@ -267,9 +303,21 @@ class offline_driver(object):
              Only ``method='euler'`` is supported currently.
 
         """
-        print(f'Starting solve at {time.strftime("%H:%M:%S")}')
+        print(f'Calling _solve at {time.strftime("%H:%M:%S")}')
         self._solve(nt, method)
         self._shutdown(file_out)
+
+    def gen_ds(self):
+        if len(self._ds) == 1:
+            self.ds = self._ds[0].copy(deep=True)
+        else:
+            self.ds = xr.concat(
+                self._ds,
+                dim='time',
+                data_vars='minimal',
+                coords='minimal',
+                compat='override',
+            )
 
     def _shutdown(self, file_out):
         """Close out integration:
@@ -277,7 +325,12 @@ class offline_driver(object):
             - write output
         """
         if file_out is not None:
-            self._ds.to_netcdf(file_out)
+            print(f'Finished _solve and calling _shutdown() at {time.strftime("%H:%M:%S")}')
+            self.gen_ds()
+            self.ds.to_netcdf(file_out)
+            print(f'Finished _shutdown() at {time.strftime("%H:%M:%S")}')
+        else:
+            print(f'Finished _solve at {time.strftime("%H:%M:%S")}')
 
 
 def config_testcase(
