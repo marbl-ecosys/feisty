@@ -96,7 +96,8 @@ def test_fish_defaults():
     bad_kwargs['stink_factor'] = 86.5
 
     # this should work:
-    fish = feisty.core.ecosystem.fish_type(**fish0_parms)
+    glob_id = 0
+    fish = feisty.core.ecosystem.fish_type(glob_id, **fish0_parms)
     for key, value in settings_dict_def_bad['fish']['defaults'].items():
         assign_key = key
         assign_value = value
@@ -110,7 +111,8 @@ def test_fish_defaults():
     # this should fail
     fish0_parms.update(bad_kwargs)
     with pytest.raises(ValueError):
-        feisty.core.ecosystem.fish_type(**fish0_parms)
+        glob_id = 0
+        feisty.core.ecosystem.fish_type(glob_id, **fish0_parms)
 
 
 def test_fish_bad_harvest_selectivity():

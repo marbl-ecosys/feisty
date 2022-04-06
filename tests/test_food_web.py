@@ -89,6 +89,7 @@ def test_food_web_init_1():
         'pred_ndx_prey',
         'prey_obj',
         'zoo_names',
+        'zoo_ids',
         'pred_link_ndx',
         'predator_obj',
         'pred_prey_func_type',
@@ -346,9 +347,7 @@ def test_get_consumption():
         print()
         da = F.food_web.get_consumption(data, predator=pred)
 
-        assert (da.data == data.isel(feeding_link=pred_link_ndx).data).all()
-        assert da.dims == ('group', 'X')
-        assert (da.group == pred_prey_list).all()
+        assert (da == data.isel(feeding_link=pred_link_ndx).data).all()
         assert da.shape == (len(pred_link_ndx), NX)
         print()
 
@@ -360,18 +359,14 @@ def test_get_consumption():
             ]
             da = F.food_web.get_consumption(data, predator=pred, prey=prey)
             print(da)
-            assert (da.data == data.isel(feeding_link=pred_link_ndx).data).all()
-            assert da.dims == ('feeding_link', 'X')
+            assert (da == data.isel(feeding_link=pred_link_ndx).data).all()
             assert da.shape == (len(pred_link_ndx), NX)
 
     for prey in prey_list:
         prey_link_ndx = [i for i, link in enumerate(food_web_settings) if link['prey'] == prey]
 
-        pred_list = [link['predator'] for link in food_web_settings if link['prey'] == prey]
         da = F.food_web.get_consumption(data, prey=prey)
-        assert (da.data == data.isel(feeding_link=prey_link_ndx).data).all()
-        assert da.dims == ('group', 'X')
-        assert (da.group == pred_list).all()
+        assert (da == data.isel(feeding_link=prey_link_ndx).data).all()
         assert da.shape == (len(prey_link_ndx), NX)
 
 
@@ -429,11 +424,6 @@ def test_compute_feeding_1():
         ndx = [i for i, link in enumerate(food_web_settings) if link['prey'] == zoo_i]
         consumption_zoo = F.food_web.get_consumption(ds.consumption_rate_link, prey=zoo_i)
         np.array_equal(consumption_zoo.data, ds.consumption_rate_link.isel(feeding_link=ndx).data)
-
-    assert 'group' in consumption_zoo.coords
-    assert 'group' in consumption_zoo.indexes
-    assert 'feeding_link' not in consumption_zoo.coords
-    assert (consumption_zoo.group == zoo_predators).all()
 
     # F.food_web._rescale_consumption(F.biomass, zoo_mortality=F.zoo_mortality)
     # assert 0

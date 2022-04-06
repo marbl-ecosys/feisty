@@ -82,9 +82,9 @@ def test_config_testcase_init_2():
     assert (
         testcase.time == xr.cftime_range(start=cftime.DatetimeNoLeap(1, 1, 1), periods=365)
     ).all()
-    assert isinstance(testcase.ds, xr.Dataset)
-    assert set(testcase.ds.data_vars) == {'biomass'}.union(testcase._diagnostic_names)
-    assert len(testcase.ds.group) == len(testcase.obj.ndx_prognostic)
+    assert isinstance(testcase._ds[0], xr.Dataset)
+    assert set(testcase._ds[0].data_vars) == {'biomass'}.union(testcase._diagnostic_names)
+    assert len(testcase._ds[0].group) == len(testcase.obj.ndx_prognostic)
 
 
 def test_config_testcase_run():
@@ -97,4 +97,6 @@ def test_cyclic_interpolation():
     testcase2 = feisty.config_testcase('tanh_shelf', 'cyclic', start_date='0002-01-01')
     testcase1.run(1)
     testcase2.run(1)
+    testcase1.gen_ds()
+    testcase2.gen_ds()
     assert (testcase1.ds['biomass'].data == testcase2.ds['biomass'].data).all()
