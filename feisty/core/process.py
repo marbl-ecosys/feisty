@@ -392,7 +392,7 @@ def compute_growth(
             1.0 - (death / somatic_growth_potential)
         )
         exp_in_denom = np.where(exp_in_denom < 300, exp_in_denom, 300)
-        gg = (somatic_growth_potential - death) / (1.0 - (10.0 ** exp_in_denom))
+        gg = (somatic_growth_potential - death) / (1.0 - (10.0**exp_in_denom))
         growth_rate.data[i, :] = np.where(
             gg < energy_avail_rate.data[i, :], gg, energy_avail_rate.data[i, :]
         )

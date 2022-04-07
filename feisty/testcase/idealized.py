@@ -130,7 +130,7 @@ def cycle_zooplankton(nt, domain_dict, zoo_spec=None):
 
 
 def zooplankton_mortality(zooC, mortality_coeff=0.07):
-    da = mortality_coeff * zooC ** 2
+    da = mortality_coeff * zooC**2
     da.attrs = {'long_name': 'Zooplankton quadratic mortality', 'units': 'g/m^2/d'}
     return da
 
