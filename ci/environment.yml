@@ -12,6 +12,7 @@ dependencies:
   - myst-nb
   - nbformat
   - nbsphinx
+  - nc-time-axis
   - netcdf4
   - numpydoc
   - pip

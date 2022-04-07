@@ -102,6 +102,7 @@ jobs:
       - name: Set up conda environment
         run: |
           mamba env update -f ci/environment.yml
+          pip install -e .
           conda list
 
       # Build the book
