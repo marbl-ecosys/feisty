@@ -200,20 +200,17 @@ class offline_driver(object):
                     )
                 )
             else:
-                forcing_time.append(
-                    np.where(
-                        self.time > self.forcing['time'].data[0],
-                        self.time,
-                        self.forcing['time'].data[0],
-                    )
+                forcing_time_loc = np.where(
+                    self.time > self.forcing['time'].data[0],
+                    self.time,
+                    self.forcing['time'].data[0],
                 )
-                forcing_time.append(
-                    np.where(
-                        self._forcing_time < self.forcing['time'].data[-1],
-                        self._forcing_time,
-                        self.forcing['time'].data[-1],
-                    )
+                forcing_time_loc = np.where(
+                    forcing_time_loc < self.forcing['time'].data[-1],
+                    forcing_time_loc,
+                    self.forcing['time'].data[-1],
                 )
+                forcing_time.append(forcing_time_loc)
             zeros = xr.DataArray(np.zeros(nt_loc), dims=('time'), name='zero')
             ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
             ds_prog = zeros * self.obj.get_prognostic().to_dataset()
