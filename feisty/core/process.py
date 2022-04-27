@@ -227,10 +227,12 @@ def compute_rescale_zoo_consumption(
     for zoo_i in food_web.zoo_names:
 
         link_ndx = food_web.prey_link_ndx[zoo_i]
-        biomass_zoo_pred = np.maximum(food_web._get_biomass_zoo_pred(biomass, zoo_i).data, 1e-300)
+        biomass_zoo_pred = np.maximum(
+            food_web._get_biomass_zoo_pred(biomass, zoo_i).data, constants.eps
+        )
 
         bio_con_zoo = biomass_zoo_pred * food_web.get_consumption(consumption_rate_link, prey=zoo_i)
-        bio_con_zoo_sum = np.maximum(np.sum(bio_con_zoo, axis=0), 1e-300)
+        bio_con_zoo_sum = np.maximum(np.sum(bio_con_zoo, axis=0), constants.eps)
 
         # Makes use of fact that zooplankton is first class in
         # [zooplankton, fish, benthic_prey]
@@ -518,7 +520,7 @@ def compute_total_tendency(
                 # logistic
                 total_tendency.data[i, :] = (
                     growth
-                    * (1.0 - biomass.data[member_obj.glob_id, :] / member_obj.carrying_capacity)
+                    * (1.0 - biomass.data[member_obj.group_ind, :] / member_obj.carrying_capacity)
                     - predation
                 )
 

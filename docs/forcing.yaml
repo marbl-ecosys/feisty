@@ -10,7 +10,7 @@ test_locs3:
     zooC: zoo
 FOSI_cesm:
   path: ../input_files/feisty_input_from_FOSI_monthly.nc
-  biomass_init: ../input_files/FOSI_cesm_init_200yr.nc
+  biomass_init_file: ../input_files/FOSI_cesm_init_200yr.nc
   varnames:
     bathymetry: dep
 FOSI_spinup:
@@ -19,6 +19,6 @@ FOSI_spinup:
     bathymetry: dep
 FOSI_cesm_daily:
   path: ../input_files/feisty_input_from_FOSI_daily.nc
-  biomass_init: ../input_files/FOSI_cesm_init_matlab.nc
+  biomass_init_file: ../input_files/FOSI_cesm_init_matlab.nc
   varnames:
     bathymetry: dep

@@ -22,7 +22,7 @@ for i in range(len(settings_dict_def['food_web'])):
 
 
 fish_ic_data = 1e-5
-benthic_prey_ic_data = 1e-4
+benthic_prey_ic_data = 2e-3
 
 n_zoo = len(settings_dict_def['zooplankton']['members'])
 n_fish = len(settings_dict_def['fish']['members'])

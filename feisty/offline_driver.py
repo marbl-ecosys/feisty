@@ -109,7 +109,7 @@ class offline_driver(object):
         settings_in={},
         fish_ic_data=None,
         benthic_prey_ic_data=None,
-        biomass_init='constant',
+        biomass_init_file=None,
         allow_negative_forcing=False,
         diagnostic_names=[],
         max_output_time_dim=365,
@@ -164,7 +164,7 @@ class offline_driver(object):
             settings_dict=self.settings_in,
             fish_ic_data=fish_ic_data,
             benthic_prey_ic_data=benthic_prey_ic_data,
-            biomass_init=biomass_init,
+            biomass_init_file=biomass_init_file,
         )
 
     def _init_output_arrays(self, nt):
@@ -173,19 +173,19 @@ class offline_driver(object):
         """
         self._ds = []
         start_dates = [self.start_date]
-        days_per_year = [np.min([nt, self._max_output_time_dim])]
-        total_days = nt - days_per_year[0]
+        time_levs_per_ds = [np.min([nt, self._max_output_time_dim])]
+        total_days = nt - time_levs_per_ds[0]
         while total_days != 0:
-            start_dates.append(start_dates[-1] + datetime.timedelta(int(days_per_year[-1])))
-            days_per_year.append(np.min([self._max_output_time_dim, total_days]))
-            total_days = total_days - days_per_year[-1]
+            start_dates.append(start_dates[-1] + datetime.timedelta(int(time_levs_per_ds[-1])))
+            time_levs_per_ds.append(np.min([self._max_output_time_dim, total_days]))
+            total_days = total_days - time_levs_per_ds[-1]
         self._ds_ind = np.zeros(nt, dtype='int')
         ind_cnt = 0
-        for ind in days_per_year:
+        for ind in time_levs_per_ds:
             ind_cnt += ind
             self._ds_ind[ind_cnt:] += 1
         forcing_time = []
-        for nt_loc, start_date in zip(days_per_year, start_dates):
+        for nt_loc, start_date in zip(time_levs_per_ds, start_dates):
             self.time = xr.cftime_range(start=start_date, periods=nt_loc, calendar='noleap')
             if self.ignore_year:
                 units = 'days since 0001-01-01 00:00:00'
@@ -326,7 +326,7 @@ class offline_driver(object):
         else:
             print(f'Finished _solve at {time.strftime("%H:%M:%S")}')
 
-    def create_ic_file_from_final_state(self, ic_file, overwrite=False):
+    def create_restart_file(self, ic_file, overwrite=False):
         if os.path.isfile(ic_file):
             if not overwrite:
                 print(f'{ic_file} exists; set overwrite=True to replace')
@@ -357,8 +357,8 @@ def config_testcase(
     forcing_name,
     start_date='0001-01-01',
     settings_in={},
-    fish_ic_data=None,
-    benthic_prey_ic_data=None,
+    fish_ic_data=1e-5,
+    benthic_prey_ic_data=2e-3,
     domain_kwargs={},
     forcing_kwargs={},
     diagnostic_names=[],
@@ -471,8 +471,8 @@ def config_from_netcdf(
     start_date='0001-01-01',
     ignore_year_in_forcing=False,
     settings_in={},
-    fish_ic_data=None,
-    benthic_prey_ic_data=None,
+    fish_ic_data=1e-5,
+    benthic_prey_ic_data=2e-3,
     diagnostic_names=[],
     max_output_time_dim=365,
 ):
@@ -563,7 +563,7 @@ def config_from_netcdf(
         settings_in,
         fish_ic_data,
         benthic_prey_ic_data,
-        input_dict.get('biomass_init', 'constant'),
+        input_dict.get('biomass_init_file', None),
         input_dict.get('allow_negative', False),
         diagnostic_names=diagnostic_names,
         max_output_time_dim=max_output_time_dim,

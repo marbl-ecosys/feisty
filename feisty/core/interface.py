@@ -3,7 +3,7 @@ import os
 import numpy as np
 import xarray as xr
 
-from . import domain, ecosystem, process, settings
+from . import constants, domain, ecosystem, process, settings
 
 
 class feisty_instance_type(object):
@@ -53,9 +53,9 @@ class feisty_instance_type(object):
         self,
         domain_dict,
         settings_dict={},
-        fish_ic_data=None,
-        benthic_prey_ic_data=None,
-        biomass_init='constant',
+        fish_ic_data=1e-5,
+        benthic_prey_ic_data=2e-3,
+        biomass_init_file=None,
     ):
         """Initialize the ``feisty_instance_type``."""
 
@@ -74,17 +74,15 @@ class feisty_instance_type(object):
             self.settings_dict['benthic_prey'], self.n_zoo + self.n_fish
         )
 
-        if biomass_init == 'constant':
-            fish_ic_data = 1e-5 if fish_ic_data is None else fish_ic_data
-            benthic_prey_ic_data = 2e-3 if benthic_prey_ic_data is None else benthic_prey_ic_data
-        elif os.path.isfile(biomass_init):
-            ic_ds = xr.open_dataset(biomass_init)
-            fish_ic_data = ic_ds['fish_ic']
-            benthic_prey_ic_data = ic_ds['bent_ic']
-        else:
-            raise NotImplementedError(
-                f'biomass_init must be "constant" or a valid file name, "{biomass_init}" is not valid'
-            )
+        if biomass_init_file is not None:
+            if os.path.isfile(biomass_init_file):
+                ic_ds = xr.open_dataset(biomass_init_file)
+                fish_ic_data = ic_ds['fish_ic']
+                benthic_prey_ic_data = ic_ds['bent_ic']
+            else:
+                raise NotImplementedError(
+                    f'biomass_init_file must be None or a valid file name, "{biomass_init_file}" is not valid'
+                )
         self._init_biomass(fish_ic_data, benthic_prey_ic_data)
 
         self._init_food_web(self.settings_dict['food_web'])
@@ -362,7 +360,7 @@ class feisty_instance_type(object):
         self.tendency_data.predation_rate[
             :, :
         ] = self.tendency_data.predation_flux.data / np.maximum(
-            self.biomass.data[self.ndx_fish, :], 1e-300
+            self.biomass.data[self.ndx_fish, :], constants.eps
         )
 
     def _compute_mortality(self):
