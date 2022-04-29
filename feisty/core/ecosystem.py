@@ -3,36 +3,43 @@ import xarray as xr
 
 from . import constants, domain
 
-functional_types = {}
 
-_pdc_type_keys = []
-_pdc_apply_pref_func_types = []
-pelagic_functional_types = []
-_pelagic_functional_type_keys = set()
-demersal_functional_types = []
-_demersal_functional_type_keys = set()
-_zooplankton_functional_type_keys = set()
-
-_size_class_masses = {}
-_size_class_bnds_ratio = {}
-PI_be_cutoff = None
-
-_mortality_type_keys = [
-    'none',
-    'constant',
-    'Hartvig',
-    'Mizer',
-    'Jennings & Collingridge',
-    'Peterson & Wrob',
-    'temperature-dependent',
-    'weight-dependent',
-]
-mortality_types = {k: i for i, k in enumerate(_mortality_type_keys)}
-
-
-_fish_defaults = {}
-_zooplankton_defaults = {}
-_benthic_prey_defaults = {}
+class ecosystem_params:
+    def __init__(
+        self,
+        functional_types,
+        _pdc_type_keys,
+        _pdc_apply_pref_func_types,
+        pelagic_functional_types,
+        _pelagic_functional_type_keys,
+        demersal_functional_types,
+        _demersal_functional_type_keys,
+        _zooplankton_functional_type_keys,
+        _size_class_masses,
+        _size_class_bnds_ratio,
+        PI_be_cutoff,
+        _mortality_type_keys,
+        mortality_types,
+        _fish_defaults,
+        _zooplankton_defaults,
+        _benthic_prey_defaults,
+    ):
+        self.functional_types = functional_types
+        self._pdc_type_keys = _pdc_type_keys
+        self._pdc_apply_pref_func_types = _pdc_apply_pref_func_types
+        self.pelagic_functional_types = pelagic_functional_types
+        self._pelagic_functional_type_keys = _pelagic_functional_type_keys
+        self.demersal_functional_types = demersal_functional_types
+        self._demersal_functional_type_keys = _demersal_functional_type_keys
+        self._zooplankton_functional_type_keys = _zooplankton_functional_type_keys
+        self._size_class_masses = _size_class_masses
+        self._size_class_bnds_ratio = _size_class_bnds_ratio
+        self.PI_be_cutoff = PI_be_cutoff
+        self._mortality_type_keys = _mortality_type_keys
+        self.mortality_types = mortality_types
+        self._fish_defaults = _fish_defaults
+        self._zooplankton_defaults = _zooplankton_defaults
+        self._benthic_prey_defaults = _benthic_prey_defaults
 
 
 def init_module_variables(
@@ -45,17 +52,32 @@ def init_module_variables(
     demersal_functional_type_keys,
     zooplankton_functional_type_keys,
 ):
-    global functional_types
-    global _size_class_masses
-    global _size_class_bnds_ratio
-    global PI_be_cutoff
-    global _pdc_type_keys
-    global _pdc_apply_pref_func_types
-    global pelagic_functional_types
-    global demersal_functional_types
-    global _pelagic_functional_type_keys
-    global _demersal_functional_type_keys
-    global _zooplankton_functional_type_keys
+
+    functional_types = {}
+    _pdc_type_keys = []
+    _pdc_apply_pref_func_types = []
+    pelagic_functional_types = []
+    _pelagic_functional_type_keys = set()
+    demersal_functional_types = []
+    _demersal_functional_type_keys = set()
+    _zooplankton_functional_type_keys = set()
+    _size_class_masses = {}
+    _size_class_bnds_ratio = {}
+    PI_be_cutoff = None
+    _mortality_type_keys = [
+        'none',
+        'constant',
+        'Hartvig',
+        'Mizer',
+        'Jennings & Collingridge',
+        'Peterson & Wrob',
+        'temperature-dependent',
+        'weight-dependent',
+    ]
+    mortality_types = {k: i for i, k in enumerate(_mortality_type_keys)}
+    _fish_defaults = {}
+    _zooplankton_defaults = {}
+    _benthic_prey_defaults = {}
 
     for name, size_bounds in size_class_bounds.items():
         _size_class_masses[name] = np.power(10.0, np.log10(size_bounds).mean())
@@ -122,8 +144,28 @@ def init_module_variables(
         _pdc_apply_pref_func_types = []
     PI_be_cutoff = benthic_pelagic_depth_cutoff
 
+    return ecosystem_params(
+        functional_types,
+        _pdc_type_keys,
+        _pdc_apply_pref_func_types,
+        pelagic_functional_types,
+        _pelagic_functional_type_keys,
+        demersal_functional_types,
+        _demersal_functional_type_keys,
+        _zooplankton_functional_type_keys,
+        _size_class_masses,
+        _size_class_bnds_ratio,
+        PI_be_cutoff,
+        _mortality_type_keys,
+        mortality_types,
+        _fish_defaults,
+        _zooplankton_defaults,
+        _benthic_prey_defaults,
+    )
+
 
 def init_fish_defaults(
+    mod_params,
     k_metabolism,
     a_metabolism,
     b_metabolism,
@@ -137,33 +179,29 @@ def init_fish_defaults(
     mortality_coeff_per_yr,
     assim_efficiency,
 ):
-    """Initialize default parameters for fish"""
-    global _fish_defaults
-
-    _fish_defaults['k_metabolism'] = k_metabolism
-    _fish_defaults['a_metabolism'] = a_metabolism
-    _fish_defaults['b_metabolism'] = b_metabolism
-    _fish_defaults['k_encounter'] = k_encounter
-    _fish_defaults['a_encounter'] = a_encounter
-    _fish_defaults['b_encounter'] = b_encounter
-    _fish_defaults['k_consumption'] = k_consumption
-    _fish_defaults['a_consumption'] = a_consumption
-    _fish_defaults['b_consumption'] = b_consumption
-    _fish_defaults['mortality_type'] = mortality_type
-    _fish_defaults['mortality_coeff_per_yr'] = mortality_coeff_per_yr
-    _fish_defaults['assim_efficiency'] = assim_efficiency
+    mod_params._fish_defaults['k_metabolism'] = k_metabolism
+    mod_params._fish_defaults['a_metabolism'] = a_metabolism
+    mod_params._fish_defaults['b_metabolism'] = b_metabolism
+    mod_params._fish_defaults['k_encounter'] = k_encounter
+    mod_params._fish_defaults['a_encounter'] = a_encounter
+    mod_params._fish_defaults['b_encounter'] = b_encounter
+    mod_params._fish_defaults['k_consumption'] = k_consumption
+    mod_params._fish_defaults['a_consumption'] = a_consumption
+    mod_params._fish_defaults['b_consumption'] = b_consumption
+    mod_params._fish_defaults['mortality_type'] = mortality_type
+    mod_params._fish_defaults['mortality_coeff_per_yr'] = mortality_coeff_per_yr
+    mod_params._fish_defaults['assim_efficiency'] = assim_efficiency
 
 
-def init_zooplankton_defaults():
+def init_zooplankton_defaults(mod_params):
     """Initialize default parameters for zooplankton"""
-    global _zooplankton_defaults
+    pass
 
 
-def init_benthic_prey_defaults(benthic_efficiency, carrying_capacity):
+def init_benthic_prey_defaults(mod_params, benthic_efficiency, carrying_capacity):
     """Initialize default parameters for benthic prey"""
-    global _benthic_prey_defaults
-    _benthic_prey_defaults['benthic_efficiency'] = benthic_efficiency
-    _benthic_prey_defaults['carrying_capacity'] = carrying_capacity
+    mod_params._benthic_prey_defaults['benthic_efficiency'] = benthic_efficiency
+    mod_params._benthic_prey_defaults['carrying_capacity'] = carrying_capacity
 
 
 # types
@@ -171,6 +209,8 @@ class fish_type(object):
     def __init__(
         self,
         group_ind,
+        domain_params,
+        mod_params,
         name,
         size_class,
         functional_type,
@@ -203,8 +243,10 @@ class fish_type(object):
           power on metab fn
 
         """
-        assert size_class in _size_class_masses, f'Unknown size class {size_class}'
-        assert functional_type in functional_types, f'Unknown functional type: {functional_type}'
+        assert size_class in mod_params._size_class_masses, f'Unknown size class {size_class}'
+        assert (
+            functional_type in mod_params.functional_types
+        ), f'Unknown functional type: {functional_type}'
         assert (0.0 <= harvest_selectivity) and (
             harvest_selectivity <= 1.0
         ), 'harvest_selectivity must be between 0. and 1.'
@@ -215,21 +257,21 @@ class fish_type(object):
         self.name = name
         self.group_ind = group_ind
         self.functional_type_key = functional_type
-        self.functional_type = functional_types[functional_type]
+        self.functional_type = mod_params.functional_types[functional_type]
         self.size_class = size_class
-        self.size_class_bnds_ratio = _size_class_bnds_ratio[size_class]
-        self.mass = _size_class_masses[size_class]
+        self.size_class_bnds_ratio = mod_params._size_class_bnds_ratio[size_class]
+        self.mass = mod_params._size_class_masses[size_class]
         self.harvest_selectivity = harvest_selectivity
         self.t_frac_pelagic_static = t_frac_pelagic_static
         self.energy_frac_somatic_growth = energy_frac_somatic_growth
         self.pelagic_demersal_coupling = pelagic_demersal_coupling
         if self.pelagic_demersal_coupling:
             assert self.functional_type in [
-                functional_types[t] for t in _pdc_type_keys
+                mod_params.functional_types[t] for t in mod_params._pdc_type_keys
             ], f"pelagic-demersal coupling not defined for '{functional_type}' functional type"
 
         # assign defaults
-        for key, default_value in _fish_defaults.items():
+        for key, default_value in mod_params._fish_defaults.items():
             assign_key = key
             assign_value = kwargs.pop(key) if key in kwargs else default_value
             if key == 'mortality_coeff_per_yr':
@@ -238,9 +280,9 @@ class fish_type(object):
 
             elif key == 'mortality_type':
                 assert (
-                    assign_value in _mortality_type_keys
+                    assign_value in mod_params._mortality_type_keys
                 ), f'Unknown mortality type: {assign_value}'
-                assign_value = mortality_types[assign_value]
+                assign_value = mod_params.mortality_types[assign_value]
             self.__dict__[assign_key] = assign_value
 
         if kwargs:
@@ -252,20 +294,20 @@ class fish_type(object):
 
         # initialize memory for result
         self.t_frac_pelagic = domain.init_array(
+            domain_params,
             name=f'{self.name}_t_frac_pelagic',
             constant=self.t_frac_pelagic_static,
         )
 
-        self.pdc_apply_pref = self.functional_type in _pdc_apply_pref_func_types
+        self.pdc_apply_pref = self.functional_type in mod_params._pdc_apply_pref_func_types
         self.is_zooplankton = False
 
     def __repr__(self):
         return f'{self.name}: {self.size_class} {self.functional_type_key}'
 
-    @property
-    def is_demersal(self):
+    def is_demersal(self, mod_params):
         """Return `True` if key is a demersal functional type"""
-        return self.functional_type_key in _demersal_functional_type_keys
+        return self.functional_type_key in mod_params._demersal_functional_type_keys
 
     @property
     def is_small(self):
@@ -276,34 +318,36 @@ class fish_type(object):
 class zooplankton_type(object):
     """Data structure containing zooplankton parameters."""
 
-    def __init__(self, group_ind, name, **kwargs):
+    def __init__(self, group_ind, mod_params, name, **kwargs):
         self.name = name
         self.group_ind = group_ind
         self.functional_type_key = 'zooplankton'
-        self.functional_type = functional_types['zooplankton']
-        self.is_demersal = False
+        self.functional_type = mod_params.functional_types['zooplankton']
         self.is_small = False
         self.is_zooplankton = True
-        for key, default_value in _zooplankton_defaults.items():
+        for key, default_value in mod_params._zooplankton_defaults.items():
             assign_key = key
             assign_value = kwargs.pop(key) if key in kwargs else default_value
             self.__dict__[assign_key] = assign_value
         if kwargs:
             raise ValueError(f'unknown parameters: {kwargs}')
 
+    def is_demersal(self, mod_params):
+        return False
+
 
 class benthic_prey_type(object):
     """Data structure containing benthic prey parameters."""
 
-    def __init__(self, group_ind, name, **kwargs):
+    def __init__(self, group_ind, mod_params, name, **kwargs):
         self.name = name
         self.group_ind = group_ind
         self.functional_type_key = 'benthic_prey'
-        self.functional_type = functional_types['benthic_prey']
+        self.functional_type = mod_params.functional_types['benthic_prey']
         self.is_zooplankton = False
         self.is_small = False
 
-        for key, default_value in _benthic_prey_defaults.items():
+        for key, default_value in mod_params._benthic_prey_defaults.items():
             assign_key = key
             assign_value = kwargs.pop(key) if key in kwargs else default_value
             self.__dict__[assign_key] = assign_value
@@ -313,17 +357,17 @@ class benthic_prey_type(object):
 
         self.lcarrying_capacity = not self.carrying_capacity == 0.0
 
-    @property
-    def is_demersal(self):
+    def is_demersal(self, mod_params):
         """Return `True` if key is a demersal functional type"""
-        return self.functional_type_key in _demersal_functional_type_keys
+        return self.functional_type_key in mod_params._demersal_functional_type_keys
 
 
 class fishing(object):
     """Data structure containing fishing parameters"""
 
-    def __init__(self, fishing_rate_per_year):
+    def __init__(self, domain_params, fishing_rate_per_year):
         self.fishing_rate = domain.init_array(
+            domain_params,
             name='fishing_rate',
             constant=fishing_rate_per_year / 365.0,
             attrs={'long_name': 'Imposed fishing rate', 'units': '1/d'},
@@ -401,7 +445,7 @@ class reproduction_link(object):
 class food_web(object):
     """Data structure defining feeding relationships."""
 
-    def __init__(self, feeding_settings, member_obj_list):
+    def __init__(self, feeding_settings, member_obj_list, mod_params):
 
         # ensure that predator-prey entries are unique
         pred_prey = [(p['predator'], p['prey']) for p in feeding_settings]
@@ -503,7 +547,7 @@ class food_web(object):
         self.zoo_names = [
             g
             for g, ft in zip(all_groups_name, all_groups_func_type)
-            if ft == functional_types['zooplankton']
+            if ft == mod_params.functional_types['zooplankton']
         ]
 
         self.zoo_ids = dict()
@@ -513,7 +557,7 @@ class food_web(object):
                     self.zoo_ids[g] = o.group_ind
                     break
 
-    def _pred_ndx_prey_filt(self, predator, prey_functional_type=None):
+    def _pred_ndx_prey_filt(self, predator, mod_params, prey_functional_type=None):
         """Return the index of a predator's prey in the `biomass` array;
         optionally filter by the functional type of the prey.
 
@@ -530,7 +574,7 @@ class food_web(object):
         ndx_prey = self.pred_ndx_prey[predator]
         if prey_functional_type is not None:
             assert not set(prey_functional_type) - set(
-                functional_types.values()
+                mod_params.functional_types.values()
             ), f'unrecognized functional type requested: {prey_functional_type}'
             ndx_prey = [
                 ix
@@ -543,6 +587,7 @@ class food_web(object):
         self,
         biomass,
         predator,
+        mod_params,
         apply_preference=False,
         prey_functional_type=None,
     ):
@@ -571,7 +616,7 @@ class food_web(object):
 
         """
 
-        ndx_prey = self._pred_ndx_prey_filt(predator, prey_functional_type)
+        ndx_prey = self._pred_ndx_prey_filt(predator, mod_params, prey_functional_type)
         biomass_prey = biomass.isel(group=ndx_prey)
 
         if apply_preference:

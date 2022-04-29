@@ -50,13 +50,13 @@ def test_fish_init():
         assert fish.name == fish_settings['members'][i]['name']
         assert fish.size_class == fish_settings['members'][i]['size_class']
         assert fish.functional_type_key == fish_settings['members'][i]['functional_type']
-        assert fish.functional_type == ecosystem.functional_types[fish.functional_type_key]
+        assert fish.functional_type == F.ecosys_params.functional_types[fish.functional_type_key]
         assert fish.t_frac_pelagic_static == fish_settings['members'][i]['t_frac_pelagic_static']
         assert (
             fish.pelagic_demersal_coupling
             == fish_settings['members'][i]['pelagic_demersal_coupling']
         )
-        assert fish.mass == ecosystem._size_class_masses[fish.size_class]
+        assert fish.mass == F.ecosys_params._size_class_masses[fish.size_class]
 
         assert isinstance(fish.t_frac_pelagic, xr.DataArray)
         assert fish.t_frac_pelagic.name == f'{fish.name}_t_frac_pelagic'
@@ -97,7 +97,9 @@ def test_fish_defaults():
 
     # this should work:
     group_ind = 0
-    fish = feisty.core.ecosystem.fish_type(group_ind, **fish0_parms)
+    fish = feisty.core.ecosystem.fish_type(
+        group_ind, F.domain_params, F.ecosys_params, **fish0_parms
+    )
     for key, value in settings_dict_def_bad['fish']['defaults'].items():
         assign_key = key
         assign_value = value
@@ -105,14 +107,14 @@ def test_fish_defaults():
             assign_key = 'mortality_coeff'
             assign_value = assign_value / 365.0
         elif key == 'mortality_type':
-            assign_value = feisty.core.ecosystem.mortality_types[assign_value]
+            assign_value = F.ecosys_params.mortality_types[assign_value]
         assert fish.__dict__[assign_key] == assign_value
 
     # this should fail
     fish0_parms.update(bad_kwargs)
     with pytest.raises(ValueError):
         group_ind = 0
-        feisty.core.ecosystem.fish_type(group_ind, **fish0_parms)
+        feisty.core.ecosystem.fish_type(group_ind, F.domain_params, F.ecosys_params, **fish0_parms)
 
 
 def test_fish_bad_harvest_selectivity():
@@ -166,7 +168,7 @@ def test_fish_apply_pref():
 def test_is_demersal():
     for obj in F.member_obj_list:
         is_demersal = obj.functional_type_key in model_settings['demersal_functional_type_keys']
-        assert is_demersal == obj.is_demersal
+        assert is_demersal == obj.is_demersal(F.ecosys_params)
 
         is_zooplankton = (
             obj.functional_type_key in model_settings['zooplankton_functional_type_keys']

@@ -179,15 +179,15 @@ def test_pred_ndx_prey_filt():
 
     for pred, prey_list_check in all_prey.items():
 
-        ndx = F.food_web._pred_ndx_prey_filt(pred)
+        ndx = F.food_web._pred_ndx_prey_filt(pred, F.ecosys_params)
         prey_list = F.biomass.group.values[ndx]
         assert (np.array(prey_list) == np.array(prey_list_check)).all()
 
         for (
             prey_functional_type_key,
             prey_functional_type,
-        ) in ecosystem.functional_types.items():
-            ndx = F.food_web._pred_ndx_prey_filt(pred, set([prey_functional_type]))
+        ) in F.ecosys_params.functional_types.items():
+            ndx = F.food_web._pred_ndx_prey_filt(pred, F.ecosys_params, set([prey_functional_type]))
 
             if not ndx:
                 continue
@@ -231,7 +231,7 @@ def test_get_prey_biomass():
         pred = pred_obj.name
         prey_list_check = all_prey[pred]
 
-        da = F.food_web.get_prey_biomass(F.biomass, pred)
+        da = F.food_web.get_prey_biomass(F.biomass, pred, F.ecosys_params)
         check_value = data.sel(group=prey_list_check).sum('group')
         assert (check_value == da).all()
 
@@ -239,27 +239,29 @@ def test_get_prey_biomass():
         da = F.food_web.get_prey_biomass(
             F.biomass,
             pred,
-            prey_functional_type=list(ecosystem.functional_types.values()),
+            F.ecosys_params,
+            prey_functional_type=list(F.ecosys_params.functional_types.values()),
         )
         assert (check_value == da).all()
 
-        da = F.food_web.get_prey_biomass(F.biomass, pred, apply_preference=True)
+        da = F.food_web.get_prey_biomass(F.biomass, pred, F.ecosys_params, apply_preference=True)
         check_value = (
             data.sel(group=prey_list_check) * xr.DataArray(preference[pred], dims=('group'))
         ).sum('group')
         assert (check_value == da).all()
 
         # ensure that this works for a restricted functional type
-        for prey_functional_type in ecosystem.functional_types.values():
+        for prey_functional_type in F.ecosys_params.functional_types.values():
 
             prey_list_check_filt = [
                 p
                 for p in prey_list_check
-                if ecosystem.functional_types[fish_func_type[p]] == prey_functional_type
+                if F.ecosys_params.functional_types[fish_func_type[p]] == prey_functional_type
             ]
             da = F.food_web.get_prey_biomass(
                 F.biomass,
                 pred,
+                F.ecosys_params,
                 prey_functional_type=set([prey_functional_type]),
             )
             assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
@@ -272,7 +274,10 @@ def test_get_prey_biomass():
         da = F.food_web.get_prey_biomass(
             F.biomass,
             pred,
-            prey_functional_type=[ecosystem.functional_types[p] for p in prey_functional_type_keys],
+            F.ecosys_params,
+            prey_functional_type=[
+                F.ecosys_params.functional_types[p] for p in prey_functional_type_keys
+            ],
         )
         assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
@@ -284,7 +289,10 @@ def test_get_prey_biomass():
         da = F.food_web.get_prey_biomass(
             F.biomass,
             pred,
-            prey_functional_type=[ecosystem.functional_types[p] for p in prey_functional_type_keys],
+            F.ecosys_params,
+            prey_functional_type=[
+                F.ecosys_params.functional_types[p] for p in prey_functional_type_keys
+            ],
         )
         assert (data.sel(group=prey_list_check_filt).sum('group') == da).all()
 
@@ -300,6 +308,7 @@ def test_get_prey_biomass_dne():
         F.food_web.get_prey_biomass(
             F.biomass,
             settings_dict_def['food_web'][0]['predator'],
+            F.ecosys_params,
             prey_functional_type=['this-is-not-a-valid-functional-type'],
         )
 

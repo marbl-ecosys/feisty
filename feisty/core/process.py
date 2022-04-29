@@ -16,6 +16,8 @@ def compute_t_frac_pelagic(
     pelagic_functional_types,
     demersal_functional_types,
     PI_be_cutoff,
+    domain_params,
+    ecosys_params,
     reset=False,
 ):
     """Return the fraction of time spent in the pelagic.
@@ -47,18 +49,20 @@ def compute_t_frac_pelagic(
             prey_pelagic = food_web.get_prey_biomass(
                 biomass,
                 fish.name,
+                ecosys_params,
                 prey_functional_type=pelagic_functional_types,
                 apply_preference=fish.pdc_apply_pref,
             ).data
             prey_demersal = food_web.get_prey_biomass(
                 biomass,
                 fish.name,
+                ecosys_params,
                 prey_functional_type=demersal_functional_types,
                 apply_preference=fish.pdc_apply_pref,
             ).data
 
             t_frac_pelagic.data[i, :] = np.where(
-                domain.ocean_depth < PI_be_cutoff,
+                domain_params.ocean_depth < PI_be_cutoff,
                 prey_pelagic / (prey_pelagic + prey_demersal),
                 0.0,
             )
@@ -144,9 +148,9 @@ def compute_encounter(
     encounter_rate_total,
     encounter_rate_pred,
     biomass,
-    T_habitat,
     t_frac_pelagic,
     food_web,
+    ecosys_params,
 ):
     """
     Compute encounter rates.
@@ -175,7 +179,7 @@ def compute_encounter(
         else:
             t_frac_pelagic_pred = t_frac_pelagic.data[link.i_fish, :]
             t_frac_prey_pred = t_frac_pelagic_pred
-            if link.prey.is_demersal and not link.prey.is_small:
+            if link.prey.is_demersal(ecosys_params) and not link.prey.is_small:
                 # small demersal class is larval, which stays in pelagic
                 t_frac_prey_pred = 1.0 - t_frac_pelagic_pred
 
