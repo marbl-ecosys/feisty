@@ -103,15 +103,15 @@ class feisty_instance_type(object):
         """initialize model settings"""
         self.ecosys_params = ecosystem.init_module_variables(**model_settings)
 
-    def _init_zooplankton(self, zooplankton_settings, glob_id):
+    def _init_zooplankton(self, zooplankton_settings, group_ind):
 
         ecosystem.init_zooplankton_defaults(self.ecosys_params, **zooplankton_settings['defaults'])
 
         self.zooplankton = []
         self.zoo_names = []
         for z_settings in zooplankton_settings['members']:
-            zoo_i = ecosystem.zooplankton_type(glob_id, self.ecosys_params, **z_settings)
-            glob_id = glob_id + 1
+            zoo_i = ecosystem.zooplankton_type(group_ind, self.ecosys_params, **z_settings)
+            group_ind = group_ind + 1
             self.zooplankton.append(zoo_i)
             self.zoo_names.append(zoo_i.name)
 
@@ -127,7 +127,7 @@ class feisty_instance_type(object):
         else:
             self.zoo_mortality = None
 
-    def _init_fish_settings(self, fish_settings, glob_id):
+    def _init_fish_settings(self, fish_settings, group_ind):
         """initialize fish"""
 
         ecosystem.init_fish_defaults(self.ecosys_params, **fish_settings['defaults'])
@@ -136,9 +136,9 @@ class feisty_instance_type(object):
         self.fish_names = []
         for fish_parameters in fish_settings['members']:
             fish_i = ecosystem.fish_type(
-                glob_id, self.domain_params, self.ecosys_params, **fish_parameters
+                group_ind, self.domain_params, self.ecosys_params, **fish_parameters
             )
-            glob_id = glob_id + 1
+            group_ind = group_ind + 1
             self.fish.append(fish_i)
             self.fish_names.append(fish_i.name)
 
@@ -146,7 +146,7 @@ class feisty_instance_type(object):
 
         self.n_fish = len(self.fish)
 
-    def _init_benthic_prey_settings(self, benthic_prey_settings, glob_id):
+    def _init_benthic_prey_settings(self, benthic_prey_settings, group_ind):
 
         ecosystem.init_benthic_prey_defaults(
             self.ecosys_params, **benthic_prey_settings['defaults']
@@ -155,8 +155,8 @@ class feisty_instance_type(object):
         self.benthic_prey = []
         self.benthic_prey_names = []
         for b_settings in benthic_prey_settings['members']:
-            bprey_i = ecosystem.benthic_prey_type(glob_id, self.ecosys_params, **b_settings)
-            glob_id = glob_id + 1
+            bprey_i = ecosystem.benthic_prey_type(group_ind, self.ecosys_params, **b_settings)
+            group_ind = group_ind + 1
             self.benthic_prey.append(bprey_i)
             self.benthic_prey_names.append(bprey_i.name)
 
