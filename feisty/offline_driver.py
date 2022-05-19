@@ -113,6 +113,7 @@ class offline_driver(object):
         allow_negative_forcing=False,
         diagnostic_names=[],
         max_output_time_dim=365,
+        num_chunks=1,
     ):
         """Run an integration with the FEISTY model.
 
@@ -139,10 +140,25 @@ class offline_driver(object):
         benthic_prey_ic_data : numeric, optional
           Initial conditions.
         """
+        self._arguments_in = dict(
+            domain_dict=domain_dict,
+            forcing=forcing,
+            start_date=start_date,
+            ignore_year_in_forcing=ignore_year_in_forcing,
+            settings_in=settings_in,
+            fish_ic_data=fish_ic_data,
+            benthic_prey_ic_data=benthic_prey_ic_data,
+            biomass_init_file=biomass_init_file,
+            allow_negative_forcing=allow_negative_forcing,
+            diagnostic_names=diagnostic_names,
+            max_output_time_dim=max_output_time_dim,
+            num_chunks=num_chunks,
+        )
         self.domain_dict = domain_dict
         self.forcing = forcing
         self.allow_negative_forcing = allow_negative_forcing
         self.ignore_year = ignore_year_in_forcing
+        self.daskify = num_chunks > 1
         date_tuple = None
         if isinstance(start_date, str):
             date_tuple = [int(date_comp) for date_comp in start_date.split('-')]
@@ -159,6 +175,12 @@ class offline_driver(object):
         # TODO: make this controllable via user input
         self._diagnostic_names = diagnostic_names
 
+        # Parallelize?
+        if self.daskify:
+            self.chunks = dict(X=(len(self.forcing.X) - 1) // num_chunks + 1)
+            self.forcing = self.forcing.chunk(self.chunks)
+            self.domain_dict['bathymetry'] = self.domain_dict['bathymetry'].chunk(self.chunks)
+
         self.obj = feisty_instance_type(
             domain_dict=self.domain_dict,
             settings_dict=self.settings_in,
@@ -167,11 +189,17 @@ class offline_driver(object):
             biomass_init_file=biomass_init_file,
         )
 
+        # Parallelize?
+        if self.daskify:
+            self.obj.biomass = self.obj.biomass.chunk(self.chunks)
+            self.obj.tendency_data = self.obj.tendency_data.chunk(self.chunks)
+            self.obj.zoo_mortality = self.obj.zoo_mortality.chunk(self.chunks)
+
     def _init_output_arrays(self, nt):
-        """Create self._ds, a list of datasets containing no more than
+        """Create self._ds_list, a list of datasets containing no more than
         self._max_output_time_dim time levels
         """
-        self._ds = []
+        self._ds_list = []
         start_dates = [self.start_date]
         time_levs_per_ds = [np.min([nt, self._max_output_time_dim])]
         total_days = nt - time_levs_per_ds[0]
@@ -179,14 +207,12 @@ class offline_driver(object):
             start_dates.append(start_dates[-1] + datetime.timedelta(int(time_levs_per_ds[-1])))
             time_levs_per_ds.append(np.min([self._max_output_time_dim, total_days]))
             total_days = total_days - time_levs_per_ds[-1]
-        self._ds_ind = np.zeros(nt, dtype='int')
         ind_cnt = 0
         for ind in time_levs_per_ds:
             ind_cnt += ind
-            self._ds_ind[ind_cnt:] += 1
         forcing_time = []
         for nt_loc, start_date in zip(time_levs_per_ds, start_dates):
-            self.time = xr.cftime_range(start=start_date, periods=nt_loc, calendar='noleap')
+            time = xr.cftime_range(start=start_date, periods=nt_loc, calendar='noleap')
             if self.ignore_year:
                 units = 'days since 0001-01-01 00:00:00'
                 forcing_time.append(
@@ -195,14 +221,14 @@ class offline_driver(object):
                             cftime.num2date(
                                 cftime.date2num(t, units) % 365, units, calendar=t.calendar
                             )
-                            for t in self.time
+                            for t in time
                         ]
                     )
                 )
             else:
                 forcing_time_loc = np.where(
-                    self.time > self.forcing['forcing_time'].data[0],
-                    self.time,
+                    time > self.forcing['forcing_time'].data[0],
+                    time,
                     self.forcing['forcing_time'].data[0],
                 )
                 forcing_time_loc = np.where(
@@ -212,28 +238,34 @@ class offline_driver(object):
                 )
                 forcing_time.append(forcing_time_loc)
             zeros = xr.DataArray(np.zeros(nt_loc), dims=('time'), name='zero')
-            ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
-            ds_prog = zeros * self.obj.get_prognostic().to_dataset()
-            self._ds.append(xr.merge((ds_prog, ds_diag)))
-            self._ds[-1]['time'] = self.time
+            ds_prog = zeros * self.state_t.to_dataset()
+            if self._diagnostic_names:
+                ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
+                self._ds_list.append(xr.merge((ds_prog, ds_diag)))
+            else:
+                self._ds_list.append(ds_prog)
+            self._ds_list[-1]['time'] = time
+            self._ds_list[-1] = self._ds_list[-1].assign_coords({'X': self.forcing.X.data})
+            if self.daskify:
+                self._ds_list[-1] = self._ds_list[-1].chunk(self.chunks)
         self._forcing_time = np.concatenate(forcing_time)
 
-    def _post_data(self, n, state_t):
+    def _post_data(self, n):
         # Which file do we write to?
-        ds_ind = self._ds_ind[n]
-        if n > 0 and ds_ind > self._ds_ind[n - 1]:
-            print(f'Starting a new output dataset for timestep {n} ({time.strftime("%H:%M:%S")})')
+        ds_ind = n // self._max_output_time_dim
         data_ind = n % self._max_output_time_dim
-        self._ds[ds_ind].biomass.data[data_ind, :, :] = state_t.data
+        if n > 0 and data_ind == 0:
+            print(f'Starting a new output dataset for timestep {n} ({time.strftime("%H:%M:%S")})')
+        self._ds_list[ds_ind].biomass.data[data_ind, :, :] = self.state_t.data
         for v in self._diagnostic_names:
-            self._ds[ds_ind][v].data[data_ind, :] = self.obj.tendency_data[v].data
+            self._ds_list[ds_ind][v].data[data_ind, :] = self.obj.tendency_data[v].data
 
     # @property
     # def ds(self):
     #     """Data comprising the output from ``feisty``."""
-    #     return self._ds
+    #     return self._ds_list
 
-    def _compute_tendency(self, forcing_t, state_t):
+    def _compute_tendency(self, forcing_t):
         """Return the feisty time tendency."""
         gcm_data_t = self.forcing.interp(forcing_time=forcing_t, assume_sorted=True)
         if not self.allow_negative_forcing:
@@ -241,8 +273,8 @@ class offline_driver(object):
             gcm_data_t['zooC'].data = np.maximum(gcm_data_t['zooC'].data, 0)
             gcm_data_t['zoo_mort'].data = np.maximum(gcm_data_t['zoo_mort'].data, 0)
         return self.obj.compute_tendencies(
-            state_t.data[self.obj.prog_ndx_fish, :],
-            state_t.data[self.obj.prog_ndx_benthic_prey, :],
+            self.state_t.data[self.obj.prog_ndx_fish, :],
+            self.state_t.data[self.obj.prog_ndx_benthic_prey, :],
             gcm_data_t.zooC.data,
             gcm_data_t.zoo_mort.data,
             T_pelagic=gcm_data_t.T_pelagic.data,
@@ -253,29 +285,27 @@ class offline_driver(object):
     def _solve(self, nt, method):
         """Call a numerical ODE solver to integrate the feisty model in time."""
 
-        state_t = self.obj.get_prognostic().copy()
-        self._init_output_arrays(nt)
         if method == 'euler':
-            self._solve_foward_euler(nt, state_t)
+            self._solve_foward_euler(nt)
 
         elif method in ['Radau', 'RK45']:
             # TODO: make input arguments
-            self._solve_scipy(nt, state_t, method)
+            self._solve_scipy(nt, method)
         else:
             raise ValueError(f'unknown method: {method}')
 
-    def _solve_foward_euler(self, nt, state_t):
+    def _solve_foward_euler(self, nt):
         """use forward-euler to solve feisty model"""
         print(f'Integrating {nt} steps (starting at {time.strftime("%H:%M:%S")})')
         for n in range(nt):
-            dsdt = self._compute_tendency(self._forcing_time[n], state_t)
-            state_t.data[self.obj.prog_ndx_prognostic, :] = (
-                state_t[self.obj.prog_ndx_prognostic, :].data
+            dsdt = self._compute_tendency(self._forcing_time[n])
+            self.state_t.data[self.obj.prog_ndx_prognostic, :] = (
+                self.state_t[self.obj.prog_ndx_prognostic, :].data
                 + dsdt.data[self.obj.ndx_prognostic, :] * self.dt
             )
-            self._post_data(n, state_t)
+            self._post_data(n)
 
-    def _solve_scipy(self, nt, state_t, method):
+    def _solve_scipy(self, nt, method):
         """use a SciPy solver to integrate the model equation."""
         raise NotImplementedError('scipy solvers not implemented')
 
@@ -299,15 +329,83 @@ class offline_driver(object):
 
         """
         print(f'Starting run() at {time.strftime("%H:%M:%S")}')
+        self.state_t = self.obj.get_prognostic().copy().assign_coords({'X': self.forcing.X.data})
+        self._init_output_arrays(nt)
         self._solve(nt, method)
         self._shutdown(file_out)
 
+    def run_parallel(self, nt, file_out=None, method='euler'):
+        """Integrate the FEISTY model.
+
+        Parameters
+        ----------
+
+        nt : integer
+          Number of timesteps to run.
+
+        file_out : string
+          File name to write model output data.
+
+        method : string
+          Method of solving feisty equations. Options: ['euler', 'Radau', 'RK45'].
+
+          .. note::
+             Only ``method='euler'`` is supported currently.
+
+        """
+        print(f'Starting run() at {time.strftime("%H:%M:%S")}')
+        self.state_t = self.obj.get_prognostic().copy().assign_coords({'X': self.forcing.X.data})
+        if self.daskify:
+            self.state_t = self.state_t.chunk(self.chunks)
+        self._init_output_arrays(nt)
+        forcing_time_offset = 0
+        for ds_ind in range(len(self._ds_list)):
+            # Parallelize?
+            self.template = self._ds_list[ds_ind]
+
+            nt_loc = len(self._ds_list[ds_ind].time)
+            t0 = self._ds_list[ds_ind].time[0].data
+            print(f'Integrating {nt_loc} steps from {t0} (starting at {time.strftime("%H:%M:%S")})')
+            new_ds = xr.map_blocks(
+                _solve_parallel,
+                self.state_t,
+                args=(
+                    self._ds_list[ds_ind],
+                    self.forcing,
+                    self._arguments_in['domain_dict']['bathymetry'].assign_coords(
+                        {'X': self.forcing.X.data}
+                    ),
+                    self.obj.biomass[self.obj.ndx_fish, :]
+                    .rename({'group': 'fish_group'})
+                    .assign_coords({'X': self.forcing.X.data}),
+                    self.obj.biomass[self.obj.ndx_benthic_prey, :]
+                    .rename({'group': 'bp_group'})
+                    .assign_coords({'X': self.forcing.X.data}),
+                    self._forcing_time[forcing_time_offset : forcing_time_offset + nt_loc],
+                    self._arguments_in['start_date'],
+                    self._arguments_in['ignore_year_in_forcing'],
+                    self._arguments_in['settings_in'],
+                    None,  # Don't want to re-read biomass init file!
+                    self._arguments_in['allow_negative_forcing'],
+                    self._arguments_in['diagnostic_names'],
+                    self._arguments_in['max_output_time_dim'],
+                    nt_loc,
+                    method,
+                ),
+                template=self.template,
+            )
+            forcing_time_offset = forcing_time_offset + nt_loc
+            self._ds_list[ds_ind] = new_ds.compute()
+            self.state_t.data = new_ds.isel(time=-1).biomass.data
+            # self._solve(nt_loc, method)
+        self._shutdown(file_out)
+
     def gen_ds(self):
-        if len(self._ds) == 1:
-            self.ds = self._ds[0].copy(deep=True)
+        if len(self._ds_list) == 1:
+            self.ds = self._ds_list[0].copy(deep=True)
         else:
             self.ds = xr.concat(
-                self._ds,
+                self._ds_list,
                 dim='time',
                 data_vars='minimal',
                 coords='minimal',
@@ -336,14 +434,14 @@ class offline_driver(object):
             os.remove(ic_file)
 
         fish_ic = (
-            self._ds[-1]
+            self._ds_list[-1]
             .isel(time=-1, group=self.obj.prog_ndx_fish)
             .drop(['X', 'time', 'group'])
             .biomass.rename({'group': 'nfish'})
             .to_dataset(name='fish_ic')
         )
         bent_ic = (
-            self._ds[-1]
+            self._ds_list[-1]
             .isel(time=-1, group=self.obj.prog_ndx_benthic_prey)
             .drop(['X', 'time', 'group'])
             .biomass.rename({'group': 'nb'})
@@ -476,6 +574,7 @@ def config_from_netcdf(
     benthic_prey_ic_data=2e-3,
     diagnostic_names=[],
     max_output_time_dim=365,
+    num_chunks=1,
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -568,6 +667,7 @@ def config_from_netcdf(
         input_dict.get('allow_negative', False),
         diagnostic_names=diagnostic_names,
         max_output_time_dim=max_output_time_dim,
+        num_chunks=num_chunks,
     )
 
 
@@ -600,3 +700,47 @@ def config_and_run_from_dataset(
     feisty_driver.run(nstep)
     feisty_driver.gen_ds()
     return feisty_driver.ds
+
+
+def _solve_parallel(
+    state_t,
+    _ds,
+    forcing,
+    domain_ds,
+    fish_ic_data,
+    benthic_prey_ic_data,
+    _forcing_time,
+    start_date,
+    ignore_year_in_forcing,
+    settings_in,
+    biomass_init_file,
+    allow_negative_forcing,
+    diagnostic_names,
+    max_output_time_dim,
+    nt_loc,
+    method,
+):
+    domain_dict = dict()
+    domain_dict['NX'] = len(domain_ds.X)
+    domain_dict['bathymetry'] = domain_ds
+    # 1. create new driver for each chunk
+    small_driver = offline_driver(
+        domain_dict,
+        forcing,
+        start_date,
+        ignore_year_in_forcing,
+        settings_in,
+        fish_ic_data.data,
+        benthic_prey_ic_data.data,
+        biomass_init_file,
+        allow_negative_forcing,
+        diagnostic_names,
+        max_output_time_dim,
+    )
+    small_driver.ds_ind = 0
+    small_driver._ds_list = [_ds]
+    small_driver.state_t = state_t
+    small_driver._forcing_time = _forcing_time
+
+    small_driver._solve(nt_loc, method)
+    return small_driver._ds_list[0]
