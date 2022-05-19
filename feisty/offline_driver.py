@@ -76,7 +76,7 @@ def _domain_from_netcdf(input_dict):
 def _forcing_from_netcdf(input_dict):
     """Read forcing fields from netcdf file"""
     allow_negative = input_dict.get('allow_negative', False)
-    ds = xr.open_dataset(input_dict['path'])
+    ds = xr.open_dataset(input_dict['path']).rename({'time': 'forcing_time'})
     if 'dimnames' in input_dict:
         for (newdim, olddim) in input_dict['dimnames'].items():
             ds = ds.rename({olddim: newdim})
@@ -201,14 +201,14 @@ class offline_driver(object):
                 )
             else:
                 forcing_time_loc = np.where(
-                    self.time > self.forcing['time'].data[0],
+                    self.time > self.forcing['forcing_time'].data[0],
                     self.time,
-                    self.forcing['time'].data[0],
+                    self.forcing['forcing_time'].data[0],
                 )
                 forcing_time_loc = np.where(
-                    forcing_time_loc < self.forcing['time'].data[-1],
+                    forcing_time_loc < self.forcing['forcing_time'].data[-1],
                     forcing_time_loc,
-                    self.forcing['time'].data[-1],
+                    self.forcing['forcing_time'].data[-1],
                 )
                 forcing_time.append(forcing_time_loc)
             zeros = xr.DataArray(np.zeros(nt_loc), dims=('time'), name='zero')
@@ -221,6 +221,8 @@ class offline_driver(object):
     def _post_data(self, n, state_t):
         # Which file do we write to?
         ds_ind = self._ds_ind[n]
+        if n > 0 and ds_ind > self._ds_ind[n - 1]:
+            print(f'Starting a new output dataset for timestep {n} ({time.strftime("%H:%M:%S")})')
         data_ind = n % self._max_output_time_dim
         self._ds[ds_ind].biomass.data[data_ind, :, :] = state_t.data
         for v in self._diagnostic_names:
@@ -233,7 +235,7 @@ class offline_driver(object):
 
     def _compute_tendency(self, forcing_t, state_t):
         """Return the feisty time tendency."""
-        gcm_data_t = self.forcing.interp(time=forcing_t, assume_sorted=True)
+        gcm_data_t = self.forcing.interp(forcing_time=forcing_t, assume_sorted=True)
         if not self.allow_negative_forcing:
             gcm_data_t['poc_flux_bottom'].data = np.maximum(gcm_data_t['poc_flux_bottom'].data, 0)
             gcm_data_t['zooC'].data = np.maximum(gcm_data_t['zooC'].data, 0)
@@ -264,9 +266,8 @@ class offline_driver(object):
 
     def _solve_foward_euler(self, nt, state_t):
         """use forward-euler to solve feisty model"""
+        print(f'Integrating {nt} steps (starting at {time.strftime("%H:%M:%S")})')
         for n in range(nt):
-            if n % 365 == 0:
-                print(f'Starting year {n//365+1} integration at {time.strftime("%H:%M:%S")}')
             dsdt = self._compute_tendency(self._forcing_time[n], state_t)
             state_t.data[self.obj.prog_ndx_prognostic, :] = (
                 state_t[self.obj.prog_ndx_prognostic, :].data
@@ -297,7 +298,7 @@ class offline_driver(object):
              Only ``method='euler'`` is supported currently.
 
         """
-        print(f'Calling _solve at {time.strftime("%H:%M:%S")}')
+        print(f'Starting run() at {time.strftime("%H:%M:%S")}')
         self._solve(nt, method)
         self._shutdown(file_out)
 
@@ -568,3 +569,34 @@ def config_from_netcdf(
         diagnostic_names=diagnostic_names,
         max_output_time_dim=max_output_time_dim,
     )
+
+
+def config_and_run_from_dataset(
+    ds,
+    nstep,
+    start_date='0001-01-01',
+    ignore_year_in_forcing=False,
+    settings_in={},
+    diagnostic_names=[],
+    max_output_time_dim=365,
+):
+    domain_dict = dict()
+    domain_dict['bathymetry'] = ds['bathymetry']
+    domain_dict['NX'] = len(ds['X'])
+    forcing = ds[['T_pelagic', 'T_bottom', 'poc_flux_bottom', 'zooC', 'zoo_mort']]
+    fish_ic_data = ds['fish_ic']
+    benthic_prey_ic_data = ds['bent_ic']
+    feisty_driver = offline_driver(
+        domain_dict,
+        forcing,
+        start_date,
+        ignore_year_in_forcing,
+        settings_in,
+        fish_ic_data,
+        benthic_prey_ic_data,
+        diagnostic_names=diagnostic_names,
+        max_output_time_dim=max_output_time_dim,
+    )
+    feisty_driver.run(nstep)
+    feisty_driver.gen_ds()
+    return feisty_driver.ds

@@ -2,11 +2,11 @@ import numpy as np
 import xarray as xr
 
 
-def _comparison(xr_matlab_vals, xr_py_vals, row_name, full_table, seps, thres):
-    nstep = np.min([len(xr_matlab_vals['time'].data), len(xr_py_vals['time'].data)])
+def _comparison(xr_matlab_vals, xr_py_vals, row_name, full_table, seps, thres, time_name='time'):
+    nstep = np.min([len(xr_matlab_vals['time'].data), len(xr_py_vals[time_name].data)])
     nx = np.min([len(xr_matlab_vals['X'].data), len(xr_py_vals['X'].data)])
-    matlab_vals = xr_matlab_vals.isel(time=slice(0, nstep), X=slice(0, nx)).data
-    py_vals = xr_py_vals.isel(time=slice(0, nstep), X=slice(0, nx)).data
+    matlab_vals = xr_matlab_vals.isel({'time': slice(0, nstep), 'X': slice(0, nx)}).data
+    py_vals = xr_py_vals.isel({time_name: slice(0, nstep), 'X': slice(0, nx)}).data
     if thres:
         thres_mask = np.logical_and(np.abs(py_vals) > thres, np.abs(matlab_vals) > thres)
         py_vals = np.where(thres_mask, py_vals, 0)
@@ -30,7 +30,7 @@ def _comparison(xr_matlab_vals, xr_py_vals, row_name, full_table, seps, thres):
         matlab_val = matlab_vals[t_ind][x_ind]
         py_val = py_vals[t_ind][x_ind]
         rel_err = rel_errs[t_ind][x_ind]
-        t_val = xr_py_vals.isel(time=t_ind).time.data
+        t_val = xr_py_vals.isel({time_name: t_ind})[time_name].data
         x_val = xr_py_vals.isel(X=x_ind).X.data
         print(
             f'{seps[0]}{row_name} (t={t_val}, X={x_val}){seps[1]}{matlab_val:10.4e}{seps[2]}'
@@ -38,7 +38,14 @@ def _comparison(xr_matlab_vals, xr_py_vals, row_name, full_table, seps, thres):
         )
 
 
-def compare_nc(baseline_ds, test_da_or_ds, full_table=True, markdown_formatting='true', thres=None):
+def compare_nc(
+    baseline_ds,
+    test_da_or_ds,
+    full_table=True,
+    markdown_formatting='true',
+    thres=None,
+    time_name='time',
+):
     if type(test_da_or_ds) == xr.Dataset:
         ds = test_da_or_ds
         da = None
@@ -70,6 +77,7 @@ def compare_nc(baseline_ds, test_da_or_ds, full_table=True, markdown_formatting=
                 full_table,
                 seps,
                 thres,
+                time_name,
             )
     else:
         for varname in ds:
@@ -80,6 +88,7 @@ def compare_nc(baseline_ds, test_da_or_ds, full_table=True, markdown_formatting=
                 full_table,
                 seps,
                 thres,
+                time_name,
             )
 
 
@@ -104,6 +113,9 @@ def default_config():
 
         # Length of run (in years)
         driver_config[matlab_script]['nyears'] = 1
+
+        # Run with dask?
+        driver_config[matlab_script]['num_chunks'] = 1
 
         # Size of each entry in testcase._ds
         driver_config[matlab_script]['max_output_time_dim'] = 365

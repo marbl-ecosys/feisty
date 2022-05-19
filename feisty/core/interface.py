@@ -248,7 +248,7 @@ class feisty_instance_type(object):
             assert data.shape == (
                 self.n_zoo,
                 self.biomass.shape[1],
-            ), f'data has the wrong dimensions (expecting ({self.n_nzoo}, {self.biomass.shape[1]}), got ({data.shape}))'
+            ), f'data has the wrong dimensions (expecting ({self.n_zoo}, {self.biomass.shape[1]}), got ({data.shape}))'
 
         self.biomass.data[self.ndx_zoo, :] = data
 
