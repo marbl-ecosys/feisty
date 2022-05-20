@@ -77,14 +77,18 @@ def test_config_testcase_init_1():
 
 def test_config_testcase_init_2():
     testcase = feisty.config_testcase('tanh_shelf', 'cyclic')
+    testcase.state_t = (
+        testcase.obj.get_prognostic().copy().assign_coords({'X': testcase.forcing.X.data})
+    )
 
     testcase._init_output_arrays(365)
     assert (
-        testcase.time == xr.cftime_range(start=cftime.DatetimeNoLeap(1, 1, 1), periods=365)
+        testcase._ds_list[0].time
+        == xr.cftime_range(start=cftime.DatetimeNoLeap(1, 1, 1), periods=365)
     ).all()
-    assert isinstance(testcase._ds[0], xr.Dataset)
-    assert set(testcase._ds[0].data_vars) == {'biomass'}.union(testcase._diagnostic_names)
-    assert len(testcase._ds[0].group) == len(testcase.obj.ndx_prognostic)
+    assert isinstance(testcase._ds_list[0], xr.Dataset)
+    assert set(testcase._ds_list[0].data_vars) == {'biomass'}.union(testcase._diagnostic_names)
+    assert len(testcase._ds_list[0].group) == len(testcase.obj.ndx_prognostic)
 
 
 def test_config_testcase_run():
