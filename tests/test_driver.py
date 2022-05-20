@@ -28,11 +28,10 @@ def test_forcing_cyclic():
 
 def test_not_implemented():
     """ensure appropriate failures with bad method."""
-    testcase = feisty.config_testcase('tanh_shelf', 'cyclic')
     with pytest.raises(ValueError):
-        testcase.run(1, method='intuition')
+        feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1, method='intuition')
     with pytest.raises(NotImplementedError):
-        testcase.run(1, method='Radau')
+        feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1, method='Radau')
 
 
 def test_read_settings():
@@ -57,50 +56,45 @@ def test_read_settings():
     os.remove(file_in)
 
 
-def test_config_testcase_init_1():
-    testcase = feisty.config_testcase('tanh_shelf', 'cyclic')
-    assert isinstance(testcase, feisty.offline_driver)
-    for attr in ['obj', 'domain_dict', 'forcing', 'settings_in', 'run']:
-        assert hasattr(testcase, attr)
+# def test_config_testcase_init_1():
+#     testcase = feisty.config_testcase('tanh_shelf', 'cyclic')
+#     assert isinstance(testcase, feisty.offline_driver)
+#     for attr in ['obj', 'domain_dict', 'forcing', 'settings_in', 'run']:
+#         assert hasattr(testcase, attr)
 
-    assert isinstance(testcase.forcing, xr.Dataset)
-    assert isinstance(testcase.obj, feisty.feisty_instance_type)
-    assert testcase.domain_dict['NX'] == feisty.testcase.domain_tanh_shelf()['NX']
-    assert (
-        testcase.domain_dict['bathymetry'] == feisty.testcase.domain_tanh_shelf()['bathymetry']
-    ).all()
+#     assert isinstance(testcase.forcing, xr.Dataset)
+#     assert isinstance(testcase.obj, feisty.feisty_instance_type)
+#     assert testcase.domain_dict['NX'] == feisty.testcase.domain_tanh_shelf()['NX']
+#     assert (
+#         testcase.domain_dict['bathymetry'] == feisty.testcase.domain_tanh_shelf()['bathymetry']
+#     ).all()
 
-    expected_forcing = feisty.testcase.forcing_cyclic(feisty.testcase.domain_tanh_shelf())
-    for v in testcase.forcing.data_vars:
-        assert (testcase.forcing[v] == expected_forcing[v]).all()
+#     expected_forcing = feisty.testcase.forcing_cyclic(feisty.testcase.domain_tanh_shelf())
+#     for v in testcase.forcing.data_vars:
+#         assert (testcase.forcing[v] == expected_forcing[v]).all()
 
 
-def test_config_testcase_init_2():
-    testcase = feisty.config_testcase('tanh_shelf', 'cyclic')
-    testcase.state_t = (
-        testcase.obj.get_prognostic().copy().assign_coords({'X': testcase.forcing.X.data})
-    )
+# def test_config_testcase_init_2():
+#     testcase = feisty.config_testcase('tanh_shelf', 'cyclic')
+#     testcase.state_t = (
+#         testcase.obj.get_prognostic().copy().assign_coords({'X': testcase.forcing.X.data})
+#     )
 
-    testcase._init_output_arrays(365)
-    assert (
-        testcase._ds_list[0].time
-        == xr.cftime_range(start=cftime.DatetimeNoLeap(1, 1, 1), periods=365)
-    ).all()
-    assert isinstance(testcase._ds_list[0], xr.Dataset)
-    assert set(testcase._ds_list[0].data_vars) == {'biomass'}.union(testcase._diagnostic_names)
-    assert len(testcase._ds_list[0].group) == len(testcase.obj.ndx_prognostic)
+#     testcase._init_output_arrays(365)
+#     assert (
+#         testcase._ds_list[0].time
+#         == xr.cftime_range(start=cftime.DatetimeNoLeap(1, 1, 1), periods=365)
+#     ).all()
+#     assert isinstance(testcase._ds_list[0], xr.Dataset)
+#     assert set(testcase._ds_list[0].data_vars) == {'biomass'}.union(testcase._diagnostic_names)
+#     assert len(testcase._ds_list[0].group) == len(testcase.obj.ndx_prognostic)
 
 
 def test_config_testcase_run():
-    testcase = feisty.config_testcase('tanh_shelf', 'cyclic')
-    testcase.run(3)
+    feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 3)
 
 
 def test_cyclic_interpolation():
-    testcase1 = feisty.config_testcase('tanh_shelf', 'cyclic')
-    testcase2 = feisty.config_testcase('tanh_shelf', 'cyclic', start_date='0002-01-01')
-    testcase1.run(1)
-    testcase2.run(1)
-    testcase1.gen_ds()
-    testcase2.gen_ds()
-    assert (testcase1.ds['biomass'].data == testcase2.ds['biomass'].data).all()
+    ds1 = feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1)
+    ds2 = feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1, start_date='0002-01-01')
+    assert (ds1['biomass'].data == ds2['biomass'].data).all()

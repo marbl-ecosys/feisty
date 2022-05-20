@@ -7,10 +7,12 @@ import numpy as np
 import xarray as xr
 import yaml
 
+from feisty.utils.data_wrangling import generate_ic_ds_for_feisty
+
 from . import testcase
 from .core import settings as settings_mod
 from .core.interface import feisty_instance_type
-from .utils import make_forcing_cyclic
+from .utils import generate_single_ds_for_feisty, generate_template, make_forcing_cyclic
 
 path_to_here = os.path.dirname(os.path.realpath(__file__))
 
@@ -38,68 +40,11 @@ def _read_settings(settings_in):
     return settings_dict
 
 
-def _read_domain(domain_in, test_case=None):
-    with xr.open_dataset(domain_in) as ds_domain:
-        return {
-            'NX': len(ds_domain.bathymetry),
-            'bathymetry': ds_domain.bathymetry,
-        }
-
-
 def _read_fish_init(fich_ic_in):
     pass
 
 
-def _domain_from_netcdf(input_dict):
-    """Read domain information from netcdf file"""
-    ds = xr.open_dataset(input_dict['path'])
-    if 'dimnames' in input_dict:
-        for (newdim, olddim) in input_dict['dimnames'].items():
-            ds = ds.rename({olddim: newdim})
-    try:
-        bathymetry = ds[input_dict['varnames']['bathymetry']]
-    except:
-        bathymetry = ds['bathymetry']
-    x = np.arange(bathymetry.size).reshape(bathymetry.shape)
-    return dict(
-        bathymetry=xr.DataArray(
-            bathymetry.data,
-            dims=('X'),
-            name='bathymetry',
-            attrs={'long_name': 'depth', 'units': 'm'},
-            coords={'X': x},
-        ),
-        NX=len(bathymetry.data),
-    )
-
-
-def _forcing_from_netcdf(input_dict):
-    """Read forcing fields from netcdf file"""
-    allow_negative = input_dict.get('allow_negative', False)
-    ds = xr.open_dataset(input_dict['path']).rename({'time': 'forcing_time'})
-    if 'dimnames' in input_dict:
-        for (newdim, olddim) in input_dict['dimnames'].items():
-            ds = ds.rename({olddim: newdim})
-    da_list = []
-    for varname in ['T_pelagic', 'T_bottom', 'poc_flux_bottom', 'zooC', 'zoo_mort']:
-        try:
-            netcdf_varname = input_dict['varnames'][varname]
-            da_list.append(ds[netcdf_varname].rename(varname))
-        except:
-            da_list.append(ds[varname])
-    ds = xr.merge(da_list)
-    if not allow_negative:
-        for varname in ['poc_flux_bottom', 'zooC', 'zoo_mort']:
-            ds[varname].data = np.where(ds[varname].data > 0, ds[varname].data, 0)
-    if 'zooplankton' not in ds.dims:
-        ds['zooC'] = ds['zooC'].expand_dims('zooplankton')
-        ds['zoo_mort'] = ds['zoo_mort'].expand_dims('zooplankton')
-        ds['zooplankton'] = xr.DataArray(['Zoo'], dims='zooplankton')
-
-    return ds
-
-
-class offline_driver(object):
+class _offline_driver(object):
     def __init__(
         self,
         domain_dict,
@@ -366,34 +311,7 @@ class offline_driver(object):
             nt_loc = len(self._ds_list[ds_ind].time)
             t0 = self._ds_list[ds_ind].time[0].data
             print(f'Integrating {nt_loc} steps from {t0} (starting at {time.strftime("%H:%M:%S")})')
-            new_ds = xr.map_blocks(
-                _solve_parallel,
-                self.state_t,
-                args=(
-                    self._ds_list[ds_ind],
-                    self.forcing,
-                    self._arguments_in['domain_dict']['bathymetry'].assign_coords(
-                        {'X': self.forcing.X.data}
-                    ),
-                    self.obj.biomass[self.obj.ndx_fish, :]
-                    .rename({'group': 'fish_group'})
-                    .assign_coords({'X': self.forcing.X.data}),
-                    self.obj.biomass[self.obj.ndx_benthic_prey, :]
-                    .rename({'group': 'bp_group'})
-                    .assign_coords({'X': self.forcing.X.data}),
-                    self._forcing_time[forcing_time_offset : forcing_time_offset + nt_loc],
-                    self._arguments_in['start_date'],
-                    self._arguments_in['ignore_year_in_forcing'],
-                    self._arguments_in['settings_in'],
-                    None,  # Don't want to re-read biomass init file!
-                    self._arguments_in['allow_negative_forcing'],
-                    self._arguments_in['diagnostic_names'],
-                    self._arguments_in['max_output_time_dim'],
-                    nt_loc,
-                    method,
-                ),
-                template=self.template,
-            )
+            new_ds = None
             forcing_time_offset = forcing_time_offset + nt_loc
             self._ds_list[ds_ind] = new_ds.compute()
             self.state_t.data = new_ds.isel(time=-1).biomass.data
@@ -451,9 +369,11 @@ class offline_driver(object):
         new_ic.to_netcdf(ic_file, encoding={v: {'_FillValue': None} for v in new_ic.variables})
 
 
-def config_testcase(
+# PUBLIC FUNCTIONS
+def config_and_run_testcase(
     domain_name,
     forcing_name,
+    nsteps,
     start_date='0001-01-01',
     settings_in={},
     fish_ic_data=1e-5,
@@ -462,6 +382,7 @@ def config_testcase(
     forcing_kwargs={},
     diagnostic_names=[],
     max_output_time_dim=365,
+    method='euler',
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -542,31 +463,48 @@ def config_testcase(
     assert domain_name in _test_domain
     assert forcing_name in _test_forcing
 
-    # Set up domain_dict and forcing
+    # Set up forcing / initial condition dictionary
     domain_dict = _test_domain[domain_name](**domain_kwargs)
-    forcing = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
+    ds = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
+    ds['bathymetry'] = domain_dict['bathymetry'].assign_coords(X=ds.X.data)
+    ds_ic = generate_ic_ds_for_feisty(
+        X=ds.X.data,
+        ic_file=None,
+        chunks={},
+        fish_ic=fish_ic_data,
+        benthic_prey_ic=benthic_prey_ic_data,
+    )
+    for var in ['fish_ic', 'bent_ic']:
+        ds[var] = ds_ic[var]
 
-    # Enable cyclic forcing for certain tests
-    ignore_year_in_forcing = forcing_name in ['cyclic']
-    if ignore_year_in_forcing:
-        forcing = make_forcing_cyclic(forcing)
-
-    return offline_driver(
-        domain_dict,
-        forcing,
-        start_date,
-        ignore_year_in_forcing,
-        settings_in,
-        fish_ic_data,
-        benthic_prey_ic_data,
+    # Set up template for map_blocks
+    template = generate_template(
+        ds=ds,
+        nsteps=nsteps,
+        start_date=start_date,
         diagnostic_names=diagnostic_names,
-        max_output_time_dim=max_output_time_dim,
     )
 
+    return xr.map_blocks(
+        config_and_run_from_dataset,
+        ds,
+        args=(
+            nsteps,
+            start_date,
+            True,  # ignore_year_in_forcing is always true for test case
+            settings_in,
+            diagnostic_names,
+            max_output_time_dim,
+            method,
+        ),
+        template=template,
+    ).compute()
 
-def config_from_netcdf(
+
+def config_and_run_from_netcdf(
     input_yaml,
     input_key,
+    nsteps,
     start_date='0001-01-01',
     ignore_year_in_forcing=False,
     settings_in={},
@@ -575,6 +513,7 @@ def config_from_netcdf(
     diagnostic_names=[],
     max_output_time_dim=365,
     num_chunks=1,
+    method='euler',
 ):
 
     """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
@@ -650,25 +589,43 @@ def config_from_netcdf(
     with open(input_yaml) as f:
         input_dict = yaml.safe_load(f)[input_key]
 
-    domain_dict = _domain_from_netcdf(input_dict)
-    forcing = _forcing_from_netcdf(input_dict)
-    if ignore_year_in_forcing:
-        forcing = make_forcing_cyclic(forcing)
-
-    return offline_driver(
-        domain_dict,
-        forcing,
-        start_date,
-        ignore_year_in_forcing,
-        settings_in,
-        fish_ic_data,
-        benthic_prey_ic_data,
-        input_dict.get('biomass_init_file', None),
-        input_dict.get('allow_negative', False),
-        diagnostic_names=diagnostic_names,
-        max_output_time_dim=max_output_time_dim,
+    forcing_rename = dict()
+    forcing_rename['time'] = 'forcing_time'
+    for input_key in ['dimnames', 'varnames']:
+        if input_key in input_dict:
+            for key, value in input_dict[input_key].items():
+                forcing_rename[value] = key
+    ds = generate_single_ds_for_feisty(
         num_chunks=num_chunks,
+        forcing_file=input_dict['path'],
+        ic_file=input_dict.get('biomass_init_file', None),
+        fish_ic=input_dict.get('fish_biomass_ic', fish_ic_data),
+        benthic_prey_ic=input_dict.get('benthic_prey_biomass_ic', benthic_prey_ic_data),
+        forcing_rename=forcing_rename,
     )
+    if ignore_year_in_forcing:
+        ds = make_forcing_cyclic(ds)
+    template = generate_template(
+        ds=ds,
+        nsteps=nsteps,
+        start_date=start_date,
+        diagnostic_names=diagnostic_names,
+    )
+
+    return xr.map_blocks(
+        config_and_run_from_dataset,
+        ds,
+        args=(
+            nsteps,
+            start_date,
+            ignore_year_in_forcing,
+            settings_in,
+            diagnostic_names,
+            max_output_time_dim,
+            method,
+        ),
+        template=template,
+    ).compute()
 
 
 def config_and_run_from_dataset(
@@ -679,14 +636,21 @@ def config_and_run_from_dataset(
     settings_in={},
     diagnostic_names=[],
     max_output_time_dim=365,
+    method='euler',
 ):
+    """This routine
+    1. creates an _offline_driver object
+    2. calls run(nstep)
+    3. calls gen_ds()
+    4. returns the resulting ds
+    """
     domain_dict = dict()
     domain_dict['bathymetry'] = ds['bathymetry']
     domain_dict['NX'] = len(ds['X'])
     forcing = ds[['T_pelagic', 'T_bottom', 'poc_flux_bottom', 'zooC', 'zoo_mort']]
     fish_ic_data = ds['fish_ic']
     benthic_prey_ic_data = ds['bent_ic']
-    feisty_driver = offline_driver(
+    feisty_driver = _offline_driver(
         domain_dict,
         forcing,
         start_date,
@@ -697,50 +661,6 @@ def config_and_run_from_dataset(
         diagnostic_names=diagnostic_names,
         max_output_time_dim=max_output_time_dim,
     )
-    feisty_driver.run(nstep)
+    feisty_driver.run(nstep, method=method)
     feisty_driver.gen_ds()
     return feisty_driver.ds
-
-
-def _solve_parallel(
-    state_t,
-    _ds,
-    forcing,
-    domain_ds,
-    fish_ic_data,
-    benthic_prey_ic_data,
-    _forcing_time,
-    start_date,
-    ignore_year_in_forcing,
-    settings_in,
-    biomass_init_file,
-    allow_negative_forcing,
-    diagnostic_names,
-    max_output_time_dim,
-    nt_loc,
-    method,
-):
-    domain_dict = dict()
-    domain_dict['NX'] = len(domain_ds.X)
-    domain_dict['bathymetry'] = domain_ds
-    # 1. create new driver for each chunk
-    small_driver = offline_driver(
-        domain_dict,
-        forcing,
-        start_date,
-        ignore_year_in_forcing,
-        settings_in,
-        fish_ic_data.data,
-        benthic_prey_ic_data.data,
-        biomass_init_file,
-        allow_negative_forcing,
-        diagnostic_names,
-        max_output_time_dim,
-    )
-    small_driver.ds_ind = 0
-    small_driver._ds_list = [_ds]
-    small_driver.state_t = state_t
-    small_driver._forcing_time = _forcing_time
-
-    small_driver._solve(nt_loc, method)
-    return small_driver._ds_list[0]
