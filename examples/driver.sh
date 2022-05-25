@@ -6,6 +6,7 @@
 #PBS -l walltime=01:00:00
 #PBS -q casper
 #PBS -j oe
+#PBS -m abe
 
 # Just run
 # $ qsub FOSI_cesm.sh

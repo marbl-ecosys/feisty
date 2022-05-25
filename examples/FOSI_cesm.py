@@ -9,6 +9,7 @@ import time
 
 import dask_mpi
 import xarray as xr
+import yaml
 from dask.distributed import Client
 
 import feisty
@@ -20,43 +21,23 @@ import feisty
 # First thing to do: initialize dask-mpi
 dask_mpi.initialize()
 
-parameters = dict()
-parameters[
-    'num_chunks'
-] = 18  # number of dask chunks to break data into; this is the number of parallel tasks that will be run
-parameters[
-    'ignore_year_in_forcing'
-] = False  # For a spin-up run, generate a dataset with a single year of forcing and set this to true
-parameters['nyears'] = 62  # 50 # Length of run (for FOSI, there are 68 years of forcing)
-parameters[
-    'start_date'
-] = '0249-01-01'  # Match calendar for forcing, which kept the CESM mid-month dates from the run: 0249-01-15 through 0316-12-15
-parameters[
-    'settings_in'
-] = {}  # default settings in feisty/core/default_settings.yaml are correct for FOSI
-parameters['diagnostic_names'] = []  # only want biomass in output
-parameters['max_output_time_dim'] = 365  # break up output into 1-year chunks
-parameters['method'] = 'euler'  # only available time-stepping method at this time
+# read parameters from yaml
+with open('params.yaml', 'r') as f:
+    parameters = yaml.safe_load(f)
 
-# FEISTY has a script that can read forcing / initial condition files and generate the necessary dataset
-# (1) provide paths to netcdf files containing forcing and ic
-feisty_data_root = os.path.join(os.sep, 'glade', 'work', 'mlevy', 'codes', 'feisty', 'input_files')
-parameters['forcing_file'] = os.path.join(feisty_data_root, 'feisty_input_from_FOSI_monthly.nc')
-parameters['ic_file'] = os.path.join(feisty_data_root, 'FOSI_cesm_init_200yr.nc')
-parameters['output_file'] = f'FOSI_cesm.{parameters["nyears"]}_yr.nc'
+# generate output_file from other parameters
+parameters['output_file'] = f'{parameters["run_name"]}.{parameters["nyears"]}_yr.nc'
 if os.path.isfile(parameters['output_file']):
     print(f'{parameters["output_file"]} exists, removing now...')
     os.remove(parameters['output_file'])
 
-# (2) provide a dictionary containing any variables that need to be renamed
-forcing_rename = dict()
-forcing_rename['time'] = 'forcing_time'
-forcing_rename['dep'] = 'bathymetry'
+# provide a dictionary containing any variables that need to be renamed
+parameters['forcing_rename']['time'] = 'forcing_time'
 ds = feisty.utils.generate_single_ds_for_feisty(
     num_chunks=parameters['num_chunks'],
     forcing_file=parameters['forcing_file'],
     ic_file=parameters['ic_file'],
-    forcing_rename=forcing_rename,
+    forcing_rename=parameters['forcing_rename'],
 )
 
 print(ds)
@@ -73,7 +54,6 @@ template = feisty.utils.generate_template(
 print(template)
 print('\n----\n')
 
-# sys.exit(0)
 ###############
 # Set up dask #
 ###############
