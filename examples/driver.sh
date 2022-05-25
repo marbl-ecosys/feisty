@@ -9,7 +9,7 @@
 #PBS -m abe
 
 # Just run
-# $ qsub FOSI_cesm.sh
+# $ qsub driver.sh
 # To put this in the queue instead of running interactively
 conda activate dev-feisty
-mpirun -n 20 ./FOSI_cesm.py
+mpirun -n 20 ./FEISTY_driver.py
