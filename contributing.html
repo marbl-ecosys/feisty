@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Contributing to the FEISTY model &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -19,8 +20,8 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -30,20 +31,20 @@
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
-    <script >let toggleHintShow = 'Click to show';</script>
-    <script >let toggleHintHide = 'Click to hide';</script>
-    <script >let toggleOpenOnPrint = 'true';</script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="_static/design-tabs.js"></script>
-    <script >const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
@@ -105,7 +106,7 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs..." aria-label="Search the docs..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <p class="caption">
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Scientific documentation
  </span>
@@ -117,7 +118,7 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
-<p class="caption">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   User guide
  </span>
@@ -210,7 +211,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
 </ul>
-<p class="caption">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Developer guide
  </span>
@@ -359,7 +360,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
 </ul>
-<p class="caption">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   References
  </span>
@@ -602,14 +603,14 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="section" id="contributing-to-the-feisty-model">
+  <section id="contributing-to-the-feisty-model">
 <h1>Contributing to the FEISTY model<a class="headerlink" href="#contributing-to-the-feisty-model" title="Permalink to this headline">#</a></h1>
 <p>Contributions are highly welcomed and appreciated.</p>
 <p>The following sections cover some general guidelines
 regarding development in feisty for maintainers and contributors.
 Nothing here is set in stone and can’t be changed.
 Feel free to suggest improvements or changes in the workflow.</p>
-<div class="section" id="developing-feisty">
+<section id="developing-feisty">
 <span id="pull-requests"></span><h2>Developing FEISTY<a class="headerlink" href="#developing-feisty" title="Permalink to this headline">#</a></h2>
 <p>The best approach to contributing to the FEISTY code or documentation is to fork the repository, clone your fork locally, apply your edits, push back to your fork, then submit a pull request on GitHub.</p>
 <p>Here are some detailed instructions describing these steps.</p>
@@ -670,8 +671,8 @@ $ git push -u
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="write-documentation">
+</section>
+<section id="write-documentation">
 <span id="documentation"></span><h2>Write documentation<a class="headerlink" href="#write-documentation" title="Permalink to this headline">#</a></h2>
 <p>Documentation is critical to enabling a robust, usable code base. Documentation files are is in the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> directory and are built with the <a class="reference external" href="https://jupyterbook.org/intro.html">Jupyter Book</a> utility. Documentation files can be Jupyter Notebooks, <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/">MyST Markdown</a>, or <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reStructuredText</a>. The layout of the documentation is expressed in <code class="docutils literal notranslate"><span class="pre">docs/_toc.yml</span></code>.</p>
 <p>Documentation is built automatically using GitHub Actions.</p>
@@ -689,12 +690,12 @@ $  jupyter-book build docs/ --all
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="feature-requests-and-feedback">
+</section>
+<section id="feature-requests-and-feedback">
 <span id="submitfeedback"></span><h2>Feature requests and feedback<a class="headerlink" href="#feature-requests-and-feedback" title="Permalink to this headline">#</a></h2>
 <p>Feature requests, bug reports and questions can be submitted via the GitHub <a class="reference external" href="https://github.com/marbl-ecosys/feisty/issues">issue tracker</a>.</p>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
