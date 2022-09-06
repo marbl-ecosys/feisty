@@ -3,7 +3,6 @@ nyears: 62
 num_chunks: 18
 ignore_year_in_forcing: False
 start_date: '0249-01-01'
-settings_in: {}
 diagnostic_names: []
 max_output_time_dim: 365
 method: euler
@@ -11,3 +10,6 @@ forcing_file: /glade/work/mlevy/codes/feisty/input_files/feisty_input_from_FOSI_
 forcing_rename:
   dep: bathymetry
 ic_file: /glade/work/mlevy/codes/feisty/input_files/FOSI_cesm_init_200yr.nc
+
+# FEISTY parameters (empty dict => use defaults)
+settings_in: {}

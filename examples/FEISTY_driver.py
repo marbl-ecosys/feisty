@@ -76,8 +76,12 @@ with Client() as c:
         ),
         template=template,
     ).compute()
+    # if output_file is .zarr, skip compute() and call to_zarr() here
+    # could also write to zarr, then read zarr and write to netcdf
 
-ds_out.to_netcdf(parameters['output_file'])
+# omit .compute and write to zarr?
+if parameters['output_file']:
+    ds_out.to_netcdf(parameters['output_file'])
 
 print(f'Finished at {time.strftime("%H:%M:%S")}')
 print(ds_out.isel(X=55000))
