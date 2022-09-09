@@ -1,4 +1,5 @@
-This file describes the variables needed in params.yaml
+This file describes the variables needed in a parameters YAML file
+(e.g. FOSI.yaml or hires_companion.yaml).
 
 run_name -- short name of the experiment, will be used in output file
 
@@ -12,8 +13,6 @@ of forcing and set this to True (useful for spinup run)
 
 start_date -- first date to use for forcing the model
 
-settings_in -- can override defaults from feisty/core/default_settings.yaml
-
 diagnostic_names -- list any diagnostics to add to output;
 by default, biomass is the only variable written
 
@@ -21,8 +20,10 @@ max_output_time_dim -- number of time steps per ds_list dataset (default: 365)
 
 method -- time-stepping method ('euler' is only available option at this time)
 
-forcing_file -- file containing forcing fields
+forcing_file -- file (or list of files) containing forcing fields
 
 forcing_rename -- dictionary of variables to rename in forcing_file
 
-ic_file -- file containing initial conditions
+ic_file -- file containing initial conditions; set to null to spin up from constant values
+
+settings_in -- can override defaults from feisty/core/default_settings.yaml

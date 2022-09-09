@@ -9,7 +9,9 @@ method: euler
 forcing_file: /glade/work/mlevy/codes/feisty/input_files/feisty_input_from_FOSI_monthly.nc
 forcing_rename:
   dep: bathymetry
+  time: forcing_time
 ic_file: /glade/work/mlevy/codes/feisty/input_files/FOSI_cesm_init_200yr.nc
+output_file: FOSI_cesm.full_cycle.nc
 
 # FEISTY parameters (empty dict => use defaults)
 settings_in: {}

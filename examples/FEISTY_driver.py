@@ -22,17 +22,16 @@ import feisty
 dask_mpi.initialize()
 
 # read parameters from yaml
-with open('params.yaml', 'r') as f:
+with open('FOSI.yaml', 'r') as f:
     parameters = yaml.safe_load(f)
 
-# generate output_file from other parameters
-parameters['output_file'] = f'{parameters["run_name"]}.{parameters["nyears"]}_yr.nc'
+# generate output_file from other parameters (if it is not specified in YAML)
+if 'output_file' not in parameters:
+    parameters['output_file'] = f'{parameters["run_name"]}.{parameters["nyears"]}_yr.nc'
 if os.path.isfile(parameters['output_file']):
     print(f'{parameters["output_file"]} exists, removing now...')
     os.remove(parameters['output_file'])
 
-# provide a dictionary containing any variables that need to be renamed
-parameters['forcing_rename']['time'] = 'forcing_time'
 ds = feisty.utils.generate_single_ds_for_feisty(
     num_chunks=parameters['num_chunks'],
     forcing_file=parameters['forcing_file'],

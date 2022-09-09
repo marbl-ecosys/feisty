@@ -1,4 +1,5 @@
 import time
+from dataclasses import dataclass
 
 import numpy as np
 import xarray as xr
@@ -23,6 +24,40 @@ def generate_ic_ds_for_feisty(
     return ds_ic
 
 
+def generate_1D_to_2D_pop_map(forcing_file):
+    if type(forcing_file) == list:
+        ds = xr.open_dataset(forcing_file[0])
+    else:
+        ds = xr.open_dataset(forcing_file)
+    nlat = len(ds['nlat'])
+    nlon = len(ds['nlon'])
+    ds = ds.stack(X=('nlat', 'nlon'))
+    da = xr.zeros_like(ds['HT'])
+    da.data = range(len(da.X))
+    ds_out = da.where(ds['HT'] > 0, drop=True).astype(np.int64).to_dataset(name='map')
+    ds_out['nlat_dimsize'] = nlat
+    ds_out['nlon_dimsize'] = nlon
+    return ds_out
+
+
+def map_ds_back_to_2D_pop(ds, map):
+    time = len(ds['time'])
+    group = len(ds['group'])
+    full_data = np.full((time, group, map['nlat_dimsize'].data * map['nlon_dimsize'].data), np.nan)
+    full_data[:, :, map['map'].data] = ds['biomass'].data[:, :, :]
+    full_data = full_data.reshape(time, group, map['nlat_dimsize'].data, map['nlon_dimsize'].data)
+    ds_new = xr.Dataset(
+        data_vars=dict(
+            biomass=(['time', 'group', 'nlat', 'nlon'], full_data),
+        ),
+        coords=dict(
+            time=ds['time'].data,
+            group=ds['group'].data,
+        ),
+    )
+    return ds_new
+
+
 def generate_single_ds_for_feisty(
     num_chunks,
     forcing_file,
@@ -32,19 +67,28 @@ def generate_single_ds_for_feisty(
     forcing_rename={},
     ic_rename={},
     allow_negative_forcing=False,
-    nX=85813,
 ):
     print(f'Starting forcing dataset generation at {time.strftime("%H:%M:%S")}')
-    if num_chunks > 1:
-        nX = 85813
-        chunks = dict(X=(nX - 1) // num_chunks + 1)
-    else:
-        chunks = {}
 
     # Read forcing file, and add zooplankton dimension if necessary
-    ds = xr.open_dataset(forcing_file).rename(forcing_rename)
-    if chunks:
+    if type(forcing_file) == list:
+        ds = xr.open_mfdataset(
+            forcing_file, parallel=False, data_vars='minimal', compat='override', coords='minimal'
+        ).rename(forcing_rename)
+        ds = ds[['bathymetry', 'poc_flux_bottom', 'zooC', 'zoo_mort', 'T_bottom', 'T_pelagic']]
+        ds = ds.drop_vars(
+            ['TLAT', 'TLONG', 'ULAT', 'ULONG']
+        ).load()  # avoid tasks involving these vars in task graph?
+    else:
+        ds = xr.open_dataset(forcing_file).rename(forcing_rename)
+    if 'X' not in ds.dims:
+        ds_tmp = ds.stack(X=('nlat', 'nlon'))
+        ds = ds_tmp.where(ds_tmp.bathymetry > 0, drop=True)
+    if num_chunks > 1:
+        chunks = dict(X=(len(ds.X) - 1) // num_chunks + 1)
         ds = ds.chunk(chunks)
+    else:
+        chunks = {}
     if not allow_negative_forcing:
         for varname in ['poc_flux_bottom', 'zooC', 'zoo_mort']:
             ds[varname].data = np.where(ds[varname].data > 0, ds[varname].data, 0)
