@@ -12,4 +12,4 @@
 # $ qsub driver.sh
 # To put this in the queue instead of running interactively
 conda activate dev-feisty
-mpirun -n 20 ./FEISTY_driver.py
+mpirun -n 20 ./FEISTY_driver.py -f highres_companion.yaml

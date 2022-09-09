@@ -22,6 +22,7 @@ forcing_rename:
   TEMP_mean_100m: T_pelagic
 ic_file: null
 output_file: highres_companion.10_yr.nc
+output_in_2D: True
 
 # FEISTY parameters (empty dict => use defaults)
 settings_in: {}

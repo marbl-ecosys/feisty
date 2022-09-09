@@ -21,16 +21,24 @@ import feisty
 # First thing to do: initialize dask-mpi
 dask_mpi.initialize()
 
-# read parameters from yaml
-with open('FOSI.yaml', 'r') as f:
-    parameters = yaml.safe_load(f)
+import argparse
 
-# generate output_file from other parameters (if it is not specified in YAML)
-if 'output_file' not in parameters:
-    parameters['output_file'] = f'{parameters["run_name"]}.{parameters["nyears"]}_yr.nc'
-if os.path.isfile(parameters['output_file']):
-    print(f'{parameters["output_file"]} exists, removing now...')
-    os.remove(parameters['output_file'])
+parser = argparse.ArgumentParser(description='Offline driver for FEISTY')
+parser.add_argument(
+    '-f',
+    '--yaml_file',
+    action='store',
+    default='FOSI.yaml',
+    dest='yaml_file',
+    help='YAML file containing configuration settings for FEISTY',
+)
+args = parser.parse_args()
+if not os.path.isfile(args.yaml_file):
+    raise FileNotFoundError(f'"{args.yaml_file}" can not be found')
+
+# read parameters from yaml
+with open(args.yaml_file, 'r') as f:
+    parameters = yaml.safe_load(f)
 
 ds = feisty.utils.generate_single_ds_for_feisty(
     num_chunks=parameters['num_chunks'],
@@ -80,9 +88,17 @@ with Client() as c:
 
 # omit .compute and write to zarr?
 if parameters['output_file']:
-    ds_out.to_netcdf(parameters['output_file'])
+    if os.path.isfile(parameters['output_file']):
+        print(f'{parameters["output_file"]} exists, removing now...')
+        os.remove(parameters['output_file'])
+
+    if parameters.get('output_in_2D', False):
+        map_ds = feisty.utils.generate_1D_to_2D_pop_map(parameters['forcing_file'])
+        ds_out2 = feisty.utils.map_ds_back_to_2D_pop(ds_out, map_ds)
+        ds_out2.to_netcdf(parameters['output_file'])
+    else:
+        ds_out.to_netcdf(parameters['output_file'])
 
 print(f'Finished at {time.strftime("%H:%M:%S")}')
-print(ds_out.isel(X=55000))
 
 # dask_mpi.send_close_signal()
