@@ -12,6 +12,7 @@ parts:
       - file: api-interface
       - file: api-testcase
       - file: api-driver
+      - file: matlab-comparison
       - file: settings
         sections:
           - file: settings-show-defaults

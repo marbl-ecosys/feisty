@@ -4,14 +4,19 @@ channels:
 dependencies:
   - codecov
   - dask
+  - dask-mpi
+  - dask-jobqueue
   - jupyter
   - jupyter-book
   - jupyter_client==6.1.12
   - jupyterlab
   - matplotlib
+  - mpich
+  - mpi4py
   - myst-nb
   - nbformat
   - nbsphinx
+  - nc-time-axis
   - netcdf4
   - numpydoc
   - pip
@@ -23,3 +28,5 @@ dependencies:
   - pip:
       - sphinx-click
       - sphinxcontrib-autoyaml
+      - git+https://github.com/dask/dask-mpi.git
+      - '--editable=..'

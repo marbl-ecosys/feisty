@@ -39,9 +39,8 @@ Process
    compute_consumption
    compute_rescale_zoo_consumption
    compute_ingestion
-   compute_predation biomass, food_web):
+   compute_predation
    compute_natural_mortality
-   compute_benthic_biomass_update
    compute_energy_avail
    compute_growth
    compute_reproduction

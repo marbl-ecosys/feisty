@@ -22,7 +22,7 @@ for i in range(len(settings_dict_def['food_web'])):
 
 
 fish_ic_data = 1e-5
-benthic_prey_ic_data = 1e-4
+benthic_prey_ic_data = 2e-3
 
 n_zoo = len(settings_dict_def['zooplankton']['members'])
 n_fish = len(settings_dict_def['fish']['members'])
@@ -78,8 +78,8 @@ def test_reproduction_routing_bad_is_larval():
 def test_domain_values():
     """test domain module init"""
 
-    assert domain._N_points == domain_dict['NX']
-    assert (domain.ocean_depth == domain_dict['bathymetry']).all()
+    assert F.domain_params._N_points == domain_dict['NX']
+    assert (F.domain_params.ocean_depth == domain_dict['bathymetry']).all()
 
 
 def test_domain_bad_bathymetry():
@@ -96,26 +96,26 @@ def test_ecosystem_init():
     """ensure all ecosystem module vars are initialized"""
 
     # make sure module variables have been initialized
-    assert ecosystem._size_class_masses
-    assert ecosystem._size_class_bnds_ratio
-    assert ecosystem.functional_types
-    assert ecosystem.mortality_types
+    assert F.ecosys_params._size_class_masses
+    assert F.ecosys_params._size_class_bnds_ratio
+    assert F.ecosys_params.functional_types
+    assert F.ecosys_params.mortality_types
 
     # check some 1:1 values
     assert (
-        ecosystem.PI_be_cutoff
+        F.ecosys_params.PI_be_cutoff
         == settings_dict_def['model_settings']['benthic_pelagic_depth_cutoff']
     )
-    assert set(ecosystem._pdc_type_keys) == set(
+    assert set(F.ecosys_params._pdc_type_keys) == set(
         settings_dict_def['model_settings']['pelagic_demersal_coupling_type_keys']
     )
-    assert ecosystem._pelagic_functional_type_keys == set(
+    assert F.ecosys_params._pelagic_functional_type_keys == set(
         settings_dict_def['model_settings']['pelagic_functional_type_keys']
     )
-    assert ecosystem._demersal_functional_type_keys == set(
+    assert F.ecosys_params._demersal_functional_type_keys == set(
         settings_dict_def['model_settings']['demersal_functional_type_keys']
     )
-    assert ecosystem._zooplankton_functional_type_keys == set(
+    assert F.ecosys_params._zooplankton_functional_type_keys == set(
         settings_dict_def['model_settings']['zooplankton_functional_type_keys']
     )
 
@@ -125,21 +125,25 @@ def test_ecosystem_size_class_bounds():
     size_class_bounds = settings_dict_def['model_settings']['size_class_bounds']
     # ensure size classes init
     for name, size_bounds in size_class_bounds.items():
-        assert ecosystem._size_class_masses[name] == np.power(10.0, np.log10(size_bounds).mean())
-        assert ecosystem._size_class_bnds_ratio[name] == size_bounds[0] / size_bounds[1]
+        assert F.ecosys_params._size_class_masses[name] == np.power(
+            10.0, np.log10(size_bounds).mean()
+        )
+        assert F.ecosys_params._size_class_bnds_ratio[name] == size_bounds[0] / size_bounds[1]
 
 
 def test_func_type_init():
     func_types_expected = settings_dict_def['model_settings']['functional_type_keys']
 
     # ensure all are present
-    assert set(ecosystem.functional_types.keys()) == set(func_types_expected)
+    assert set(F.ecosys_params.functional_types.keys()) == set(func_types_expected)
 
     # ensure no extras
-    assert len(ecosystem.functional_types.keys()) == len(func_types_expected)
+    assert len(F.ecosys_params.functional_types.keys()) == len(func_types_expected)
 
     # ensure unique entries
-    assert len(set(ecosystem.functional_types.values())) == len(ecosystem.functional_types.values())
+    assert len(set(F.ecosys_params.functional_types.values())) == len(
+        F.ecosys_params.functional_types.values()
+    )
 
 
 def test_bad_func_type_fails():

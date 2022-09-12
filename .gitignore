@@ -104,4 +104,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# dask stuff
+**/dask-worker.*
+
 .DS_Store
