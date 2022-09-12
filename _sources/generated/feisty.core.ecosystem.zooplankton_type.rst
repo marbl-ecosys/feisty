@@ -14,6 +14,7 @@
    .. autosummary::
    
       ~zooplankton_type.__init__
+      ~zooplankton_type.is_demersal
    
    
 

@@ -193,6 +193,17 @@ const thebe_selector_output = ".output, .cell_output"
    FEISTY Driver
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="matlab-comparison.html">
+   Comparing with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     matlab
+    </span>
+   </code>
+   Baselines
+  </a>
+ </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="settings.html">
    FEISTY Settings
@@ -622,6 +633,14 @@ title="Print to PDF"
 <p>Setup a <code class="docutils literal notranslate"><span class="pre">feisty</span></code> integration.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">import</span> <span class="nn">feisty</span>
@@ -633,7 +652,32 @@ title="Print to PDF"
 <h2>Configure testcase to run<a class="headerlink" href="#configure-testcase-to-run" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">testcase</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_testcase</span><span class="p">(</span><span class="s2">&quot;tanh_shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;cyclic&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">settings_in</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">settings_in</span><span class="p">[</span><span class="s2">&quot;benthic_prey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;defaults&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;benthic_efficiency&quot;</span><span class="p">:</span> <span class="mf">0.075</span><span class="p">,</span> <span class="s2">&quot;carrying_capacity&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;benthic_prey&quot;</span><span class="p">}],</span>
+<span class="p">}</span>
+<span class="n">settings_in</span><span class="p">[</span><span class="s2">&quot;food_web&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Sf&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Zoo&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Sp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Zoo&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Sd&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Zoo&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mf&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Zoo&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">0.45</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mf&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Sf&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mf&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Sp&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mf&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Sd&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Zoo&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">0.45</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Sf&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Sp&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Mp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Sd&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Md&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;benthic_prey&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Lp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Mf&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Lp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Mp&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Lp&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Md&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Ld&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Mf&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">0.375</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Ld&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Mp&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Ld&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;Md&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;predator&quot;</span><span class="p">:</span> <span class="s2">&quot;Ld&quot;</span><span class="p">,</span> <span class="s2">&quot;prey&quot;</span><span class="p">:</span> <span class="s2">&quot;benthic_prey&quot;</span><span class="p">,</span> <span class="s2">&quot;preference&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+<span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -643,7 +687,42 @@ title="Print to PDF"
 <h2>Run the model<a class="headerlink" href="#run-the-model" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">testcase</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">730</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_out</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_and_run_testcase</span><span class="p">(</span>
+    <span class="s2">&quot;tanh_shelf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cyclic&quot;</span><span class="p">,</span>
+    <span class="mi">730</span><span class="p">,</span>
+    <span class="n">settings_in</span><span class="o">=</span><span class="n">settings_in</span><span class="p">,</span>
+    <span class="n">diagnostic_names</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;T_habitat&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ingestion_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;predation_flux&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;predation_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;metabolism_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mortality_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;energy_avail_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;growth_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reproduction_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;recruitment_flux&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fish_catch_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;encounter_rate_link&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;encounter_rate_total&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;consumption_rate_max_pred&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;consumption_rate_link&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.10/site-packages/xarray/core/dataset.py:2172: FutureWarning: None value for &#39;chunks&#39; is deprecated. It will raise an error in the future. Use instead &#39;{}&#39;
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting template generation at 14:44:48
+Starting run() at 14:44:48
+Integrating 730 steps (starting at 14:44:48)
+Starting a new output dataset for timestep 365 (14:44:58)
+Finished _solve at 14:45:08
 </pre></div>
 </div>
 </div>
@@ -654,27 +733,26 @@ title="Print to PDF"
 <h1>Output<a class="headerlink" href="#output" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_out</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>xarray.Dataset {
 dimensions:
-	X = 22 ;
-	group = 9 ;
 	time = 730 ;
+	group = 9 ;
+	X = 22 ;
 	fish = 8 ;
 	feeding_link = 19 ;
 
 variables:
+	object time(time) ;
+	object group(group) ;
 	float64 X(X) ;
-	&lt;U12 group(group) ;
+	object fish(fish) ;
+	object feeding_link(feeding_link) ;
 	float64 biomass(time, group, X) ;
-	&lt;U2 fish(fish) ;
-	&lt;U15 feeding_link(feeding_link) ;
-	&lt;U2 predator(feeding_link) ;
-	&lt;U12 prey(feeding_link) ;
 	float64 T_habitat(time, fish, X) ;
 	float64 ingestion_rate(time, fish, X) ;
 	float64 predation_flux(time, fish, X) ;
@@ -690,7 +768,8 @@ variables:
 	float64 encounter_rate_total(time, fish, X) ;
 	float64 consumption_rate_max_pred(time, fish, X) ;
 	float64 consumption_rate_link(time, feeding_link, X) ;
-	object time(time) ;
+	&lt;U2 predator(feeding_link) ;
+	&lt;U12 prey(feeding_link) ;
 
 // global attributes:
 }
@@ -700,9 +779,9 @@ variables:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_ds</span> <span class="o">=</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_ds</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-    <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">4e-6</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">test_ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">));</span>
@@ -710,7 +789,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/driver-example_8_0.png" src="_images/driver-example_8_0.png" />
+<img alt="_images/driver-example_9_0.png" src="_images/driver-example_9_0.png" />
 </div>
 </div>
 </section>

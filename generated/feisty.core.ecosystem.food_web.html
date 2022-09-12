@@ -193,6 +193,17 @@ const thebe_selector_output = ".output, .cell_output"
    FEISTY Driver
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../matlab-comparison.html">
+   Comparing with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     matlab
+    </span>
+   </code>
+   Baselines
+  </a>
+ </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../settings.html">
    FEISTY Settings
@@ -550,11 +561,11 @@ title="Print to PDF"
 <h1>feisty.core.ecosystem.food_web<a class="headerlink" href="#feisty-core-ecosystem-food-web" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="feisty.core.ecosystem.food_web">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">feisty.core.ecosystem.</span></span><span class="sig-name descname"><span class="pre">food_web</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feeding_settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_obj_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.ecosystem.food_web" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">feisty.core.ecosystem.</span></span><span class="sig-name descname"><span class="pre">food_web</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feeding_settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_obj_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mod_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.ecosystem.food_web" title="Permalink to this definition">#</a></dt>
 <dd><p>Data structure defining feeding relationships.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="feisty.core.ecosystem.food_web.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feeding_settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_obj_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.ecosystem.food_web.__init__" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feeding_settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_obj_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mod_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#feisty.core.ecosystem.food_web.__init__" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -564,13 +575,13 @@ title="Print to PDF"
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#feisty.core.ecosystem.food_web.__init__" title="feisty.core.ecosystem.food_web.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(feeding_settings, member_obj_list)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#feisty.core.ecosystem.food_web.__init__" title="feisty.core.ecosystem.food_web.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(feeding_settings, member_obj_list, ...)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_consumption</span></code>(consumption[, predator, prey])</p></td>
 <td><p>get the total consumption rate across all prey</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_prey_biomass</span></code>(biomass, predator[, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_prey_biomass</span></code>(biomass, predator, mod_params)</p></td>
 <td><p>Return biomass of prey.</p></td>
 </tr>
 </tbody>

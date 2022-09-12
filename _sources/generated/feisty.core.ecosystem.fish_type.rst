@@ -14,6 +14,7 @@
    .. autosummary::
    
       ~fish_type.__init__
+      ~fish_type.is_demersal
    
    
 
@@ -23,7 +24,6 @@
 
    .. autosummary::
    
-      ~fish_type.is_demersal
       ~fish_type.is_small
    
    

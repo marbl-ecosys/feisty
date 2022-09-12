@@ -193,6 +193,17 @@ const thebe_selector_output = ".output, .cell_output"
    FEISTY Driver
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="matlab-comparison.html">
+   Comparing with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     matlab
+    </span>
+   </code>
+   Baselines
+  </a>
+ </li>
  <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="settings.html">
    FEISTY Settings
@@ -561,15 +572,202 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">feisty</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">defaults</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_defaults</span><span class="p">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;feisty&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loffline: true
+model_settings:
+  size_class_bounds:
+    small:
+    - 0.001
+    - 0.5
+    medium:
+    - 0.5
+    - 250.0
+    large:
+    - 250.0
+    - 125000.0
+  functional_type_keys:
+  - zooplankton
+  - forage
+  - piscivore
+  - demersal
+  - benthic_prey
+  pelagic_demersal_coupling_type_keys:
+  - piscivore
+  - demersal
+  zooplankton_functional_type_keys:
+  - zooplankton
+  pelagic_functional_type_keys:
+  - forage
+  - piscivore
+  demersal_functional_type_keys:
+  - demersal
+  - benthic_prey
+  pelagic_demersal_coupling_apply_pref_type_keys:
+  - demersal
+  benthic_pelagic_depth_cutoff: 200.0
+zooplankton:
+  defaults: {}
+  members:
+  - name: Zoo
+fish:
+  defaults:
+    k_metabolism: 0.0855
+    a_metabolism: 4.0
+    b_metabolism: 0.175
+    k_encounter: 0.063
+    a_encounter: 70.0
+    b_encounter: 0.2
+    k_consumption: 0.063
+    a_consumption: 20.0
+    b_consumption: 0.25
+    mortality_type: constant
+    mortality_coeff_per_yr: 0.1
+    assim_efficiency: 0.7
+  members:
+  - name: Sf
+    size_class: small
+    functional_type: forage
+    t_frac_pelagic_static: 1.0
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.0
+    energy_frac_somatic_growth: 1.0
+  - name: Sp
+    size_class: small
+    functional_type: piscivore
+    t_frac_pelagic_static: 1.0
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.0
+    energy_frac_somatic_growth: 1.0
+  - name: Sd
+    size_class: small
+    functional_type: demersal
+    t_frac_pelagic_static: 1.0
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.0
+    energy_frac_somatic_growth: 1.0
+  - name: Mf
+    size_class: medium
+    functional_type: forage
+    t_frac_pelagic_static: 1.0
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 1.0
+    energy_frac_somatic_growth: 0.5
+  - name: Mp
+    size_class: medium
+    functional_type: piscivore
+    t_frac_pelagic_static: 1.0
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.1
+    energy_frac_somatic_growth: 1.0
+  - name: Md
+    size_class: medium
+    functional_type: demersal
+    t_frac_pelagic_static: 0.0
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 0.1
+    energy_frac_somatic_growth: 1.0
+  - name: Lp
+    size_class: large
+    functional_type: piscivore
+    t_frac_pelagic_static: 1.0
+    pelagic_demersal_coupling: false
+    harvest_selectivity: 1.0
+    energy_frac_somatic_growth: 0.5
+  - name: Ld
+    size_class: large
+    functional_type: demersal
+    t_frac_pelagic_static: 0.0
+    pelagic_demersal_coupling: true
+    harvest_selectivity: 1.0
+    energy_frac_somatic_growth: 0.5
+benthic_prey:
+  defaults:
+    benthic_efficiency: 0.075
+    carrying_capacity: 80.0
+  members:
+  - name: benthic_prey
+food_web:
+- predator: Sf
+  prey: Zoo
+  preference: 0.9
+- predator: Sp
+  prey: Zoo
+  preference: 0.9
+- predator: Sd
+  prey: Zoo
+  preference: 0.9
+- predator: Mf
+  prey: Zoo
+  preference: 0.45
+- predator: Mf
+  prey: Sf
+  preference: 1.0
+- predator: Mf
+  prey: Sp
+  preference: 1.0
+- predator: Mf
+  prey: Sd
+  preference: 1.0
+- predator: Mp
+  prey: Zoo
+  preference: 0.45
+- predator: Mp
+  prey: Sf
+  preference: 1.0
+- predator: Mp
+  prey: Sp
+  preference: 1.0
+- predator: Mp
+  prey: Sd
+  preference: 1.0
+- predator: Md
+  prey: benthic_prey
+  preference: 1.0
+- predator: Lp
+  prey: Mf
+  preference: 0.5
+- predator: Lp
+  prey: Mp
+  preference: 1.0
+- predator: Lp
+  prey: Md
+  preference: 1.0
+- predator: Ld
+  prey: Mf
+  preference: 0.375
+- predator: Ld
+  prey: Mp
+  preference: 0.75
+- predator: Ld
+  prey: Md
+  preference: 1.0
+- predator: Ld
+  prey: benthic_prey
+  preference: 1.0
+reproduction_routing:
+- from: Mf
+  to: Sf
+  efficiency: 0.01
+  is_larval: true
+- from: Lp
+  to: Sp
+  efficiency: 0.01
+  is_larval: true
+- from: Ld
+  to: Sd
+  efficiency: 0.01
+  is_larval: true
+- from: Sf
+  to: Mf
+- from: Sp
+  to: Mp
+- from: Sd
+  to: Md
+- from: Mp
+  to: Lp
+- from: Md
+  to: Ld
+fishing:
+  fishing_rate_per_year: 0.3
 </pre></div>
 </div>
 </div>

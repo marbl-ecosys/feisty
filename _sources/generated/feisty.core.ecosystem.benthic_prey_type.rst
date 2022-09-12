@@ -14,15 +14,10 @@
    .. autosummary::
    
       ~benthic_prey_type.__init__
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
       ~benthic_prey_type.is_demersal
+   
+   
+
+   
    
    

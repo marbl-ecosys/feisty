@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Running the model &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
+    <title>Comparing with matlab Baselines &#8212; Fisheries Size and Functional Type model (FEISTY)</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -53,6 +53,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="FEISTY Settings" href="settings.html" />
+    <link rel="prev" title="FEISTY Driver" href="api-driver.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -121,7 +123,7 @@ const thebe_selector_output = ".output, .cell_output"
   User guide
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="usage.html">
    Usage
@@ -189,6 +191,17 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1">
   <a class="reference internal" href="api-driver.html">
    FEISTY Driver
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Comparing with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     matlab
+    </span>
+   </code>
+   Baselines
   </a>
  </li>
  <li class="toctree-l1 has-children">
@@ -543,8 +556,23 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#configure-testcase-to-run">
-   Configure testcase to run
+  <a class="reference internal nav-link" href="#additional-improvements">
+   Additional Improvements
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#running-the-model">
+   Running the model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configure-run">
+   Configure run
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#set-up-dask-cluster-if-chunking-data">
+   Set up Dask cluster (if chunking data)
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -561,7 +589,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Running the model</h1>
+                <h1>Comparing with matlab Baselines</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -572,8 +600,23 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#configure-testcase-to-run">
-   Configure testcase to run
+  <a class="reference internal nav-link" href="#additional-improvements">
+   Additional Improvements
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#running-the-model">
+   Running the model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configure-run">
+   Configure run
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#set-up-dask-cluster-if-chunking-data">
+   Set up Dask cluster (if chunking data)
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -591,8 +634,28 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="running-the-model">
-<h1>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="comparing-with-matlab-baselines">
+<h1>Comparing with <code class="docutils literal notranslate"><span class="pre">matlab</span></code> Baselines<a class="headerlink" href="#comparing-with-matlab-baselines" title="Permalink to this headline">#</a></h1>
+<p>This code is ported from <code class="docutils literal notranslate"><span class="pre">matlab</span></code> scripts.
+Before adding features, we tested a variety of simulations to ensure answers are close (typically within round-off) of the <code class="docutils literal notranslate"><span class="pre">matlab</span></code> solutions.</p>
+<p>First we ran a test case with 9 columns and analytic forcing fields, that can be run with <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'test_case'</span></code>.
+Next we read in forcing for three locations from netCDF files; that test can be run with <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'test_locs3'</span></code>.
+Finally, we read in forcing from the CESM FOSI run.
+For exact reproduction, that test can be run with <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'FOSI_cesm_daily'</span></code>.</p>
+<section id="additional-improvements">
+<h2>Additional Improvements<a class="headerlink" href="#additional-improvements" title="Permalink to this headline">#</a></h2>
+<p>After verifying we could reproduce the <code class="docutils literal notranslate"><span class="pre">matlab</span></code> solutions with daily forcing, we then added the ability to interpolate from monthly forcing.
+We also modified how the interpolation is done:</p>
+<ol class="simple">
+<li><p>We kept the dates from the CESM FOSI simulation, rather than assuming the output was evenly spaced 30 days apart each year</p></li>
+<li><p>We apply a floor of 0 for the zooplankton mortality, rather than using the minimum value over the calendar year</p></li>
+<li><p>We do not extrapolate prior to the first level or after the last time level; instead, we use the first or last level, respectively.</p></li>
+</ol>
+<p>Due to these changes, running <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'FOSI_cesm'</span></code> will not be within round-off of the <code class="docutils literal notranslate"><span class="pre">matlab</span></code> runs.
+Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'FOSI_cesm_spinup'</span></code> uses cyclic forcing from the first year but with the above changes to interpolation so the resulting initial conditions will not match the <code class="docutils literal notranslate"><span class="pre">matlab</span></code> output.</p>
+</section>
+<section id="running-the-model">
+<h2>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">#</a></h2>
 <p>Setup a <code class="docutils literal notranslate"><span class="pre">feisty</span></code> integration.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -604,142 +667,129 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">dask_jobqueue</span> <span class="kn">import</span> <span class="n">PBSCluster</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">compare_nc</span><span class="p">,</span> <span class="n">default_config</span><span class="p">,</span> <span class="n">old_settings</span>
 
 <span class="kn">import</span> <span class="nn">feisty</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.10/site-packages/dask_jobqueue/core.py:20: FutureWarning: tmpfile is deprecated and will be removed in a future release. Please use dask.utils.tmpfile instead.
+  from distributed.utils import tmpfile
+</pre></div>
 </div>
-<section id="configure-testcase-to-run">
-<h2>Configure testcase to run<a class="headerlink" href="#configure-testcase-to-run" title="Permalink to this headline">#</a></h2>
-<p>TODO: this is using the first column (which I believe is shallowest); want to add deepest column as well.
-That will require refactoring the yaml file and also changing test_ds.</p>
+</div>
+</div>
+</section>
+<section id="configure-run">
+<h2>Configure run<a class="headerlink" href="#configure-run" title="Permalink to this headline">#</a></h2>
+<p>There are a few options on how to run:</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_case</span></code> uses an idealized testcase where forcing and depth are computed analytically</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_locs3</span></code> is a simple model where three columns were pulled from a larger run for quick testing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FOSI_spinup</span></code> cycles through the first year of 68 years of forcing generated from a CESM; its purpose is to provide equilibriated initial conditions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FOSI_cesm</span></code> uses initial conditions from <code class="docutils literal notranslate"><span class="pre">FOSI_spinup</span></code> but the full 68 years of forcing from CESM to allow biomass to evolve</p></li>
+</ol>
+<p>Note that both of the <code class="docutils literal notranslate"><span class="pre">FOSI</span></code> options run on the 85813 active ocean cells from the POP <code class="docutils literal notranslate"><span class="pre">gx1v7</span></code> grid.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_comparison</span><span class="p">(</span><span class="n">matlab_vals</span><span class="p">,</span> <span class="n">py_vals</span><span class="p">,</span> <span class="n">row_name</span><span class="p">,</span> <span class="n">full_table</span><span class="p">,</span> <span class="n">seps</span><span class="p">):</span>
-    <span class="n">nstep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">matlab_vals</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">py_vals</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)])</span>
-    <span class="n">nx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">matlab_vals</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">py_vals</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)])</span>
-    <span class="n">matlab_vals</span> <span class="o">=</span> <span class="n">matlab_vals</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nstep</span><span class="p">),</span> <span class="n">X</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">py_vals</span> <span class="o">=</span> <span class="n">py_vals</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nstep</span><span class="p">),</span> <span class="n">X</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">rel_err_denom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-        <span class="n">matlab_vals</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">matlab_vals</span><span class="p">,</span> <span class="mi">1</span>
-    <span class="p">)</span>  <span class="c1"># avoid dividing by 0 in next np.where() statement</span>
-    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">matlab_vals</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">py_vals</span> <span class="o">-</span> <span class="n">matlab_vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">rel_err_denom</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">),</span> <span class="n">py_vals</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rel_errs</span><span class="p">)</span>
-    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">),</span> <span class="n">py_vals</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">rel_errs</span><span class="p">)</span>
-    <span class="n">rel_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">),</span> <span class="n">py_vals</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">rel_errs</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">full_table</span> <span class="ow">or</span> <span class="n">rel_err</span> <span class="o">&gt;</span> <span class="mf">1e-12</span><span class="p">:</span>
-        <span class="n">max_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rel_errs</span><span class="p">)))</span>
-        <span class="n">t_ind</span> <span class="o">=</span> <span class="n">max_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">x_ind</span> <span class="o">=</span> <span class="n">max_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">matlab_val</span> <span class="o">=</span> <span class="n">matlab_vals</span><span class="p">[</span><span class="n">t_ind</span><span class="p">][</span><span class="n">x_ind</span><span class="p">]</span>
-        <span class="n">py_val</span> <span class="o">=</span> <span class="n">py_vals</span><span class="p">[</span><span class="n">t_ind</span><span class="p">][</span><span class="n">x_ind</span><span class="p">]</span>
-        <span class="n">rel_err</span> <span class="o">=</span> <span class="n">rel_errs</span><span class="p">[</span><span class="n">t_ind</span><span class="p">][</span><span class="n">x_ind</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}{</span><span class="n">row_name</span><span class="si">}</span><span class="s2"> (t=</span><span class="si">{</span><span class="n">t_ind</span><span class="si">}</span><span class="s2">, X=</span><span class="si">{</span><span class="n">x_ind</span><span class="si">}</span><span class="s2">)</span><span class="si">{</span><span class="n">seps</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}{</span><span class="n">matlab_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">py_val</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}{</span><span class="n">rel_err</span><span class="si">:</span><span class="s2">10.4e</span><span class="si">}{</span><span class="n">seps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">compare_nc</span><span class="p">(</span><span class="n">baseline_ds</span><span class="p">,</span> <span class="n">test_da_or_ds</span><span class="p">,</span> <span class="n">full_table</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">markdown_formatting</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">test_da_or_ds</span><span class="p">)</span> <span class="o">==</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">test_da_or_ds</span>
-        <span class="n">da</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">baseline_da</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">table_header</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">da</span> <span class="o">=</span> <span class="n">test_da_or_ds</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">da_dims</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;fish&quot;</span><span class="p">]</span>
-        <span class="n">da_dim</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-        <span class="k">for</span> <span class="n">dad</span> <span class="ow">in</span> <span class="n">da_dims</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">dad</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-                <span class="n">da_dim</span> <span class="o">=</span> <span class="n">dad</span>
-                <span class="k">break</span>
-        <span class="n">baseline_da</span> <span class="o">=</span> <span class="n">baseline_ds</span><span class="p">[</span><span class="n">da</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
-        <span class="n">table_header</span> <span class="o">=</span> <span class="n">da_dim</span>
-    <span class="k">if</span> <span class="n">markdown_formatting</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">table_header</span><span class="si">}</span><span class="s2"> | Matlab Value | Python Value | Rel Err |&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;| --- | --- | --- | --- |&quot;</span><span class="p">)</span>
-        <span class="n">seps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;| &quot;</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span> <span class="s2">&quot; |&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">seps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">da</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">dimname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">da</span><span class="p">[</span><span class="n">da_dim</span><span class="p">]):</span>
-            <span class="n">_comparison</span><span class="p">(</span>
-                <span class="n">baseline_da</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">da_dim</span><span class="p">:</span> <span class="n">n</span><span class="p">}),</span> <span class="n">da</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">da_dim</span><span class="p">:</span> <span class="n">n</span><span class="p">}),</span> <span class="n">dimname</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">full_table</span><span class="p">,</span> <span class="n">seps</span>
-            <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">_comparison</span><span class="p">(</span>
-                <span class="n">baseline_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">zooplankton</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="n">varname</span><span class="p">],</span>
-                <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">zooplankton</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="n">varname</span><span class="p">],</span>
-                <span class="n">varname</span><span class="p">,</span>
-                <span class="n">full_table</span><span class="p">,</span>
-                <span class="n">seps</span><span class="p">,</span>
-            <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># matlab_script = &#39;test_case&#39;</span>
+<span class="n">matlab_script</span> <span class="o">=</span> <span class="s1">&#39;test_locs3&#39;</span>
+<span class="c1"># matlab_script = &#39;FOSI_spinup&#39;</span>
+<span class="c1"># matlab_script = &#39;FOSI_cesm&#39;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># matlab_script = &quot;test_case&quot; ; force_nonnegative=True</span>
-<span class="n">matlab_script</span><span class="p">,</span> <span class="n">force_nonnegative</span> <span class="o">=</span> <span class="s2">&quot;test_locs3&quot;</span><span class="p">,</span> <span class="kc">True</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configuration settings for the offline driver as well as output generated in this notebook</span>
+<span class="n">driver_config</span> <span class="o">=</span> <span class="n">default_config</span><span class="p">()</span>
 
-<span class="n">baselines_from_nc</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../matlab_baselines/</span><span class="si">{</span><span class="n">matlab_script</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+<span class="c1"># configurations that differ from default</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_case&#39;</span><span class="p">][</span><span class="s1">&#39;ignore_year_in_forcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_case&#39;</span><span class="p">][</span><span class="s1">&#39;make_err_plots&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_case&#39;</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;ylim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 
-<span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_case&quot;</span><span class="p">:</span>
-    <span class="n">nyears</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">testcase</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_testcase</span><span class="p">(</span><span class="s2">&quot;tanh_shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;cyclic&quot;</span><span class="p">)</span>
-<span class="k">elif</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_locs3&quot;</span><span class="p">:</span>
-    <span class="n">nyears</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;forcing_yaml&#39;</span><span class="p">:</span> <span class="s1">&#39;./forcing.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;forcing_key&#39;</span><span class="p">:</span> <span class="n">matlab_script</span><span class="p">}</span>
-    <span class="n">testcase</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_from_netcdf</span><span class="p">(</span>
-        <span class="n">ignore_year_in_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">domain_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="n">forcing_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
-    <span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown matlab_script &#39;</span><span class="si">{</span><span class="n">matlab_script</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;ignore_year_in_forcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;max_output_time_dim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">730</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;make_err_plots&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;ylim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">][</span><span class="s1">&#39;ignore_year_in_forcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_cesm&#39;</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="k">for</span> <span class="n">matlab_script_loc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;FOSI_cesm&#39;</span><span class="p">,</span> <span class="s1">&#39;FOSI_cesm_daily&#39;</span><span class="p">,</span> <span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">]:</span>
+    <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;num_chunks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;FOSI_cesm.nc&#39;</span>
+    <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;baseline_compare&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">matlab_script_loc</span> <span class="o">!=</span> <span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">:</span>
+        <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;start_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0249-01-01&#39;</span>
+        <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;make_err_plots&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;compare_forcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># diagnostic_names=driver_config[matlab_script_loc][&#39;diagnostic_names&#39;] = [&#39;growth_rate&#39;]</span>
+    <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">55000</span>  <span class="c1"># looks good</span>
+    <span class="c1"># driver_config[matlab_script_loc][&#39;plot_settings&#39;][&#39;X&#39;] = 15633  # large error in small classes</span>
+    <span class="c1"># driver_config[matlab_script_loc][&#39;plot_settings&#39;][&#39;X&#39;] = 11677  # large error in medium classes</span>
+    <span class="c1"># driver_config[matlab_script_loc][&#39;plot_settings&#39;][&#39;X&#39;] = 76989  # large error in benthic</span>
+
+<span class="k">for</span> <span class="n">matlab_script_loc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="s1">&#39;test_locs3&#39;</span><span class="p">]:</span>
+    <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;settings_in&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_settings</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">baselines_from_nc</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s1">&#39;../matlab_baselines/</span><span class="si">{</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s2">&quot;baseline&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="p">)</span>
 
 <span class="c1"># Set negative forcing values to zero</span>
-<span class="k">if</span> <span class="n">force_nonnegative</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;force_nonnegative&#39;</span><span class="p">]:</span>
     <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;poc_flux_bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;zooC&#39;</span><span class="p">,</span> <span class="s1">&#39;zoo_mort&#39;</span><span class="p">]:</span>
         <span class="n">baselines_from_nc</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
             <span class="n">baselines_from_nc</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">baselines_from_nc</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span>
         <span class="p">)</span>
+
+<span class="k">if</span> <span class="n">matlab_script</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">driver_config</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown matlab_script &#39;</span><span class="si">{</span><span class="n">matlab_script</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="set-up-dask-cluster-if-chunking-data">
+<h2>Set up Dask cluster (if chunking data)<a class="headerlink" href="#set-up-dask-cluster-if-chunking-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_nc</span><span class="p">(</span>
-    <span class="n">baselines_from_nc</span><span class="p">,</span>
-    <span class="n">testcase</span><span class="o">.</span><span class="n">forcing</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;zooplankton&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">),</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Max diff in depth: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="p">[</span><span class="s1">&#39;dep&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">testcase</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">domain_dict</span><span class="p">[</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>|  | Matlab Value | Python Value | Rel Err |
-| --- | --- | --- | --- |
-| T_pelagic (t=0, X=0) | 4.7453e+00 | 4.7453e+00 | 0.0000e+00 |
-| T_bottom (t=0, X=0) | 4.7647e+00 | 4.7647e+00 | 0.0000e+00 |
-| poc_flux_bottom (t=0, X=0) | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 |
-| zooC (t=0, X=0) | 7.0175e+00 | 7.0175e+00 | 0.0000e+00 |
-| zoo_mort (t=0, X=0) | 5.2470e-02 | 5.2470e-02 | 0.0000e+00 |
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;num_chunks&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">ncores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;num_chunks&#39;</span><span class="p">],</span> <span class="mi">36</span><span class="p">)</span>
+    <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;distributed.dashboard.link&#39;</span><span class="p">:</span> <span class="s1">&#39;/proxy/</span><span class="si">{port}</span><span class="s1">/status&#39;</span><span class="p">})</span>
+    <span class="c1"># dask.config.set({&quot;distributed.comm.timeouts.tcp&quot;: &quot;180s&quot;})</span>
+    <span class="c1"># dask.config.set({&quot;distributed.comm.timeouts.connect&quot;: &quot;180s&quot;})</span>
+    <span class="n">cluster</span> <span class="o">=</span> <span class="n">PBSCluster</span><span class="p">(</span>
+        <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;300 GB&#39;</span><span class="p">,</span>
+        <span class="n">processes</span><span class="o">=</span><span class="n">ncores</span><span class="p">,</span>
+        <span class="n">cores</span><span class="o">=</span><span class="n">ncores</span><span class="p">,</span>
+        <span class="n">queue</span><span class="o">=</span><span class="s1">&#39;casper&#39;</span><span class="p">,</span>
+        <span class="n">walltime</span><span class="o">=</span><span class="s1">&#39;1:00:00&#39;</span><span class="p">,</span>
+        <span class="n">resource_spec</span><span class="o">=</span><span class="s1">&#39;select=1:ncpus=36:mem=300GB&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
 
-Max diff in depth: 0.0
+    <span class="n">cluster</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">client</span>
 </pre></div>
 </div>
 </div>
@@ -749,53 +799,169 @@ Max diff in depth: 0.0
 <h2>Run the model<a class="headerlink" href="#run-the-model" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nsteps</span> <span class="o">=</span> <span class="n">nyears</span> <span class="o">*</span> <span class="mi">365</span>
-<span class="n">make_plot</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="o">%</span><span class="k">time</span> testcase.run(nsteps)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Configuring and running </span><span class="si">{</span><span class="n">matlab_script</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
+<span class="n">nsteps</span> <span class="o">=</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">365</span>
+
+<span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s1">&#39;test_case&#39;</span><span class="p">:</span>
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_and_run_testcase</span><span class="p">(</span>
+        <span class="s1">&#39;tanh_shelf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;cyclic&#39;</span><span class="p">,</span>
+        <span class="n">nsteps</span><span class="p">,</span>
+        <span class="n">settings_in</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;settings_in&#39;</span><span class="p">],</span>
+        <span class="n">max_output_time_dim</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;max_output_time_dim&#39;</span><span class="p">],</span>
+    <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_and_run_from_netcdf</span><span class="p">(</span>
+        <span class="s1">&#39;./forcing.yaml&#39;</span><span class="p">,</span>
+        <span class="n">matlab_script</span><span class="p">,</span>
+        <span class="n">nsteps</span><span class="p">,</span>
+        <span class="n">start_date</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;start_date&#39;</span><span class="p">],</span>
+        <span class="n">ignore_year_in_forcing</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;ignore_year_in_forcing&#39;</span><span class="p">],</span>
+        <span class="n">settings_in</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;settings_in&#39;</span><span class="p">],</span>
+        <span class="n">diagnostic_names</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;diagnostic_names&#39;</span><span class="p">],</span>
+        <span class="n">max_output_time_dim</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;max_output_time_dim&#39;</span><span class="p">],</span>
+        <span class="n">num_chunks</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;num_chunks&#39;</span><span class="p">],</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 38.7 s, sys: 64 ms, total: 38.8 s
-Wall time: 40.1 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Configuring and running test_locs3...
+Starting forcing dataset generation at 14:20:48
+Starting template generation at 14:20:48
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.10/site-packages/xarray/core/dataset.py:2172: FutureWarning: None value for &#39;chunks&#39; is deprecated. It will raise an error in the future. Use instead &#39;{}&#39;
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting run() at 14:20:49
+Integrating 730 steps (starting at 14:20:49)
+Finished _solve at 14:21:08
+CPU times: user 19.6 s, sys: 32.2 ms, total: 19.6 s
+Wall time: 19.7 s
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">nsteps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">make_plot</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_case&quot;</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s2">&quot;test_locs3&quot;</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">5e-6</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_nc</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="p">,</span> <span class="n">testcase</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span> <span class="n">nsteps</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;baseline_compare&#39;</span><span class="p">]:</span>
+    <span class="n">compare_nc</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="p">,</span> <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| group | Matlab Value | Python Value | Rel Err |
 | --- | --- | --- | --- |
-| Sf (t=535, X=0) | 1.7784e-05 | 1.7784e-05 | 5.7154e-16 |
-| Sp (t=0, X=0) | 9.9989e-06 | 9.9989e-06 | 0.0000e+00 |
-| Sd (t=706, X=1) | 8.7526e-06 | 8.7526e-06 | 1.9355e-16 |
-| Mf (t=642, X=0) | 5.2255e-04 | 5.2255e-04 | 4.1497e-16 |
-| Mp (t=4, X=2) | 1.5865e-05 | 1.5865e-05 | 2.1356e-16 |
-| Md (t=258, X=0) | 1.5325e-04 | 1.5325e-04 | 3.5373e-16 |
-| Lp (t=187, X=2) | 3.0789e-04 | 3.0789e-04 | 3.5214e-16 |
-| Ld (t=214, X=1) | 2.0739e-05 | 2.0739e-05 | 1.7971e-15 |
-| benthic_prey (t=370, X=1) | 3.3466e-01 | 3.3466e-01 | 1.9905e-15 |
+| Sf (t=0002-06-20 00:00:00, X=195.5) | 1.7784e-05 | 1.7784e-05 | 5.7154e-16 |
+| Sp (t=0001-01-01 00:00:00, X=195.5) | 9.9989e-06 | 9.9989e-06 | 0.0000e+00 |
+| Sd (t=0002-12-08 00:00:00, X=202.5) | 8.7526e-06 | 8.7526e-06 | 1.9355e-16 |
+| Mf (t=0002-10-05 00:00:00, X=195.5) | 5.2255e-04 | 5.2255e-04 | 4.1497e-16 |
+| Mp (t=0001-01-05 00:00:00, X=280.5) | 1.5865e-05 | 1.5865e-05 | 2.1356e-16 |
+| Md (t=0001-09-16 00:00:00, X=195.5) | 1.5325e-04 | 1.5325e-04 | 3.5373e-16 |
+| Lp (t=0001-07-07 00:00:00, X=280.5) | 3.0789e-04 | 3.0789e-04 | 3.5214e-16 |
+| Ld (t=0001-08-03 00:00:00, X=202.5) | 2.0739e-05 | 2.0739e-05 | 1.7971e-15 |
+| benthic_prey (t=0002-01-06 00:00:00, X=202.5) | 3.3466e-01 | 3.3466e-01 | 1.9905e-15 |
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;make_plots&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">time</span><span class="p">):</span>
+        <span class="n">isel_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">time</span><span class="p">))}</span>
+        <span class="n">baselines_tmp</span> <span class="o">=</span> <span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">isel_dict</span><span class="p">)</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;group&#39;</span><span class="p">:</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">data</span><span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">baselines_tmp</span> <span class="o">=</span> <span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">({</span><span class="s1">&#39;group&#39;</span><span class="p">:</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">})</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+        <span class="n">ds_out</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">baselines_tmp</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;ylim&#39;</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;python&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;matlab&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.025</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Comparison at X=</span><span class="si">{</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/matlab-comparison_13_0.png" src="_images/matlab-comparison_13_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;make_err_plots&#39;</span><span class="p">]:</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+        <span class="n">da1</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">time</span><span class="p">):</span>
+            <span class="n">da1</span> <span class="o">=</span> <span class="n">da1</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">time</span><span class="p">))})</span>
+        <span class="n">da2</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">baselines_tmp</span><span class="o">.</span><span class="n">biomass</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">assign_coords</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">da1</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">data</span><span class="p">})</span>
+        <span class="p">)</span>
+        <span class="p">(</span><span class="n">da1</span> <span class="o">-</span> <span class="n">da2</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">da1</span> <span class="o">-</span> <span class="n">da2</span><span class="p">)</span> <span class="o">/</span> <span class="n">da2</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;absolute error&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;relative error&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.025</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Relative Error&quot;</span><span class="p">)</span>
+    <span class="n">fig_suptitle</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Comparison at X=</span><span class="si">{</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">time</span><span class="p">):</span>
+        <span class="n">fig_suptitle</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fig_suptitle</span><span class="si">}</span><span class="s2"> (time dimension reduced from above)&quot;</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">fig_suptitle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/matlab-comparison_14_0.png" src="_images/matlab-comparison_14_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;baseline_compare&#39;</span><span class="p">]:</span>
+    <span class="n">compare_nc</span><span class="p">(</span>
+        <span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">[</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]]),</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">[</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]]),</span>
+        <span class="n">nsteps</span><span class="p">,</span>
+        <span class="n">thres</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| group | Matlab Value | Python Value | Rel Err |
+| --- | --- | --- | --- |
+| Sf (t=0002-06-20 00:00:00, X=195.5) | 1.7784e-05 | 1.7784e-05 | 5.7154e-16 |
+| Sp (t=0001-01-01 00:00:00, X=195.5) | 9.9989e-06 | 9.9989e-06 | 0.0000e+00 |
+| Sd (t=0002-04-06 00:00:00, X=195.5) | 1.0285e-05 | 1.0285e-05 | 1.6472e-16 |
+| Mf (t=0002-10-05 00:00:00, X=195.5) | 5.2255e-04 | 5.2255e-04 | 4.1497e-16 |
+| Mp (t=0001-01-01 00:00:00, X=195.5) | 1.0541e-05 | 1.0541e-05 | 0.0000e+00 |
+| Md (t=0001-09-16 00:00:00, X=195.5) | 1.5325e-04 | 1.5325e-04 | 3.5373e-16 |
+| Lp (t=0001-12-09 00:00:00, X=195.5) | 2.8092e-04 | 2.8092e-04 | 1.9298e-16 |
+| Ld (t=0002-04-30 00:00:00, X=195.5) | 6.6312e-04 | 6.6312e-04 | 4.9050e-16 |
+| benthic_prey (t=0001-12-13 00:00:00, X=195.5) | 2.8330e+01 | 2.8330e+01 | 1.6302e-15 |
 </pre></div>
 </div>
 </div>
@@ -830,6 +996,20 @@ Wall time: 40.1 s
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="api-driver.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">FEISTY Driver</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="settings.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">FEISTY Settings</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

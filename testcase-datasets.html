@@ -193,6 +193,17 @@ const thebe_selector_output = ".output, .cell_output"
    FEISTY Driver
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="matlab-comparison.html">
+   Comparing with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     matlab
+    </span>
+   </code>
+   Baselines
+  </a>
+ </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="settings.html">
    FEISTY Settings
@@ -630,18 +641,6 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">feisty</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;feisty&#39;
-</pre></div>
-</div>
-</div>
 </div>
 <section id="idealized-bathymetry">
 <h2>Idealized bathymetry<a class="headerlink" href="#idealized-bathymetry" title="Permalink to this headline">#</a></h2>
@@ -701,29 +700,29 @@ forcing representing an annual cycle using harmonic function.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>xarray.Dataset {
 dimensions:
-	time = 366 ;
+	forcing_time = 365 ;
 	X = 22 ;
 	zooplankton = 1 ;
 
 variables:
-	float64 time(time) ;
+	object forcing_time(forcing_time) ;
 	float64 X(X) ;
-	float64 T_pelagic(time, X) ;
+	float64 T_pelagic(forcing_time, X) ;
 		T_pelagic:long_name = T_pelagic ;
 		T_pelagic:units = degC ;
-	float64 T_bottom(time, X) ;
+	float64 T_bottom(forcing_time, X) ;
 		T_bottom:long_name = T_bottom ;
 		T_bottom:units = degC ;
-	float64 poc_flux_bottom(time, X) ;
+	float64 poc_flux_bottom(forcing_time, X) ;
 		poc_flux_bottom:long_name = POC flux ;
 		poc_flux_bottom:units = g/m^2/d ;
 		poc_flux_bottom:b = 0.7 ;
 	&lt;U3 zooplankton(zooplankton) ;
-	float64 zooC(zooplankton, time, X) ;
+	float64 zooC(zooplankton, forcing_time, X) ;
 		zooC:long_name = Zooplankton biomass ;
 		zooC:units = g/m^2 ;
 		zooC:harmonic_parms = Zoo = {&#39;mu&#39;: 4.0, &#39;amp_fraction&#39;: 0.2, &#39;phase&#39;: 10.0} ;
-	float64 zoo_mort(zooplankton, time, X) ;
+	float64 zoo_mort(zooplankton, forcing_time, X) ;
 		zoo_mort:long_name = Zooplankton quadratic mortality ;
 		zoo_mort:units = g/m^2/d ;
 
@@ -746,7 +745,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x162bdd0a0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7ff599012250&gt;
 </pre></div>
 </div>
 <img alt="_images/testcase-datasets_9_1.png" src="_images/testcase-datasets_9_1.png" />
@@ -762,7 +761,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x162ab3f10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7ff599121fa0&gt;
 </pre></div>
 </div>
 <img alt="_images/testcase-datasets_11_1.png" src="_images/testcase-datasets_11_1.png" />
@@ -804,7 +803,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x162e17760&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7ff598e0c640&gt;]
 </pre></div>
 </div>
 <img alt="_images/testcase-datasets_17_1.png" src="_images/testcase-datasets_17_1.png" />
