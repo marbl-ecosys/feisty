@@ -630,6 +630,7 @@ def config_and_run_from_netcdf(
 
 def config_and_run_from_dataset(
     ds,
+    ds_ic,
     nstep,
     start_date='0001-01-01',
     ignore_year_in_forcing=False,
@@ -647,9 +648,12 @@ def config_and_run_from_dataset(
     domain_dict = dict()
     domain_dict['bathymetry'] = ds['bathymetry']
     domain_dict['NX'] = len(ds['X'])
+
     forcing = ds[['T_pelagic', 'T_bottom', 'poc_flux_bottom', 'zooC', 'zoo_mort']]
-    fish_ic_data = ds['fish_ic']
-    benthic_prey_ic_data = ds['bent_ic']
+
+    fish_ic_data = ds_ic['fish_ic']
+    benthic_prey_ic_data = ds_ic['bent_ic']
+
     feisty_driver = _offline_driver(
         domain_dict,
         forcing,
@@ -661,6 +665,8 @@ def config_and_run_from_dataset(
         diagnostic_names=diagnostic_names,
         max_output_time_dim=max_output_time_dim,
     )
+
     feisty_driver.run(nstep, method=method)
     feisty_driver.gen_ds()
+
     return feisty_driver.ds

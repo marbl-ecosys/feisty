@@ -1,0 +1,11 @@
+195801-196712:
+  list_forcing_files:
+    - /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.TEMP_BOTTOM.195801-196712.nc
+    - /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.TEMP_mean_100m.195801-196712.nc
+    - /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.mesozooC_zint_100m_2.195801-196712.nc
+    - /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.mesozoo_loss_zint_100m.195801-196712.nc
+    - /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.pocToFloor.195801-196712.nc
+  nyears: 1
+  start_date: '1958-01-01'
+keys:
+  - 195801-196712

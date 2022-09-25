@@ -1,0 +1,196 @@
+benthic_prey:
+  defaults:
+    benthic_efficiency: 0.075
+    carrying_capacity: 80.0
+  members:
+    - name: benthic_prey
+fish:
+  defaults:
+    a_consumption: 20.0
+    a_encounter: 70.0
+    a_metabolism: 4.0
+    assim_efficiency: 0.7
+    b_consumption: 0.25
+    b_encounter: 0.2
+    b_metabolism: 0.175
+    k_consumption: 0.063
+    k_encounter: 0.063
+    k_metabolism: 0.0855
+    mortality_coeff_per_yr: 0.1
+    mortality_type: constant
+  members:
+    - energy_frac_somatic_growth: 1.0
+      functional_type: forage
+      harvest_selectivity: 0.0
+      name: Sf
+      pelagic_demersal_coupling: false
+      size_class: small
+      t_frac_pelagic_static: 1.0
+    - energy_frac_somatic_growth: 1.0
+      functional_type: piscivore
+      harvest_selectivity: 0.0
+      name: Sp
+      pelagic_demersal_coupling: false
+      size_class: small
+      t_frac_pelagic_static: 1.0
+    - energy_frac_somatic_growth: 1.0
+      functional_type: demersal
+      harvest_selectivity: 0.0
+      name: Sd
+      pelagic_demersal_coupling: false
+      size_class: small
+      t_frac_pelagic_static: 1.0
+    - energy_frac_somatic_growth: 0.5
+      functional_type: forage
+      harvest_selectivity: 1.0
+      name: Mf
+      pelagic_demersal_coupling: false
+      size_class: medium
+      t_frac_pelagic_static: 1.0
+    - energy_frac_somatic_growth: 1.0
+      functional_type: piscivore
+      harvest_selectivity: 0.1
+      name: Mp
+      pelagic_demersal_coupling: false
+      size_class: medium
+      t_frac_pelagic_static: 1.0
+    - energy_frac_somatic_growth: 1.0
+      functional_type: demersal
+      harvest_selectivity: 0.1
+      name: Md
+      pelagic_demersal_coupling: false
+      size_class: medium
+      t_frac_pelagic_static: 0.0
+    - energy_frac_somatic_growth: 0.5
+      functional_type: piscivore
+      harvest_selectivity: 1.0
+      name: Lp
+      pelagic_demersal_coupling: false
+      size_class: large
+      t_frac_pelagic_static: 1.0
+    - energy_frac_somatic_growth: 0.5
+      functional_type: demersal
+      harvest_selectivity: 1.0
+      name: Ld
+      pelagic_demersal_coupling: true
+      size_class: large
+      t_frac_pelagic_static: 0.0
+fishing:
+  fishing_rate_per_year: 0.3
+food_web:
+  - predator: Sf
+    preference: 0.9
+    prey: Zoo
+  - predator: Sp
+    preference: 0.9
+    prey: Zoo
+  - predator: Sd
+    preference: 0.9
+    prey: Zoo
+  - predator: Mf
+    preference: 0.45
+    prey: Zoo
+  - predator: Mf
+    preference: 1.0
+    prey: Sf
+  - predator: Mf
+    preference: 1.0
+    prey: Sp
+  - predator: Mf
+    preference: 1.0
+    prey: Sd
+  - predator: Mp
+    preference: 0.45
+    prey: Zoo
+  - predator: Mp
+    preference: 1.0
+    prey: Sf
+  - predator: Mp
+    preference: 1.0
+    prey: Sp
+  - predator: Mp
+    preference: 1.0
+    prey: Sd
+  - predator: Md
+    preference: 1.0
+    prey: benthic_prey
+  - predator: Lp
+    preference: 0.5
+    prey: Mf
+  - predator: Lp
+    preference: 1.0
+    prey: Mp
+  - predator: Lp
+    preference: 1.0
+    prey: Md
+  - predator: Ld
+    preference: 0.375
+    prey: Mf
+  - predator: Ld
+    preference: 0.75
+    prey: Mp
+  - predator: Ld
+    preference: 1.0
+    prey: Md
+  - predator: Ld
+    preference: 1.0
+    prey: benthic_prey
+loffline: true
+model_settings:
+  benthic_pelagic_depth_cutoff: 200.0
+  demersal_functional_type_keys:
+    - demersal
+    - benthic_prey
+  functional_type_keys:
+    - zooplankton
+    - forage
+    - piscivore
+    - demersal
+    - benthic_prey
+  pelagic_demersal_coupling_apply_pref_type_keys:
+    - demersal
+  pelagic_demersal_coupling_type_keys:
+    - piscivore
+    - demersal
+  pelagic_functional_type_keys:
+    - forage
+    - piscivore
+  size_class_bounds:
+    large:
+      - 250.0
+      - 125000.0
+    medium:
+      - 0.5
+      - 250.0
+    small:
+      - 0.001
+      - 0.5
+  zooplankton_functional_type_keys:
+    - zooplankton
+reproduction_routing:
+  - efficiency: 0.01
+    from: Mf
+    is_larval: true
+    to: Sf
+  - efficiency: 0.01
+    from: Lp
+    is_larval: true
+    to: Sp
+  - efficiency: 0.01
+    from: Ld
+    is_larval: true
+    to: Sd
+  - from: Sf
+    to: Mf
+  - from: Sp
+    to: Mp
+  - from: Sd
+    to: Md
+  - from: Mp
+    to: Lp
+  - from: Md
+    to: Ld
+zooplankton:
+  defaults: {}
+  members:
+    - name: Zoo

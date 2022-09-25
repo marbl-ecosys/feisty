@@ -6,7 +6,7 @@ import xarray as xr
 
 
 def generate_ic_ds_for_feisty(
-    X, ic_file, chunks={}, fish_ic=1e-5, benthic_prey_ic=2e-3, ic_rename={}
+    X, ic_file, num_chunks, fish_ic=1e-5, benthic_prey_ic=2e-3, ic_rename={}
 ):
     if ic_file is None:
         nX = len(X)
@@ -19,8 +19,11 @@ def generate_ic_ds_for_feisty(
         )
     else:
         ds_ic = xr.open_dataset(ic_file).rename(ic_rename).assign_coords({'X': X})
-    if chunks:
+
+    if num_chunks > 1:
+        chunks = gen_chunks_dict(ds_ic, num_chunks)
         ds_ic = ds_ic.chunk(chunks)
+
     return ds_ic
 
 
@@ -58,14 +61,14 @@ def map_ds_back_to_2D_pop(ds, map):
     return ds_new
 
 
+def gen_chunks_dict(ds, num_chunks):
+    return dict(X=(len(ds.X) - 1) // num_chunks + 1)
+
+
 def generate_single_ds_for_feisty(
     num_chunks,
     forcing_file,
-    ic_file,
-    fish_ic=1e-5,
-    benthic_prey_ic=2e-3,
     forcing_rename={},
-    ic_rename={},
     allow_negative_forcing=False,
 ):
     print(f'Starting forcing dataset generation at {time.strftime("%H:%M:%S")}')
@@ -75,37 +78,44 @@ def generate_single_ds_for_feisty(
         ds = xr.open_mfdataset(
             forcing_file, parallel=False, data_vars='minimal', compat='override', coords='minimal'
         ).rename(forcing_rename)
-        ds = ds[['bathymetry', 'poc_flux_bottom', 'zooC', 'zoo_mort', 'T_bottom', 'T_pelagic']]
-        ds = ds.drop_vars(
-            ['TLAT', 'TLONG', 'ULAT', 'ULONG']
-        ).load()  # avoid tasks involving these vars in task graph?
+
+        keep_vars = [
+            'bathymetry',
+            'poc_flux_bottom',
+            'zooC',
+            'zoo_mort',
+            'T_bottom',
+            'T_pelagic',
+        ]
+        ds = ds[keep_vars]
+
+        # TODO: remove POP specific
+        ds = ds.drop_vars(['TLAT', 'TLONG', 'ULAT', 'ULONG'])
+
     else:
         ds = xr.open_dataset(forcing_file).rename(forcing_rename)
+
     if 'X' not in ds.dims:
         ds_tmp = ds.stack(X=('nlat', 'nlon'))
         ds = ds_tmp.where(ds_tmp.bathymetry > 0, drop=True)
+
     if num_chunks > 1:
-        chunks = dict(X=(len(ds.X) - 1) // num_chunks + 1)
+        chunks = gen_chunks_dict(ds, num_chunks)
         ds = ds.chunk(chunks)
-    else:
-        chunks = {}
+
     if not allow_negative_forcing:
         for varname in ['poc_flux_bottom', 'zooC', 'zoo_mort']:
             ds[varname].data = np.where(ds[varname].data > 0, ds[varname].data, 0)
+
     if 'zooplankton' not in ds.dims:
         ds['zooC'] = ds['zooC'].expand_dims('zooplankton')
         ds['zoo_mort'] = ds['zoo_mort'].expand_dims('zooplankton')
         ds['zooplankton'] = xr.DataArray(['Zoo'], dims='zooplankton')
 
-    # Read initial condition file, add fish_ic and bent_ic to ds
-    ds_ic = generate_ic_ds_for_feisty(
-        ds.X.data, ic_file, chunks, fish_ic, benthic_prey_ic, ic_rename
-    )
-    for var in ['fish_ic', 'bent_ic']:
-        ds[var] = ds_ic[var]
     return ds
 
 
+# TODO: this should be agnostic wrt FEISTY groups
 def generate_template(
     ds,
     nsteps,
@@ -194,6 +204,7 @@ def generate_template(
         chunks = {}
 
     # Create template for output (used for xr.map_blocks)
+    # TODO: support alternative calendars
     model_time = xr.cftime_range(
         start=start_date,
         periods=nsteps,
@@ -205,6 +216,7 @@ def generate_template(
         biomass=(['time', 'group', 'X'], np.zeros((len(model_time), len(groups), len(X))))
     )
     coords_dict = dict(time=(['time'], model_time), group=(['group'], groups), X=(['X'], X))
+
     # TODO: better way to add diagnostics
     for diag in diagnostic_names:
         if diag in ['encounter_rate_link', 'consumption_rate_link']:
@@ -226,6 +238,8 @@ def generate_template(
         data_vars=data_vars_dict,
         coords=coords_dict,
     ).assign_coords({'X': ds['X']})
+
     if chunks:
         ds_out = ds_out.chunk(chunks)
+
     return ds_out
