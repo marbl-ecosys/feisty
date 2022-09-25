@@ -7,12 +7,15 @@ import numpy as np
 import xarray as xr
 import yaml
 
-from feisty.utils.data_wrangling import generate_ic_ds_for_feisty
-
 from . import testcase
 from .core import settings as settings_mod
 from .core.interface import feisty_instance_type
-from .utils import generate_single_ds_for_feisty, generate_template, make_forcing_cyclic
+from .utils import (
+    generate_ic_ds_for_feisty,
+    generate_single_ds_for_feisty,
+    generate_template,
+    make_forcing_cyclic,
+)
 
 path_to_here = os.path.dirname(os.path.realpath(__file__))
 
@@ -470,7 +473,7 @@ def config_and_run_testcase(
     ds_ic = generate_ic_ds_for_feisty(
         X=ds.X.data,
         ic_file=None,
-        chunks={},
+        num_chunks=1,
         fish_ic=fish_ic_data,
         benthic_prey_ic=benthic_prey_ic_data,
     )
@@ -489,6 +492,7 @@ def config_and_run_testcase(
         config_and_run_from_dataset,
         ds,
         args=(
+            ds_ic,
             nsteps,
             start_date,
             True,  # ignore_year_in_forcing is always true for test case
@@ -595,16 +599,23 @@ def config_and_run_from_netcdf(
         if input_key in input_dict:
             for key, value in input_dict[input_key].items():
                 forcing_rename[value] = key
+
     ds = generate_single_ds_for_feisty(
         num_chunks=num_chunks,
         forcing_file=input_dict['path'],
-        ic_file=input_dict.get('biomass_init_file', None),
-        fish_ic=input_dict.get('fish_biomass_ic', fish_ic_data),
-        benthic_prey_ic=input_dict.get('benthic_prey_biomass_ic', benthic_prey_ic_data),
         forcing_rename=forcing_rename,
     )
     if ignore_year_in_forcing:
         ds = make_forcing_cyclic(ds)
+
+    ds_ic = generate_ic_ds_for_feisty(
+        ds.X.data,
+        num_chunks=num_chunks,
+        ic_file=input_dict.get('biomass_init_file', None),
+        fish_ic=input_dict.get('fish_biomass_ic', fish_ic_data),
+        benthic_prey_ic=input_dict.get('benthic_prey_biomass_ic', benthic_prey_ic_data),
+    )
+
     template = generate_template(
         ds=ds,
         nsteps=nsteps,
@@ -616,6 +627,7 @@ def config_and_run_from_netcdf(
         config_and_run_from_dataset,
         ds,
         args=(
+            ds_ic,
             nsteps,
             start_date,
             ignore_year_in_forcing,
