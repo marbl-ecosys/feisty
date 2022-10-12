@@ -1,0 +1,101 @@
+196401-196412:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.196401-196412.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.196401-196412.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.196401-196412.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.196401-196412.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.196401-196412.nc
+  nyears: 1
+  start_date: '1964-01-01'
+196501-196512:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.196501-196512.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.196501-196512.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.196501-196512.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.196501-196512.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.196501-196512.nc
+  nyears: 1
+  start_date: '1965-01-01'
+196601-196612:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.196601-196612.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.196601-196612.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.196601-196612.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.196601-196612.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.196601-196612.nc
+  nyears: 1
+  start_date: '1966-01-01'
+196701-196712:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.196701-196712.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.196701-196712.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.196701-196712.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.196701-196712.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.196701-196712.nc
+  nyears: 1
+  start_date: '1967-01-01'
+196801-196812:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.196801-196812.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.196801-196812.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.196801-196812.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.196801-196812.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.196801-196812.nc
+  nyears: 1
+  start_date: '1968-01-01'
+196901-196912:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.196901-196912.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.196901-196912.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.196901-196912.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.196901-196912.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.196901-196912.nc
+  nyears: 1
+  start_date: '1969-01-01'
+197001-197012:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.197001-197012.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.197001-197012.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.197001-197012.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.197001-197012.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.197001-197012.nc
+  nyears: 1
+  start_date: '1970-01-01'
+197101-197112:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.197101-197112.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.197101-197112.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.197101-197112.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.197101-197112.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.197101-197112.nc
+  nyears: 1
+  start_date: '1971-01-01'
+197201-197212:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.197201-197212.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.197201-197212.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.197201-197212.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.197201-197212.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.197201-197212.nc
+  nyears: 1
+  start_date: '1972-01-01'
+197301-197312:
+  list_forcing_files:
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_BOTTOM.197301-197312.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.TEMP_mean_100m.197301-197312.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozooC_zint_100m_2.197301-197312.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.197301-197312.nc
+    - /glade/scratch/kristenk/hi-res-feisty-inputs/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.pocToFloor.197301-197312.nc
+  nyears: 1
+  start_date: '1973-01-01'
+keys:
+  - 196401-196412
+  - 196501-196512
+  - 196601-196612
+  - 196701-196712
+  - 196801-196812
+  - 196901-196912
+  - 197001-197012
+  - 197101-197112
+  - 197201-197212
+  - 197301-197312

@@ -1,0 +1,19 @@
+computing_account: P93300670
+diagnostic_names: []
+forcing_rename:
+  HT: bathymetry
+  TEMP_BOTTOM: T_bottom
+  TEMP_mean_100m: T_pelagic
+  mesozooC_zint_100m_2: zooC
+  mesozoo_loss_zint_100m: zoo_mort
+  pocToFloor: poc_flux_bottom
+  time: forcing_time
+ignore_year_in_forcing: false
+max_output_time_dim: 365
+method: euler
+num_chunks: 32
+output_in_2D: true
+resubmit: true
+run_dir_root: /glade/scratch/{{env['USER']}}
+run_name: feisty.TL319_t13.4p2z.001
+write_output: true
