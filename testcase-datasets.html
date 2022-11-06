@@ -745,7 +745,101 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7f0959c18d30&gt;
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">forcing</span><span class="o">.</span><span class="n">T_pelagic</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">forcing</span><span class="o">.</span><span class="n">T_bottom</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/xarray/plot/accessor.py:46,</span> in <span class="ni">DataArrayPlotAccessor.__call__</span><span class="nt">(self, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">44</span> <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">dataarray_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">,</span> <span class="n">assigned</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;__doc__&quot;</span><span class="p">,</span> <span class="s2">&quot;__annotations__&quot;</span><span class="p">))</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">46</span>     <span class="k">return</span> <span class="n">dataarray_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_da</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/xarray/plot/dataarray_plot.py:312,</span> in <span class="ni">plot</span><span class="nt">(darray, row, col, col_wrap, ax, hue, subplot_kws, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">308</span>     <span class="n">plotfunc</span> <span class="o">=</span> <span class="n">hist</span>
+<span class="g g-Whitespace">    </span><span class="mi">310</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;ax&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ax</span>
+<span class="ne">--&gt; </span><span class="mi">312</span> <span class="k">return</span> <span class="n">plotfunc</span><span class="p">(</span><span class="n">darray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/xarray/plot/dataarray_plot.py:1613,</span> in <span class="ni">_plot2d.&lt;locals&gt;.newplotfunc</span><span class="nt">(***failed resolving arguments***)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1609</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;plt.imshow&#39;s `aspect` kwarg is not available in xarray&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1611</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">get_axis</span><span class="p">(</span><span class="n">figsize</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">subplot_kws</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1613</span> <span class="n">primitive</span> <span class="o">=</span> <span class="n">plotfunc</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1614</span>     <span class="n">xplt</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1615</span>     <span class="n">yplt</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1616</span>     <span class="n">zval</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1617</span>     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1618</span>     <span class="n">cmap</span><span class="o">=</span><span class="n">cmap_params</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">   </span><span class="mi">1619</span>     <span class="n">vmin</span><span class="o">=</span><span class="n">cmap_params</span><span class="p">[</span><span class="s2">&quot;vmin&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">   </span><span class="mi">1620</span>     <span class="n">vmax</span><span class="o">=</span><span class="n">cmap_params</span><span class="p">[</span><span class="s2">&quot;vmax&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">   </span><span class="mi">1621</span>     <span class="n">norm</span><span class="o">=</span><span class="n">cmap_params</span><span class="p">[</span><span class="s2">&quot;norm&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">   </span><span class="mi">1622</span>     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1623</span> <span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1625</span> <span class="c1"># Label the plot with metadata</span>
+<span class="g g-Whitespace">   </span><span class="mi">1626</span> <span class="k">if</span> <span class="n">add_labels</span><span class="p">:</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/xarray/plot/dataarray_plot.py:2340,</span> in <span class="ni">pcolormesh</span><span class="nt">(x, y, z, ax, xscale, yscale, infer_intervals, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2337</span>         <span class="n">y</span> <span class="o">=</span> <span class="n">_infer_interval_breaks</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">yscale</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2339</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">2340</span> <span class="n">primitive</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2342</span> <span class="c1"># by default, pcolormesh picks &quot;round&quot; values for bounds</span>
+<span class="g g-Whitespace">   </span><span class="mi">2343</span> <span class="c1"># this results in ugly looking plots with lots of surrounding whitespace</span>
+<span class="g g-Whitespace">   </span><span class="mi">2344</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">&quot;projection&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">2345</span>     <span class="c1"># not a cartopy geoaxis</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/matplotlib/__init__.py:1423,</span> in <span class="ni">_preprocess_data.&lt;locals&gt;.inner</span><span class="nt">(ax, data, *args, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1420</span> <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1421</span> <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1422</span>     <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1423</span>         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="n">sanitize_sequence</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1425</span>     <span class="n">bound</span> <span class="o">=</span> <span class="n">new_sig</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1426</span>     <span class="n">auto_label</span> <span class="o">=</span> <span class="p">(</span><span class="n">bound</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label_namer</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1427</span>                   <span class="ow">or</span> <span class="n">bound</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label_namer</span><span class="p">))</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/matplotlib/axes/_axes.py:6171,</span> in <span class="ni">Axes.pcolormesh</span><span class="nt">(self, alpha, norm, cmap, vmin, vmax, shading, antialiased, *args, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6167</span> <span class="n">C</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">6169</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;snap&#39;</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pcolormesh.snap&#39;</span><span class="p">])</span>
+<span class="ne">-&gt; </span><span class="mi">6171</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mcoll</span><span class="o">.</span><span class="n">QuadMesh</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">6172</span>     <span class="n">coords</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="n">antialiased</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="n">shading</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">6173</span>     <span class="n">array</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6174</span> <span class="n">collection</span><span class="o">.</span><span class="n">_scale_norm</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6175</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pcolor_grid_deprecation_helper</span><span class="p">()</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/matplotlib/collections.py:1985,</span> in <span class="ni">QuadMesh.__init__</span><span class="nt">(self, *args, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1983</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shading</span> <span class="o">=</span> <span class="n">shading</span>
+<span class="g g-Whitespace">   </span><span class="mi">1984</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Bbox</span><span class="o">.</span><span class="n">unit</span><span class="p">()</span>
+<span class="ne">-&gt; </span><span class="mi">1985</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox</span><span class="o">.</span><span class="n">update_from_data_xy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coordinates</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="g g-Whitespace">   </span><span class="mi">1986</span> <span class="c1"># super init delayed after own init because array kwarg requires</span>
+<span class="g g-Whitespace">   </span><span class="mi">1987</span> <span class="c1"># self._coordinates and self._shading</span>
+<span class="g g-Whitespace">   </span><span class="mi">1988</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/matplotlib/transforms.py:954,</span> in <span class="ni">Bbox.update_from_data_xy</span><span class="nt">(self, xy, ignore, updatex, updatey)</span>
+<span class="g g-Whitespace">    </span><span class="mi">951</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">952</span>     <span class="k">return</span>
+<span class="ne">--&gt; </span><span class="mi">954</span> <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">955</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">ignore</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">956</span>                       <span class="n">updatex</span><span class="o">=</span><span class="n">updatex</span><span class="p">,</span> <span class="n">updatey</span><span class="o">=</span><span class="n">updatey</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/matplotlib/path.py:129,</span> in <span class="ni">Path.__init__</span><span class="nt">(self, vertices, codes, _interpolation_steps, closed, readonly)</span>
+<span class="g g-Whitespace">     </span><span class="mi">99</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">codes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_interpolation_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">100</span>              <span class="n">closed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">101</span>     <span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">102</span><span class="sd">     Create a new path with the given vertices and codes.</span>
+<span class="g g-Whitespace">    </span><span class="mi">103</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">127</span><span class="sd">         and codes as read-only arrays.</span>
+<span class="g g-Whitespace">    </span><span class="mi">128</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">129</span>     <span class="n">vertices</span> <span class="o">=</span> <span class="n">_to_unmasked_float_array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">130</span>     <span class="n">_api</span><span class="o">.</span><span class="n">check_shape</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">132</span>     <span class="k">if</span> <span class="n">codes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+<span class="nn">File /usr/share/miniconda/envs/dev-feisty/lib/python3.8/site-packages/matplotlib/cbook/__init__.py:1369,</span> in <span class="ni">_to_unmasked_float_array</span><span class="nt">(x)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1367</span>     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1368</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1369</span>     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+<span class="ne">TypeError</span>: float() argument must be a string or a number, not &#39;cftime._cftime.DatetimeNoLeap&#39;
 </pre></div>
 </div>
 <img alt="_images/testcase-datasets_9_1.png" src="_images/testcase-datasets_9_1.png" />
@@ -761,7 +855,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f0959a829a0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x162ab3f10&gt;
 </pre></div>
 </div>
 <img alt="_images/testcase-datasets_11_1.png" src="_images/testcase-datasets_11_1.png" />
@@ -803,7 +897,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f09599e5bb0&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x162e17760&gt;]
 </pre></div>
 </div>
 <img alt="_images/testcase-datasets_17_1.png" src="_images/testcase-datasets_17_1.png" />
