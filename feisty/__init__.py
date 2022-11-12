@@ -14,5 +14,6 @@ from .offline_driver import (
     _offline_driver,
     config_and_run_from_dataset,
     config_and_run_from_netcdf,
+    config_and_run_from_yaml,
     config_and_run_testcase,
 )

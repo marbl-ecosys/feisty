@@ -33,7 +33,7 @@ def test_1day_testcase():
         {'predator': 'Ld', 'prey': 'Md', 'preference': 1.0},
         {'predator': 'Ld', 'prey': 'benthic_prey', 'preference': 1.0},
     ]
-    ds_out = feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1, settings_in=settings_in)
+    ds_out = feisty.config_and_run_testcase('tanh_shelf', 'cyclic', settings_in=settings_in)
     baseline_file = os.path.join('tests', 'baselines', 'test_case_1day.nc')
     baseline_da = xr.open_dataset(baseline_file)['biomass'].transpose('time', 'group', 'X')
     for coord in ['X', 'time', 'group']:
@@ -71,7 +71,6 @@ def test_1day_locs3():
     ds_out = feisty.config_and_run_from_netcdf(
         'tests/test_forcing.yaml',
         'test_locs3',
-        1,
         ignore_year_in_forcing=True,
         settings_in=settings_in,
     )

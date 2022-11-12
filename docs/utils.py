@@ -112,7 +112,7 @@ def default_config():
         driver_config[matlab_script]['start_date'] = '0001-01-01'
 
         # Length of run (in years)
-        driver_config[matlab_script]['nyears'] = 1
+        driver_config[matlab_script]['end_date'] = '0001-12-31'
 
         # Run with dask?
         driver_config[matlab_script]['num_chunks'] = 1

@@ -11,9 +11,12 @@ from . import testcase
 from .core import settings as settings_mod
 from .core.interface import feisty_instance_type
 from .utils import (
+    gen_chunks_dict,
+    generate_forcing_ds_from_config,
     generate_ic_ds_for_feisty,
     generate_single_ds_for_feisty,
     generate_template,
+    get_forcing_from_config,
     make_forcing_cyclic,
 )
 
@@ -376,8 +379,8 @@ class _offline_driver(object):
 def config_and_run_testcase(
     domain_name,
     forcing_name,
-    nsteps,
     start_date='0001-01-01',
+    end_date='0001-01-01',
     settings_in={},
     fish_ic_data=1e-5,
     benthic_prey_ic_data=2e-3,
@@ -483,8 +486,8 @@ def config_and_run_testcase(
     # Set up template for map_blocks
     template = generate_template(
         ds=ds,
-        nsteps=nsteps,
         start_date=start_date,
+        end_date=end_date,
         diagnostic_names=diagnostic_names,
     )
 
@@ -493,7 +496,7 @@ def config_and_run_testcase(
         ds,
         args=(
             ds_ic,
-            nsteps,
+            len(template['time']),
             start_date,
             True,  # ignore_year_in_forcing is always true for test case
             settings_in,
@@ -508,8 +511,8 @@ def config_and_run_testcase(
 def config_and_run_from_netcdf(
     input_yaml,
     input_key,
-    nsteps,
     start_date='0001-01-01',
+    end_date='0001-01-01',
     ignore_year_in_forcing=False,
     settings_in={},
     fish_ic_data=1e-5,
@@ -520,7 +523,7 @@ def config_and_run_from_netcdf(
     method='euler',
 ):
 
-    """Return an instance of ``feisty.driver.offline_driver`` for ``testcase`` data.
+    """Return an instance of ``feisty.driver.offline_driver`` configured from a YAML file
 
     Parameters
     ----------
@@ -549,44 +552,44 @@ def config_and_run_from_netcdf(
     sim : feisty.driver.offline_driver
       An instance of the ``feisty.driver.offline_driver`` ready for integration.
 
-    Examples
-    --------
+    # Examples
+    # --------
 
-    Instantiate a ``offline_driver``::
+    # Instantiate a ``offline_driver``::
 
-      >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
+    #   >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
 
-    Integrate the model for 365 days::
+    # Integrate the model for 365 days::
 
-       >>> testcase.run(365)
+    #    >>> testcase.run(365)
 
-    Access the output::
+    # Access the output::
 
-      >>> testcase.ds.info()
-      xarray.Dataset {
-      dimensions:
-              X = 22 ;
-              group = 9 ;
-              time = 365 ;
-              fish = 8 ;
-      variables:
-              float64 X(X) ;
-              <U12 group(group) ;
-              float64 biomass(time, group, X) ;
-              <U2 fish(fish) ;
-              float64 T_habitat(time, fish, X) ;
-              float64 ingestion_rate(time, fish, X) ;
-              float64 predation_flux(time, fish, X) ;
-              float64 predation_rate(time, fish, X) ;
-              float64 metabolism_rate(time, fish, X) ;
-              float64 mortality_rate(time, fish, X) ;
-              float64 energy_avail_rate(time, fish, X) ;
-              float64 growth_rate(time, fish, X) ;
-              float64 reproduction_rate(time, fish, X) ;
-              float64 recruitment_flux(time, fish, X) ;
-              float64 fish_catch_rate(time, fish, X) ;
-      // global attributes:
-        }
+    #   >>> testcase.ds.info()
+    #   xarray.Dataset {
+    #   dimensions:
+    #           X = 22 ;
+    #           group = 9 ;
+    #           time = 365 ;
+    #           fish = 8 ;
+    #   variables:
+    #           float64 X(X) ;
+    #           <U12 group(group) ;
+    #           float64 biomass(time, group, X) ;
+    #           <U2 fish(fish) ;
+    #           float64 T_habitat(time, fish, X) ;
+    #           float64 ingestion_rate(time, fish, X) ;
+    #           float64 predation_flux(time, fish, X) ;
+    #           float64 predation_rate(time, fish, X) ;
+    #           float64 metabolism_rate(time, fish, X) ;
+    #           float64 mortality_rate(time, fish, X) ;
+    #           float64 energy_avail_rate(time, fish, X) ;
+    #           float64 growth_rate(time, fish, X) ;
+    #           float64 reproduction_rate(time, fish, X) ;
+    #           float64 recruitment_flux(time, fish, X) ;
+    #           float64 fish_catch_rate(time, fish, X) ;
+    #   // global attributes:
+    #     }
     """
     # Determine location of initial conditions
     # "constant" => 1e-5 for fish, 2e-3 for benthic prey
@@ -618,8 +621,8 @@ def config_and_run_from_netcdf(
 
     template = generate_template(
         ds=ds,
-        nsteps=nsteps,
         start_date=start_date,
+        end_date=end_date,
         diagnostic_names=diagnostic_names,
     )
 
@@ -628,7 +631,7 @@ def config_and_run_from_netcdf(
         ds,
         args=(
             ds_ic,
-            nsteps,
+            len(template['time']),
             start_date,
             ignore_year_in_forcing,
             settings_in,
@@ -638,6 +641,118 @@ def config_and_run_from_netcdf(
         ),
         template=template,
     ).compute()
+
+
+def config_and_run_from_yaml(
+    input_dict,
+    settings_in={},
+):
+
+    """Return an instance of ``feisty.driver.offline_driver`` configured from a YAML file.
+       This should eventually replace config_and_run_from_netcdf() as it is a better YAML schema.
+
+    Parameters
+    ----------
+
+    input_dict : dict
+      Configuration of this FEISTY case
+
+    settings_in : dict
+      Settings to overwrite defaults.
+
+    Returns
+    -------
+
+    sim : feisty.driver.offline_driver
+      An instance of the ``feisty.driver.offline_driver`` ready for integration.
+
+    # Examples
+    # --------
+
+    # Instantiate a ``offline_driver``::
+
+    #   >>> testcase = feisty.driver.simulate_testcase("tanh_shelf", "cyclic")
+
+    # Integrate the model for 365 days::
+
+    #    >>> testcase.run(365)
+
+    # Access the output::
+
+    #   >>> testcase.ds.info()
+    #   xarray.Dataset {
+    #   dimensions:
+    #           X = 22 ;
+    #           group = 9 ;
+    #           time = 365 ;
+    #           fish = 8 ;
+    #   variables:
+    #           float64 X(X) ;
+    #           <U12 group(group) ;
+    #           float64 biomass(time, group, X) ;
+    #           <U2 fish(fish) ;
+    #           float64 T_habitat(time, fish, X) ;
+    #           float64 ingestion_rate(time, fish, X) ;
+    #           float64 predation_flux(time, fish, X) ;
+    #           float64 predation_rate(time, fish, X) ;
+    #           float64 metabolism_rate(time, fish, X) ;
+    #           float64 mortality_rate(time, fish, X) ;
+    #           float64 energy_avail_rate(time, fish, X) ;
+    #           float64 growth_rate(time, fish, X) ;
+    #           float64 reproduction_rate(time, fish, X) ;
+    #           float64 recruitment_flux(time, fish, X) ;
+    #           float64 fish_catch_rate(time, fish, X) ;
+    #   // global attributes:
+    #     }
+    """
+
+    num_chunks = input_dict.get('num_chunks', 1)
+    start_date = input_dict['start_date']
+    end_date = input_dict['end_date']
+    ignore_year_in_forcing = input_dict['forcing'].get('use_cyclic_forcing', False)
+    diagnostic_names = []
+    method = input_dict.get('method', 'euler')
+    max_output_time_dim = input_dict.get('max_output_time_dim', 365)
+
+    feisty_forcing = get_forcing_from_config(input_dict)
+    ds = generate_forcing_ds_from_config(feisty_forcing)
+    if num_chunks > 1:
+        chunks = gen_chunks_dict(ds, num_chunks)
+        ds = ds.chunk(chunks)
+
+    if 'initial_conditions' in input_dict:
+        ic_root = input_dict['initial_conditions'].get('root_dir', '.')
+        ic_file = f'{ic_root}/{input_dict["initial_conditions"]["ic_file"]}'
+    else:
+        ic_file = None
+    ds_ic = generate_ic_ds_for_feisty(
+        ds.X.data,
+        num_chunks=num_chunks,
+        ic_file=ic_file,
+    )
+
+    template = generate_template(
+        ds=ds,
+        start_date=start_date,
+        end_date=end_date,
+        diagnostic_names=diagnostic_names,
+    )
+
+    return xr.map_blocks(
+        config_and_run_from_dataset,
+        ds,
+        args=(
+            ds_ic,
+            len(template['time']),
+            start_date,
+            ignore_year_in_forcing,
+            settings_in,
+            diagnostic_names,
+            max_output_time_dim,
+            method,
+        ),
+        template=template,
+    )
 
 
 def config_and_run_from_dataset(

@@ -1,0 +1,12 @@
+root_dir: /glade/work/mlevy/codes/feisty/input_files/
+variables:
+  - T_pelagic
+  - T_bottom
+  - poc_flux_bottom
+  - zooC
+  - zoo_mort
+field_rename:
+  dep: bathymetry
+  time: forcing_time
+files:
+  - feisty_input_from_FOSI_monthly.nc

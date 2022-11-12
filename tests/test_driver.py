@@ -29,9 +29,9 @@ def test_forcing_cyclic():
 def test_not_implemented():
     """ensure appropriate failures with bad method."""
     with pytest.raises(ValueError):
-        feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1, method='intuition')
+        feisty.config_and_run_testcase('tanh_shelf', 'cyclic', method='intuition')
     with pytest.raises(NotImplementedError):
-        feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1, method='Radau')
+        feisty.config_and_run_testcase('tanh_shelf', 'cyclic', method='Radau')
 
 
 def test_read_settings():
@@ -91,10 +91,12 @@ def test_read_settings():
 
 
 def test_config_testcase_run():
-    feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 3)
+    feisty.config_and_run_testcase('tanh_shelf', 'cyclic', end_date='0001-01-03')
 
 
 def test_cyclic_interpolation():
-    ds1 = feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1)
-    ds2 = feisty.config_and_run_testcase('tanh_shelf', 'cyclic', 1, start_date='0002-01-01')
+    ds1 = feisty.config_and_run_testcase('tanh_shelf', 'cyclic')
+    ds2 = feisty.config_and_run_testcase(
+        'tanh_shelf', 'cyclic', start_date='0002-01-01', end_date='0002-01-01'
+    )
     assert (ds1['biomass'].data == ds2['biomass'].data).all()

@@ -1,18 +1,19 @@
-computing_account: P93300670
-diagnostic_names: []
-forcing_rename:
-  HT: bathymetry
-  TEMP_BOTTOM: T_bottom
-  TEMP_mean_100m: T_pelagic
-  mesozooC_zint_100m_2: zooC
-  mesozoo_loss_zint_100m: zoo_mort
-  pocToFloor: poc_flux_bottom
-  time: forcing_time
-ignore_year_in_forcing: false
+start_date: '1958-01-01'
+end_date: '1967-12-31'
+dt:
+  1 # dt is currently hardcoded in the package as 1 day
+  # changing this variable won't change anything until
+  # we update the underlying package
+forcing:
+  use_cyclic_forcing: False
+  streams:
+    - forcing_streams/T_pelagic.TL319_g17.4p2z.yaml
+    - forcing_streams/T_bottom.TL319_g17.4p2z.yaml
+    - forcing_streams/poc_flux_bottom.TL319_g17.4p2z.yaml
+    - forcing_streams/zoo_mort.TL319_g17.4p2z.yaml
+    - forcing_streams/zooC.TL319_g17.4p2z.yaml
 max_output_time_dim: 365
 method: euler
-num_chunks: 32
+num_chunks: 18
 output_in_2D: true
-resubmit: true
-run_dir_root: /glade/scratch/{{env['USER']}}
-run_name: feisty.TL319_g17.4p2z.001
+# no "initial_conditions" key => initialize from constant values
