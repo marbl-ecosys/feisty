@@ -681,7 +681,7 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.10/site-packages/dask_jobqueue/core.py:20: FutureWarning: tmpfile is deprecated and will be removed in a future release. Please use dask.utils.tmpfile instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.8/site-packages/dask_jobqueue/core.py:20: FutureWarning: tmpfile is deprecated and will be removed in a future release. Please use dask.utils.tmpfile instead.
   from distributed.utils import tmpfile
 </pre></div>
 </div>
@@ -719,14 +719,14 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 <span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_case&#39;</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;ylim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 
 <span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;ignore_year_in_forcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0002-12-31&#39;</span>
 <span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;max_output_time_dim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">730</span>
 <span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;make_err_plots&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;test_locs3&#39;</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;ylim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
 
 <span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">][</span><span class="s1">&#39;ignore_year_in_forcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_cesm&#39;</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_cesm&#39;</span><span class="p">][</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0251-12-31&#39;</span>
+<span class="n">driver_config</span><span class="p">[</span><span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">][</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0100-12-31&#39;</span>
 <span class="k">for</span> <span class="n">matlab_script_loc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;FOSI_cesm&#39;</span><span class="p">,</span> <span class="s1">&#39;FOSI_cesm_daily&#39;</span><span class="p">,</span> <span class="s1">&#39;FOSI_spinup&#39;</span><span class="p">]:</span>
     <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;num_chunks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">18</span>
     <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script_loc</span><span class="p">][</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;FOSI_cesm.nc&#39;</span>
@@ -802,13 +802,12 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Configuring and running </span><span class="si">{</span><span class="n">matlab_script</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
-<span class="n">nsteps</span> <span class="o">=</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;nyears&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">365</span>
 
 <span class="k">if</span> <span class="n">matlab_script</span> <span class="o">==</span> <span class="s1">&#39;test_case&#39;</span><span class="p">:</span>
     <span class="n">ds_out</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_and_run_testcase</span><span class="p">(</span>
         <span class="s1">&#39;tanh_shelf&#39;</span><span class="p">,</span>
         <span class="s1">&#39;cyclic&#39;</span><span class="p">,</span>
-        <span class="n">nsteps</span><span class="p">,</span>
+        <span class="n">end_date</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span>
         <span class="n">settings_in</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;settings_in&#39;</span><span class="p">],</span>
         <span class="n">max_output_time_dim</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;max_output_time_dim&#39;</span><span class="p">],</span>
     <span class="p">)</span>
@@ -816,8 +815,8 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
     <span class="n">ds_out</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_and_run_from_netcdf</span><span class="p">(</span>
         <span class="s1">&#39;./forcing.yaml&#39;</span><span class="p">,</span>
         <span class="n">matlab_script</span><span class="p">,</span>
-        <span class="n">nsteps</span><span class="p">,</span>
         <span class="n">start_date</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;start_date&#39;</span><span class="p">],</span>
+        <span class="n">end_date</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span>
         <span class="n">ignore_year_in_forcing</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;ignore_year_in_forcing&#39;</span><span class="p">],</span>
         <span class="n">settings_in</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;settings_in&#39;</span><span class="p">],</span>
         <span class="n">diagnostic_names</span><span class="o">=</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;diagnostic_names&#39;</span><span class="p">],</span>
@@ -829,19 +828,13 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Configuring and running test_locs3...
-Starting forcing dataset generation at 14:20:48
-Starting template generation at 14:20:48
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.10/site-packages/xarray/core/dataset.py:2172: FutureWarning: None value for &#39;chunks&#39; is deprecated. It will raise an error in the future. Use instead &#39;{}&#39;
-  warnings.warn(
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting run() at 14:20:49
-Integrating 730 steps (starting at 14:20:49)
-Finished _solve at 14:21:08
-CPU times: user 19.6 s, sys: 32.2 ms, total: 19.6 s
-Wall time: 19.7 s
+Starting forcing dataset generation at 17:04:56
+Starting template generation at 17:04:56
+Starting run() at 17:04:56
+Integrating 730 steps (starting at 17:04:56)
+Finished _solve at 17:05:11
+CPU times: user 15.1 s, sys: 49.5 ms, total: 15.2 s
+Wall time: 15.8 s
 </pre></div>
 </div>
 </div>
@@ -849,7 +842,7 @@ Wall time: 19.7 s
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;baseline_compare&#39;</span><span class="p">]:</span>
-    <span class="n">compare_nc</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="p">,</span> <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">)</span>
+    <span class="n">compare_nc</span><span class="p">(</span><span class="n">baselines_from_nc</span><span class="p">,</span> <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">],</span> <span class="n">thres</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -944,7 +937,6 @@ Wall time: 19.7 s
     <span class="n">compare_nc</span><span class="p">(</span>
         <span class="n">baselines_from_nc</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">[</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]]),</span>
         <span class="n">ds_out</span><span class="p">[</span><span class="s2">&quot;biomass&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">[</span><span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;plot_settings&#39;</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]]),</span>
-        <span class="n">nsteps</span><span class="p">,</span>
         <span class="n">thres</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
     <span class="p">)</span>
 </pre></div>

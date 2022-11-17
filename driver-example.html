@@ -690,7 +690,8 @@ title="Print to PDF"
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_out</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">config_and_run_testcase</span><span class="p">(</span>
     <span class="s2">&quot;tanh_shelf&quot;</span><span class="p">,</span>
     <span class="s2">&quot;cyclic&quot;</span><span class="p">,</span>
-    <span class="mi">730</span><span class="p">,</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">,</span>
+    <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;0002-12-31&#39;</span><span class="p">,</span>
     <span class="n">settings_in</span><span class="o">=</span><span class="n">settings_in</span><span class="p">,</span>
     <span class="n">diagnostic_names</span><span class="o">=</span><span class="p">[</span>
         <span class="s2">&quot;T_habitat&quot;</span><span class="p">,</span>
@@ -714,15 +715,11 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.10/site-packages/xarray/core/dataset.py:2172: FutureWarning: None value for &#39;chunks&#39; is deprecated. It will raise an error in the future. Use instead &#39;{}&#39;
-  warnings.warn(
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting template generation at 14:44:48
-Starting run() at 14:44:48
-Integrating 730 steps (starting at 14:44:48)
-Starting a new output dataset for timestep 365 (14:44:58)
-Finished _solve at 14:45:08
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting template generation at 16:55:38
+Starting run() at 16:55:39
+Integrating 730 steps (starting at 16:55:39)
+Starting a new output dataset for timestep 365 (16:55:47)
+Finished _solve at 16:55:55
 </pre></div>
 </div>
 </div>
@@ -740,19 +737,20 @@ Finished _solve at 14:45:08
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>xarray.Dataset {
 dimensions:
-	time = 730 ;
-	group = 9 ;
 	X = 22 ;
+	group = 9 ;
+	time = 730 ;
 	fish = 8 ;
 	feeding_link = 19 ;
 
 variables:
-	object time(time) ;
-	object group(group) ;
 	float64 X(X) ;
-	object fish(fish) ;
-	object feeding_link(feeding_link) ;
+	&lt;U12 group(group) ;
 	float64 biomass(time, group, X) ;
+	&lt;U2 fish(fish) ;
+	&lt;U15 feeding_link(feeding_link) ;
+	&lt;U2 predator(feeding_link) ;
+	&lt;U12 prey(feeding_link) ;
 	float64 T_habitat(time, fish, X) ;
 	float64 ingestion_rate(time, fish, X) ;
 	float64 predation_flux(time, fish, X) ;
@@ -768,8 +766,7 @@ variables:
 	float64 encounter_rate_total(time, fish, X) ;
 	float64 consumption_rate_max_pred(time, fish, X) ;
 	float64 consumption_rate_link(time, feeding_link, X) ;
-	&lt;U2 predator(feeding_link) ;
-	&lt;U12 prey(feeding_link) ;
+	object time(time) ;
 
 // global attributes:
 }
