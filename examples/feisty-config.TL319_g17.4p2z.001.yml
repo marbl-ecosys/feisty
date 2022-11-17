@@ -4,6 +4,7 @@ dt:
   1 # dt is currently hardcoded in the package as 1 day
   # changing this variable won't change anything until
   # we update the underlying package
+# no "initial_conditions" key => initialize from constant values
 forcing:
   use_cyclic_forcing: False
   streams:
@@ -15,5 +16,10 @@ forcing:
 max_output_time_dim: 365
 method: euler
 num_chunks: 18
+output_file: highres_companion.10_yr.nc
 output_in_2D: true
-# no "initial_conditions" key => initialize from constant values
+# Option to pull out a single lat,lon from POP grid
+# (could we provide degrees instead of indices?)
+# lat_lon: # lat: 0 - 383 on the 1 degree grid; lon: 0 - 319 on the 1 degree grid
+#   - 0, 10
+#   - 55, 20

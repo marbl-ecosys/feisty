@@ -29,66 +29,64 @@ class driver_settings(object):
     def __init__(
         self,
         run_config_file,
-        run_forcing_file,
         run_settings_file=None,
         continue_run=False,
     ):
 
         self.run_config_file = run_config_file
-        self.run_forcing_file = run_forcing_file
         self.run_settings_file = run_settings_file
+        self.calendar = 'noleap'
 
         # set run config properties
-        config_info = self._read_file(run_config_file, apply_template=True)
-        forcing_info = self._read_file(run_forcing_file, apply_template=True)
+        self.config_info = self._read_file(run_config_file, apply_template=True)
         self.settings_in = self._read_file(run_settings_file)
 
-        self.run_name = config_info.pop('run_name')
-        self.computing_account = config_info.pop('computing_account')
-        self.run_dir_root = config_info.pop('run_dir_root', '.')
-        self.diagnostic_names = config_info.pop('diagnostic_names', [])
+        # self.run_name = config_info.pop('run_name')
+        # self.computing_account = config_info.pop('computing_account')
+        # self.run_dir_root = config_info.pop('run_dir_root', '.')
+        # self.diagnostic_names = config_info.pop('diagnostic_names', [])
 
-        self.resubmit = config_info.pop('resubmit', False)
+        # self.resubmit = config_info.pop('resubmit', False)
 
-        self.forcing_rename = config_info.pop('forcing_rename', {})
-        self.ignore_year_in_forcing = config_info.pop('ignore_year_in_forcing', False)
-        self.max_output_time_dim = config_info.pop('max_output_time_dim', 365)
-        self.method = config_info.pop('method', 'euler')
-        self.num_chunks = config_info.pop('num_chunks', 18)
-        self.output_in_2D = config_info.pop('output_in_2D', True)
-        self.calendar = config_info.pop('calendar', 'noleap')
+        # self.forcing_rename = config_info.pop('forcing_rename', {})
+        # self.ignore_year_in_forcing = config_info.pop('ignore_year_in_forcing', False)
+        # self.max_output_time_dim = config_info.pop('max_output_time_dim', 365)
+        # self.method = config_info.pop('method', 'euler')
+        # self.num_chunks = config_info.pop('num_chunks', 18)
+        # self.output_in_2D = config_info.pop('output_in_2D', True)
+        # self.calendar = config_info.pop('calendar', 'noleap')
 
         if self.calendar != 'noleap':
             raise NotImplementedError(f'unsupported calendar: {self.calendar}')
 
         # set ic and forcing properties
-        self.forcing_keys = forcing_info['keys']
-        if continue_run:
-            assert os.path.exists(self.restart_pointer), 'missing restart pointer file'
+        # self.forcing_keys = forcing_info['keys']
+        # if continue_run:
+        #     assert os.path.exists(self.restart_pointer), 'missing restart pointer file'
 
-            restart_info = self._read_file(self.restart_pointer)
-            self.ic_file = restart_info['ic_file']
+        #     restart_info = self._read_file(self.restart_pointer)
+        #     self.ic_file = restart_info['ic_file']
 
-            assert (
-                restart_info['forcing_key'] in self.forcing_keys
-            ), f"unknown forcing key: {restart_info['forcing_key']} in restart pointer"
-            # increment forcing keys
-            key_ndx = self.forcing_keys.index(self.forcing_key) + 1
+        #     assert (
+        #         restart_info['forcing_key'] in self.forcing_keys
+        #     ), f"unknown forcing key: {restart_info['forcing_key']} in restart pointer"
+        #     # increment forcing keys
+        #     key_ndx = self.forcing_keys.index(self.forcing_key) + 1
 
-        else:
-            self.ic_file = config_info.pop('ic_file', None)
-            key_ndx = 0
+        # else:
+        #     # self.ic_file = config_info.pop('ic_file', None)
+        #     key_ndx = 0
 
-        self.forcing_key = self.forcing_keys[key_ndx]
-        self.last_submission = key_ndx >= len(self.forcing_keys) - 1
+        # self.forcing_key = self.forcing_keys[key_ndx]
+        # self.last_submission = key_ndx >= len(self.forcing_keys) - 1
 
-        forcing_info_key = forcing_info[self.forcing_key]
-        self.start_date = forcing_info_key.pop('start_date')
-        self.nyears = forcing_info_key.pop('nyears')
-        self.list_forcing_files = forcing_info_key.pop('list_forcing_files')
+        # forcing_info_key = forcing_info[self.forcing_key]
+        # self.start_date = forcing_info_key.pop('start_date')
+        # self.nyears = forcing_info_key.pop('nyears')
+        # self.list_forcing_files = forcing_info_key.pop('list_forcing_files')
 
-        assert not config_info, f'unknown keys in input file: {config_info}'
-        assert not forcing_info_key, f'unknown keys in forcing file: {forcing_info_key}'
+        # assert not config_info, f'unknown keys in input file: {config_info}'
+        # assert not forcing_info_key, f'unknown keys in forcing file: {forcing_info_key}'
 
     def write_restart_pointer(self):
         """write a restart pointer file"""
@@ -167,7 +165,6 @@ class driver_settings(object):
         os.makedirs(self.run_dir, exist_ok=True)
         ensure_files = [
             self.run_config_file,
-            self.run_forcing_file,
             self.run_settings_file,
         ]
         for file in ensure_files:
@@ -176,12 +173,11 @@ class driver_settings(object):
             check_call(['cp', file, self._file_in_run_dir(file)])
 
 
-def gen_jobscript(run_config_file, run_forcing_file, run_settings_file=None, continue_run=False):
+def gen_jobscript(run_config_file, run_settings_file=None, continue_run=False):
     """return a jobscript file suitable for submission to queue"""
 
     run_settings = driver_settings(
         run_config_file,
-        run_forcing_file,
         run_settings_file,
         continue_run,
     )
@@ -189,13 +185,11 @@ def gen_jobscript(run_config_file, run_forcing_file, run_settings_file=None, con
     mpi_tasks = run_settings.num_chunks + 2
 
     run_config_file = run_settings.run_config_file
-    run_forcing_file = run_settings.run_forcing_file
     run_settings_file = run_settings.run_settings_file
 
     indent_spc = ' ' * 4
     options = [
         f'{indent_spc}--run-config-file {run_config_file}',
-        f'--run-forcing-file {run_forcing_file}',
     ]
 
     if run_settings.run_settings_file is not None:
@@ -231,19 +225,18 @@ def gen_jobscript(run_config_file, run_forcing_file, run_settings_file=None, con
     return jobscript
 
 
-def submit_run(run_config_file, run_forcing_file, run_settings_file=None, continue_run=False):
+def submit_run(run_config_file, run_settings_file=None, continue_run=False):
     """submit a FEISTY integration to the queue"""
 
     run_settings = driver_settings(
         run_config_file,
-        run_forcing_file,
         run_settings_file,
         continue_run,
     )
 
     run_settings.setup_run_dir()
 
-    jobscript = gen_jobscript(run_config_file, run_forcing_file, run_settings_file, continue_run)
+    jobscript = gen_jobscript(run_config_file, run_settings_file, continue_run)
 
     print('submitting run')
     print(f'qsub {jobscript}')
@@ -259,12 +252,6 @@ def submit_run(run_config_file, run_forcing_file, run_settings_file=None, contin
     help='YAML file containing run settings',
 )
 @click.option(
-    '--run-forcing-file',
-    type=click.Path(exists=True),
-    required=True,
-    help='YAML file containing forcing data',
-)
-@click.option(
     '--run-settings-file',
     type=click.Path(exists=True),
     required=False,
@@ -278,7 +265,6 @@ def submit_run(run_config_file, run_forcing_file, run_settings_file=None, contin
 )
 def main(
     run_config_file,
-    run_forcing_file,
     run_settings_file=None,
     continue_run=False,
 ):
@@ -286,83 +272,18 @@ def main(
     # configure Run
     run_settings = driver_settings(
         run_config_file,
-        run_forcing_file,
         run_settings_file,
         continue_run,
     )
+    ds_out = feisty.config_and_run_from_yaml(run_settings.config_info)
 
-    os.makedirs(run_settings.run_dir, exist_ok=True)
+    # os.makedirs(run_settings.run_dir, exist_ok=True)
 
     # initialize dask-mpi
     dask_mpi.initialize()
 
-    print('\n')
-    print('-' * 50)
-    print('generating forcing dataset')
-    print('-' * 50)
-
-    ds = feisty.utils.generate_single_ds_for_feisty(
-        num_chunks=run_settings.num_chunks,
-        forcing_file=run_settings.list_forcing_files,
-        forcing_rename=run_settings.forcing_rename,
-    ).persist()
-
-    print(ds)
-    print('\n----\n')
-
-    print('\n')
-    print('-' * 50)
-    print('generating IC dataset')
-    print('-' * 50)
-
-    ds_ic = feisty.utils.generate_ic_ds_for_feisty(
-        ds.X.data,
-        ic_file=run_settings.ic_file,
-        num_chunks=run_settings.num_chunks,
-    ).persist()
-
-    print(ds_ic)
-    print('\n----\n')
-
-    # Generate a template for the output of map_blocks
-    print('\n')
-    print('-' * 50)
-    print('generating template dataset')
-    print('-' * 50)
-
-    template = feisty.utils.generate_template(
-        ds=ds,
-        nsteps=run_settings.nsteps,
-        start_date=run_settings.start_date,
-        diagnostic_names=run_settings.diagnostic_names,
-    )
-
-    print(template)
-    print('\n----\n')
-
-    # Run FEISTY
-    print('\n')
-    print('-' * 50)
-    print(f'Starting compute at {time.strftime("%H:%M:%S")}')
-    print('-' * 50)
-
     with Client():
-        # map_blocks lets us run in parallel over our dask cluster
-        ds_out = xr.map_blocks(
-            feisty.config_and_run_from_dataset,
-            ds,
-            args=(
-                ds_ic,
-                run_settings.nsteps,
-                run_settings.start_date,
-                run_settings.ignore_year_in_forcing,
-                run_settings.settings_in,
-                run_settings.diagnostic_names,
-                run_settings.max_output_time_dim,
-                run_settings.method,
-            ),
-            template=template,
-        ).compute()
+        da_out = ds_out['biomass'].compute()
         # if output_file is .zarr, skip compute() and call to_zarr() here
         # could also write to zarr, then read zarr and write to netcdf
 
@@ -370,53 +291,58 @@ def main(
     print('-' * 50)
     print('integration completed')
     print('-' * 50)
-    print(ds_out)
     print('\n----\n')
 
-    # omit .compute and write to zarr?
-    if os.path.isfile(run_settings.output_file):
-        print(f'{run_settings.output_file} exists, removing now...')
-        os.remove(run_settings.output_file)
+    if run_settings.config_info.get('output_in_2D', False):
+        # Rerun map_da_back_to_2D_pop if output_file is not specified in run_settings,
+        # or if it is specified in run_settings but does not exist
+        print('Converting back to lat/lon grid')
+        da_out = feisty.utils.map_da_back_to_2D_pop(
+            da_out, run_settings.config_info['forcing']['streams']
+        )
+        print(da_out)
 
-    print('\n')
-    print('-' * 50)
-    print(f'writing output file: {run_settings.output_file}')
-    print('-' * 50)
-    if run_settings.output_in_2D:
-        map_ds = feisty.utils.generate_1D_to_2D_pop_map(run_settings.list_forcing_files)
-        ds_out2 = feisty.utils.map_ds_back_to_2D_pop(ds_out, map_ds)
-        ds_out2.to_netcdf(run_settings.output_file)
-    else:
-        ds_out.to_netcdf(run_settings.output_file)
+        # omit .compute and write to zarr?
+        if 'output_file' in run_settings.config_info:
+            print('\n')
+            print('-' * 50)
+            print(f'writing output file: {run_settings.config_info["output_file"]}')
+            if os.path.isfile(run_settings.config_info['output_file']):
+                print(f'{run_settings.config_info["output_file"]} exists, removing now...')
+                os.remove(run_settings.config_info['output_file'])
+            print('-' * 50)
+            encoding = {'biomass': {'_FillValue': 9.969209968386869e36}}
+            da_out.to_dataset().to_netcdf(
+                run_settings.config_info['output_file'], encoding=encoding
+            )
 
     print(f'Finished at {time.strftime("%H:%M:%S")}')
     print('\n----\n')
 
-    print('\n')
-    print('-' * 50)
-    print(f'writing restart file: {run_settings.restart_file}')
-    print('-' * 50)
+    # print('\n')
+    # print('-' * 50)
+    # print(f'writing restart file: {run_settings.restart_file}')
+    # print('-' * 50)
 
-    run_settings.write_restart_pointer()
-    # TODO: better approach here? Can't write X as multi-index to netCDF
-    ds_out['X'] = np.arange(0, len(ds_out.X))
-    ds_out.isel(time=-1).to_netcdf(run_settings.restart_file)
+    # run_settings.write_restart_pointer()
+    # # TODO: better approach here? Can't write X as multi-index to netCDF
+    # ds_out['X'] = np.arange(0, len(ds_out.X))
+    # ds_out.isel(time=-1).to_netcdf(run_settings.restart_file)
 
-    print('\n----\n')
+    # print('\n----\n')
 
-    # dask_mpi.send_close_signal()
-    if run_settings.resubmit and not run_settings.last_submission:
-        print('resubmitting')
-        submit_run(
-            run_config_file,
-            run_forcing_file,
-            run_settings_file,
-            continue_run=True,
-        )
-    print('\n')
-    print('-' * 50)
-    print('completed')
-    print('-' * 50)
+    # # dask_mpi.send_close_signal()
+    # if run_settings.resubmit and not run_settings.last_submission:
+    #     print('resubmitting')
+    #     submit_run(
+    #         run_config_file,
+    #         run_settings_file,
+    #         continue_run=True,
+    #     )
+    # print('\n')
+    # print('-' * 50)
+    # print('completed')
+    # print('-' * 50)
 
 
 if __name__ == '__main__':
