@@ -1,0 +1,16 @@
+start_date: '0249-01-01'
+end_date: '0253-12-31'
+dt:
+  1 # dt is currently hardcoded in the package as 1 day
+  # changing this variable won't change anything until
+  # we update the underlying package
+forcing:
+  use_cyclic_forcing: False
+  streams:
+    - forcing_streams/FOSI_CESM.yaml
+max_output_time_dim: 365
+method: euler
+num_chunks: 18
+initial_conditions:
+  root_dir: /glade/work/mlevy/codes/feisty/input_files
+  ic_file: FOSI_cesm_init_200yr.nc

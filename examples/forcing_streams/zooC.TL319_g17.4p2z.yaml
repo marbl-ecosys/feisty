@@ -1,0 +1,9 @@
+root_dir: /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/
+variables:
+  - zooC
+field_rename:
+  HT: bathymetry
+  mesozooC_zint_100m_2: zooC
+  time: forcing_time
+files:
+  - g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.mesozooC_zint_100m_2.195801-196712.nc

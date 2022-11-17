@@ -1,8 +1,10 @@
 from .cyclic_forcing import make_forcing_cyclic
 from .data_wrangling import (
-    generate_1D_to_2D_pop_map,
+    gen_chunks_dict,
+    generate_forcing_ds_from_config,
     generate_ic_ds_for_feisty,
     generate_single_ds_for_feisty,
     generate_template,
-    map_ds_back_to_2D_pop,
+    get_forcing_from_config,
+    map_da_back_to_2D_pop,
 )

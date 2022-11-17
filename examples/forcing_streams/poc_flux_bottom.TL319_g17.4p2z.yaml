@@ -1,0 +1,9 @@
+root_dir: /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/
+variables:
+  - poc_flux_bottom
+field_rename:
+  HT: bathymetry
+  pocToFloor: poc_flux_bottom
+  time: forcing_time
+files:
+  - g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.pocToFloor.195801-196712.nc

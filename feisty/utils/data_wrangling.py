@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import xarray as xr
+import yaml
 
 
 def generate_ic_ds_for_feisty(
@@ -27,38 +28,23 @@ def generate_ic_ds_for_feisty(
     return ds_ic
 
 
-def generate_1D_to_2D_pop_map(forcing_file):
-    if type(forcing_file) == list:
-        ds = xr.open_dataset(forcing_file[0])
-    else:
-        ds = xr.open_dataset(forcing_file)
-    nlat = len(ds['nlat'])
-    nlon = len(ds['nlon'])
-    ds = ds.stack(X=('nlat', 'nlon'))
-    da = xr.zeros_like(ds['HT'])
-    da.data = range(len(da.X))
-    ds_out = da.where(ds['HT'] > 0, drop=True).astype(np.int64).to_dataset(name='map')
-    ds_out['nlat_dimsize'] = nlat
-    ds_out['nlon_dimsize'] = nlon
-    return ds_out
-
-
-def map_ds_back_to_2D_pop(ds, map):
-    time = len(ds['time'])
-    group = len(ds['group'])
+def map_da_back_to_2D_pop(da, streams):
+    map = _generate_1D_to_2D_pop_map(streams)
+    time = len(da['time'])
+    group = len(da['group'])
     full_data = np.full((time, group, map['nlat_dimsize'].data * map['nlon_dimsize'].data), np.nan)
-    full_data[:, :, map['map'].data] = ds['biomass'].data[:, :, :]
+    full_data[:, :, map['map'].data] = da.data[:, :, :]
     full_data = full_data.reshape(time, group, map['nlat_dimsize'].data, map['nlon_dimsize'].data)
     ds_new = xr.Dataset(
         data_vars=dict(
             biomass=(['time', 'group', 'nlat', 'nlon'], full_data),
         ),
         coords=dict(
-            time=ds['time'].data,
-            group=ds['group'].data,
+            time=da['time'].data,
+            group=da['group'].data,
         ),
     )
-    return ds_new
+    return ds_new['biomass']
 
 
 def gen_chunks_dict(ds, num_chunks):
@@ -118,8 +104,9 @@ def generate_single_ds_for_feisty(
 # TODO: this should be agnostic wrt FEISTY groups
 def generate_template(
     ds,
-    nsteps,
     start_date='0001-01-01',
+    end_date='0001-12-31',
+    freq='D',
     groups=np.array(['Sf', 'Sp', 'Sd', 'Mf', 'Mp', 'Md', 'Lp', 'Ld', 'benthic_prey'], dtype='<U12'),
     feeding_link=np.array(
         [
@@ -207,7 +194,8 @@ def generate_template(
     # TODO: support alternative calendars
     model_time = xr.cftime_range(
         start=start_date,
-        periods=nsteps,
+        end=end_date,
+        freq=freq,
         calendar='noleap',
     )
     X = ds['X'].data
@@ -242,4 +230,94 @@ def generate_template(
     if chunks:
         ds_out = ds_out.chunk(chunks)
 
+    return ds_out
+
+
+def get_forcing_from_config(feisty_config):
+    if 'forcing' not in feisty_config:
+        raise KeyError("get_forcing_from_config requires argument with 'forcing' key")
+    if 'streams' not in feisty_config['forcing']:
+        raise KeyError(
+            "get_forcing_from_config requires argument with 'streams' key under 'forcing'"
+        )
+
+    feisty_forcing = list()
+    if type(feisty_config['forcing']['streams']) == str:
+        with open(feisty_config['forcing']['streams']) as f:
+            feisty_forcing.append(yaml.safe_load(f))
+    else:
+        for streams_file in feisty_config['forcing']['streams']:
+            with open(streams_file) as f:
+                feisty_forcing.append(yaml.safe_load(f))
+
+    return feisty_forcing
+
+
+def generate_forcing_ds_from_config(feisty_forcing):
+    forcing_dses = list()
+    for forcing_dict in feisty_forcing:
+        forcing_rename = forcing_dict.get('field_rename', {})
+        root_dir = forcing_dict.get('root_dir', '.')
+        forcing_dses.append(
+            xr.open_mfdataset(
+                [f'{root_dir}/{filename}' for filename in forcing_dict['files']],
+                parallel=False,
+                data_vars='minimal',
+                compat='override',
+                coords='minimal',
+            ).rename(forcing_rename)
+        )
+    forcing_ds = xr.merge(forcing_dses)
+    if 'TLAT' in forcing_ds:
+        forcing_ds = forcing_ds.drop_vars(['TLAT', 'TLONG', 'ULAT', 'ULONG'])
+
+    # Make sure zooplankton dimension exists
+    if 'zooplankton' not in forcing_ds.dims:
+        forcing_ds['zooC'] = forcing_ds['zooC'].expand_dims('zooplankton')
+        forcing_ds['zoo_mort'] = forcing_ds['zoo_mort'].expand_dims('zooplankton')
+        forcing_ds['zooplankton'] = xr.DataArray(['Zoo'], dims='zooplankton')
+
+    if 'X' not in forcing_ds.dims:
+        ds_tmp = forcing_ds.stack(X=('nlat', 'nlon'))
+        forcing_ds = ds_tmp.where(ds_tmp.bathymetry > 0, drop=True)
+
+    # Make sure all variables are in the dataset
+    forcing_vars = [
+        'forcing_time',
+        'X',
+        'zooplankton',
+        'bathymetry',
+        'T_pelagic',
+        'T_bottom',
+        'poc_flux_bottom',
+        'zooC',
+        'zoo_mort',
+    ]
+    for varname in forcing_vars:
+        if varname not in forcing_ds.variables:
+            raise KeyError(f'Expecting {varname} in forcing dataset')
+
+    return forcing_ds[forcing_vars]
+
+
+def _generate_1D_to_2D_pop_map(streams):
+    # Read a forcing field to get 2D coordinates
+    with open(streams[0]) as f:
+        stream_config = yaml.safe_load(f)
+    root_dir = stream_config.get('root_dir', '.')
+    if type(stream_config['files']) == list:
+        forcing_file = stream_config['files'][0]
+    else:
+        forcing_file = stream_config['files']
+    ds = xr.open_dataset(f'{root_dir}/{forcing_file}')
+
+    # Create map needed to recreate 2D output
+    nlat = len(ds['nlat'])
+    nlon = len(ds['nlon'])
+    ds = ds.stack(X=('nlat', 'nlon'))
+    da = xr.zeros_like(ds['HT'])
+    da.data = range(len(da.X))
+    ds_out = da.where(ds['HT'] > 0, drop=True).astype(np.int64).to_dataset(name='map')
+    ds_out['nlat_dimsize'] = nlat
+    ds_out['nlon_dimsize'] = nlon
     return ds_out
