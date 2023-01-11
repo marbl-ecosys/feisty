@@ -1,5 +1,6 @@
 start_date: '1958-01-01'
-end_date: '1967-12-31'
+end_date: '1958-12-31'
+#end_date: '1967-12-31'
 dt:
   1 # dt is currently hardcoded in the package as 1 day
   # changing this variable won't change anything until
@@ -15,8 +16,11 @@ forcing:
     - forcing_streams/zooC.TL319_g17.4p2z.yaml
 max_output_time_dim: 365
 method: euler
-num_chunks: 18
-output_file: highres_companion.10_yr.nc
+num_workers: 12
+chunks:
+  nlat: 128 # divide into 384
+  nlon: 80 # divide into 320
+output_file: highres_companion.zarr
 output_in_2D: true
 # Option to pull out a single lat,lon from POP grid
 # (could we provide degrees instead of indices?)

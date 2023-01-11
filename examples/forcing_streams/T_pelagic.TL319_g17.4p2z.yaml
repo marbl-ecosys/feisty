@@ -1,9 +1,9 @@
-root_dir: /glade/work/mlevy/codes/feisty/input_files/1deg_companion_run/
+root_dir: /glade/campaign/cesm/development/bgcwg/projects/CESM2-OMIP2-like-4p2z-run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch/ocn/proc/tseries/day_1/
 variables:
   - T_pelagic
 field_rename:
   HT: bathymetry
-  TEMP_mean_100m: T_pelagic
+  TEMP_mean_150m: T_pelagic
   time: forcing_time
 files:
-  - g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.TEMP_mean_100m.195801-196712.nc
+  - g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.ecosys.nday1.TEMP_mean_150m.19580101-20211231.nc

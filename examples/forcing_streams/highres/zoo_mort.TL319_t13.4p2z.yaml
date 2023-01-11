@@ -1,0 +1,9 @@
+root_dir: /glade/scratch/kristenk/hi-res-feisty-inputs
+variables:
+  - zoo_mort
+field_rename:
+  HT: bathymetry
+  mesozoo_loss_zint_100m: zoo_mort
+  time: forcing_time
+files:
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.mesozoo_loss_zint_100m.196401-196412.nc

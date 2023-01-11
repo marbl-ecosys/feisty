@@ -25,6 +25,7 @@ dependencies:
   - pytest-cov
   - scipy
   - xarray
+  - zarr
   - pip:
       - sphinx-click
       - sphinxcontrib-autoyaml
