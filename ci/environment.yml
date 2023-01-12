@@ -1,6 +1,7 @@
 name: dev-feisty
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - codecov
   - dask
