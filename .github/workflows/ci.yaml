@@ -48,7 +48,7 @@ jobs:
           channel-priority: strict
           mamba-version: '*'
           activate-environment: dev-feisty
-          auto-update-conda: false
+          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           use-only-tar-bz2: true
 
@@ -94,7 +94,7 @@ jobs:
           channel-priority: strict
           mamba-version: '*'
           activate-environment: dev-feisty
-          auto-update-conda: false
+          auto-update-conda: true
           python-version: 3.8
           use-only-tar-bz2: true
 
