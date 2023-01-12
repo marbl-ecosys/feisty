@@ -23,7 +23,7 @@ jobs:
       # Install dependencies
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          channels: conda-forge
+          channels: ['conda-forge', 'default']
           channel-priority: strict
           mamba-version: '*'
           activate-environment: dev-feisty
