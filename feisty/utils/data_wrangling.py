@@ -1,3 +1,4 @@
+import os
 import time
 from dataclasses import dataclass
 
@@ -397,3 +398,35 @@ def _ones(dimsizes, chunks={}):
     if chunks:
         return dask.array.ones(dimsizes, chunks=_chunk_dict_to_array(dimsizes, chunks))
     return np.ones(dimsizes)
+
+
+def create_restart_file(
+    ds,
+    ic_file,
+    fish_names=['Sf', 'Sp', 'Sd', 'Mf', 'Mp', 'Md', 'Lp', 'Ld'],
+    benthic_names=['benthic_prey'],
+    overwrite=False,
+):
+    if os.path.isfile(ic_file):
+        if not overwrite:
+            print(f'{ic_file} exists; set overwrite=True to replace')
+            return
+        print(f'Removing {ic_file} before writing new copy')
+        os.remove(ic_file)
+
+    fish_ic = (
+        ds.isel(time=-1)
+        .sel(group=fish_names)
+        .drop(['time', 'group'])
+        .biomass.rename({'group': 'nfish'})
+        .to_dataset(name='fish_ic')
+    )
+    bent_ic = (
+        ds.isel(time=-1)
+        .sel(group=benthic_names)
+        .drop(['time', 'group'])
+        .biomass.rename({'group': 'nb'})
+        .to_dataset(name='bent_ic')
+    )
+    new_ic = xr.merge([fish_ic, bent_ic])
+    new_ic.to_netcdf(ic_file, encoding={v: {'_FillValue': None} for v in new_ic.variables})

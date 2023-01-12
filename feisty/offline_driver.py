@@ -330,31 +330,6 @@ class _offline_driver(object):
         else:
             print(f'Finished _solve at {time.strftime("%H:%M:%S")}')
 
-    def create_restart_file(self, ic_file, overwrite=False):
-        if os.path.isfile(ic_file):
-            if not overwrite:
-                print(f'{ic_file} exists; set overwrite=True to replace')
-                return
-            print(f'Removing {ic_file} before writing new copy')
-            os.remove(ic_file)
-
-        fish_ic = (
-            self._ds_list[-1]
-            .isel(time=-1, group=self.obj.prog_ndx_fish)
-            .drop(['X', 'time', 'group'])
-            .biomass.rename({'group': 'nfish'})
-            .to_dataset(name='fish_ic')
-        )
-        bent_ic = (
-            self._ds_list[-1]
-            .isel(time=-1, group=self.obj.prog_ndx_benthic_prey)
-            .drop(['X', 'time', 'group'])
-            .biomass.rename({'group': 'nb'})
-            .to_dataset(name='bent_ic')
-        )
-        new_ic = xr.merge([fish_ic, bent_ic])
-        new_ic.to_netcdf(ic_file, encoding={v: {'_FillValue': None} for v in new_ic.variables})
-
 
 # PUBLIC FUNCTIONS
 def config_and_run_testcase(
