@@ -310,7 +310,7 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks):
         root_dir = forcing_dict.get('root_dir', '.')
         forcing_dses.append(
             xr.open_mfdataset(
-                [f'{root_dir}/{filename}' for filename in forcing_dict['files']],
+                [os.path.join(root_dir, filename) for filename in forcing_dict['files']],
                 chunks=chunks,
                 data_vars='minimal',
                 compat='override',

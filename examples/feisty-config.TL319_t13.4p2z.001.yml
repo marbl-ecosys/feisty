@@ -1,5 +1,5 @@
-start_date: '1964-01-01'
-end_date: '1964-12-31'
+start_date: '1980-01-01'
+end_date: '1980-12-31'
 dt:
   1 # dt is currently hardcoded in the package as 1 day
   # changing this variable won't change anything until
@@ -19,7 +19,7 @@ num_workers: 48
 chunks:
   nlat: 100 # divides into 2400
   nlon: 100 # divides into 3600
-output_file: highres.1964.zarr
+output_file: highres.1980.zarr
 output_in_2D: true
 # Option to pull out a single lat,lon from POP grid
 # (could we provide degrees instead of indices?)
