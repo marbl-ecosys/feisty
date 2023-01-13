@@ -19,7 +19,7 @@ def generate_ic_ds_for_feisty(
                     fish_ic=(['nfish', 'X'], fish_ic * _ones((8, nX), chunks)),
                     bent_ic=(['nb', 'X'], benthic_prey_ic * _ones((1, nX), chunks)),
                 ),
-                coords=dict(X=ds.X),
+                coords=dict(X=ds.X.data),
             )
         else:
             nlat = len(ds.nlat)
@@ -35,8 +35,11 @@ def generate_ic_ds_for_feisty(
                 coords=dict(nlat=ds.nlat.data, nlon=ds.nlon.data),
             )
     else:
+        ds_ic = xr.open_dataset(ic_file).rename(ic_rename)
         if 'X' in ds.coords:
-            ds_ic = xr.open_dataset(ic_file).rename(ic_rename).assign_coords({'X': ds.X})
+            ds_ic = ds_ic.assign_coords(dict(X=ds.X.data))
+        else:
+            ds_ic = ds_ic.assign_coords(dict(nlat=ds.nlat.data, nlon=ds.nlon.data))
 
     # if num_chunks > 1:
     #     chunks = gen_chunks_dict(ds_ic, num_chunks)
