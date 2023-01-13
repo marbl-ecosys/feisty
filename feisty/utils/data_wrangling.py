@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 from dataclasses import dataclass
 
@@ -35,7 +36,12 @@ def generate_ic_ds_for_feisty(
                 coords=dict(nlat=ds.nlat.data, nlon=ds.nlon.data),
             )
     else:
-        ds_ic = xr.open_dataset(ic_file).rename(ic_rename)
+        if ic_file[-3:] == '.nc':
+            ds_ic = xr.open_dataset(ic_file).rename(ic_rename)
+        elif ic_file[-5:] == '.zarr':
+            ds_ic = xr.open_zarr(ic_file).rename(ic_rename)
+        else:
+            raise ValueError(f'Can not determine file type for {ic_file}')
         if 'X' in ds.coords:
             ds_ic = ds_ic.assign_coords(dict(X=ds.X.data))
         else:
@@ -403,20 +409,13 @@ def _ones(dimsizes, chunks={}):
     return np.ones(dimsizes)
 
 
-def create_restart_file(
+def write_restart_file(
     ds,
-    ic_file,
+    rest_file,
     fish_names=['Sf', 'Sp', 'Sd', 'Mf', 'Mp', 'Md', 'Lp', 'Ld'],
     benthic_names=['benthic_prey'],
     overwrite=False,
 ):
-    if os.path.isfile(ic_file):
-        if not overwrite:
-            print(f'{ic_file} exists; set overwrite=True to replace')
-            return
-        print(f'Removing {ic_file} before writing new copy')
-        os.remove(ic_file)
-
     fish_ic = (
         ds.isel(time=-1)
         .sel(group=fish_names)
@@ -432,4 +431,33 @@ def create_restart_file(
         .to_dataset(name='bent_ic')
     )
     new_ic = xr.merge([fish_ic, bent_ic])
-    new_ic.to_netcdf(ic_file, encoding={v: {'_FillValue': None} for v in new_ic.variables})
+    _write_to_nc_or_zarr(new_ic, rest_file, overwrite)
+
+
+def write_history_file(ds, hist_file, overwrite=False):
+    _write_to_nc_or_zarr(ds, hist_file, overwrite)
+
+
+def _write_to_nc_or_zarr(ds, filename, overwrite=False):
+    if os.path.isfile(filename):
+        if not overwrite:
+            raise ValueError(f'{filename} exists; set overwrite=True to replace')
+        print(f'Removing {filename} before writing new copy')
+        os.remove(filename)
+    elif os.path.isdir(filename):
+        if not overwrite:
+            raise ValueError(f'{filename}/ exists; set overwrite=True to replace')
+        print(f'Removing {filename}/ before writing new copy')
+        shutil.rmtree(filename)
+
+    print(f'Writing {filename}')
+    if filename[-3:] == '.nc':
+        for v in ds.variables:
+            ds[v].encoding['_FillValue'] = 1e34
+        print('Calling to_netcdf...')
+        ds.to_netcdf(filename)
+    elif filename[-5:] == '.zarr':
+        print('Calling to_zarr...')
+        ds.to_zarr(filename)
+    else:
+        raise ValueError(f'Can not determine file type for {filename}')
