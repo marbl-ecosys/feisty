@@ -318,8 +318,9 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks):
             ).rename(forcing_rename)
         )
     forcing_ds = xr.merge(forcing_dses, compat='override', join='override')
-    if 'TLAT' in forcing_ds:
-        forcing_ds = forcing_ds.drop_vars(['TLAT', 'TLONG', 'ULAT', 'ULONG'])
+    drop_vars = [var for var in ['TLAT', 'TLONG', 'ULAT', 'ULONG'] if var in forcing_ds]
+    if drop_vars:
+        forcing_ds = forcing_ds.drop_vars(drop_vars)
 
     # Make sure zooplankton dimension exists
     if 'zooplankton' not in forcing_ds.dims:

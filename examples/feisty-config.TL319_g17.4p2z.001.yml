@@ -9,11 +9,11 @@ dt:
 forcing:
   use_cyclic_forcing: False
   streams:
-    - forcing_streams/T_pelagic.TL319_g17.4p2z.yaml
-    - forcing_streams/T_bottom.TL319_g17.4p2z.yaml
-    - forcing_streams/poc_flux_bottom.TL319_g17.4p2z.yaml
-    - forcing_streams/zoo_mort.TL319_g17.4p2z.yaml
-    - forcing_streams/zooC.TL319_g17.4p2z.yaml
+    - forcing_streams/cesm_JRA_output/T_pelagic.TL319_g17.4p2z.yaml
+    - forcing_streams/cesm_JRA_output/T_bottom.TL319_g17.4p2z.yaml
+    - forcing_streams/cesm_JRA_output/poc_flux_bottom.TL319_g17.4p2z.yaml
+    - forcing_streams/cesm_JRA_output/zoo_mort.TL319_g17.4p2z.yaml
+    - forcing_streams/cesm_JRA_output/zooC.TL319_g17.4p2z.yaml
 max_output_time_dim: 365
 method: euler
 num_workers: 12
