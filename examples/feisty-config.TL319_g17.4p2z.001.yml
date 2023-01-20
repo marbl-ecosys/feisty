@@ -16,9 +16,9 @@ forcing:
     - forcing_streams/cesm_JRA_output/zooC.TL319_g17.4p2z.yaml
 max_output_time_dim: 365
 method: euler
-num_workers: 12
+num_workers: 16
 chunks:
-  nlat: 128 # divide into 384
+  nlat: 96 # divide into 384
   nlon: 80 # divide into 320
 output_file: highres_companion.zarr
 output_in_2D: true
