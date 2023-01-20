@@ -15,10 +15,10 @@ forcing:
     - forcing_streams/cesm_JRA_output/zooC.TL319_t13.4p2z.yaml
 max_output_time_dim: 365
 method: euler
-num_workers: 48
+num_workers: 72
 chunks:
-  nlat: 100 # divides into 2400
-  nlon: 100 # divides into 3600
+  nlat: 8 # divides into 2400
+  nlon: 1200 # divides into 3600
 output_file: highres.1980.zarr
 output_in_2D: true
 # Option to pull out a single lat,lon from POP grid
