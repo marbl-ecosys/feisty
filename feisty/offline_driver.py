@@ -6,6 +6,7 @@ import cftime
 import numpy as np
 import xarray as xr
 import yaml
+from dask.distributed import wait
 
 from . import testcase
 from .core import settings as settings_mod
@@ -18,6 +19,8 @@ from .utils import (
     generate_template,
     get_forcing_from_config,
     make_forcing_cyclic,
+    write_history_file,
+    write_restart_file,
 )
 
 path_to_here = os.path.dirname(os.path.realpath(__file__))
@@ -694,7 +697,7 @@ def config_and_run_from_yaml(
         diagnostic_names=diagnostic_names,
     )
 
-    return xr.map_blocks(
+    ds_out = xr.map_blocks(
         config_and_run_from_dataset,
         ds,
         args=(
@@ -708,7 +711,28 @@ def config_and_run_from_yaml(
             method,
         ),
         template=template,
-    )
+    ).persist()
+    wait(ds_out['biomass'])
+
+    # Output according to YAML
+    if 'output' in input_dict:
+        overwrite = input_dict['output'].get('overwrite', False)
+        if 'hist_file' in input_dict['output']:
+            hist_dir = input_dict['output'].get('hist_dir', '.')
+            write_history_file(
+                ds_out,
+                os.path.join(hist_dir, input_dict['output']['hist_file']),
+                overwrite=overwrite,
+            )
+        if 'rest_file' in input_dict['output']:
+            rest_dir = input_dict['output'].get('rest_dir', '.')
+            write_restart_file(
+                ds_out,
+                os.path.join(rest_dir, input_dict['output']['rest_file']),
+                overwrite=overwrite,
+            )
+
+    return ds_out
 
 
 def config_and_run_from_dataset(

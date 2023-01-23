@@ -16,12 +16,16 @@ forcing:
     - forcing_streams/cesm_JRA_output/zooC.TL319_g17.4p2z.yaml
 max_output_time_dim: 365
 method: euler
-num_workers: 16
+num_workers: 12
 chunks:
-  nlat: 96 # divide into 384
+  nlat: 128 # divide into 384
   nlon: 80 # divide into 320
-output_file: highres_companion.zarr
-output_in_2D: true
+output:
+  overwrite: True
+  hist_file: companion_1958.zarr
+  rest_file: companion_1958-12-31.zarr
+  hist_dir: ./
+  rest_dir: ./
 # Option to pull out a single lat,lon from POP grid
 # (could we provide degrees instead of indices?)
 # lat_lon: # lat: 0 - 383 on the 1 degree grid; lon: 0 - 319 on the 1 degree grid

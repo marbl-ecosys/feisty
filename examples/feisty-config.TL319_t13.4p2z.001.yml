@@ -19,8 +19,11 @@ num_workers: 72
 chunks:
   nlat: 8 # divides into 2400
   nlon: 1200 # divides into 3600
-output_file: highres.1980.zarr
-output_in_2D: true
+output:
+  hist_file: highres_1980.zarr
+  rest_file: highres_1980-12-31.zarr
+  hist_dir: ./
+  rest_dir: ./
 # Option to pull out a single lat,lon from POP grid
 # (could we provide degrees instead of indices?)
 # lat_lon: # lat: 0 - 383 on the 1 degree grid; lon: 0 - 319 on the 1 degree grid
