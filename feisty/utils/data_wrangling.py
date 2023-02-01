@@ -1,3 +1,4 @@
+import datetime
 import os
 import shutil
 import time
@@ -303,20 +304,23 @@ def get_forcing_from_config(feisty_config):
     return feisty_forcing
 
 
-def generate_forcing_ds_from_config(feisty_forcing, chunks):
+def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
     forcing_dses = list()
     for forcing_dict in feisty_forcing:
         forcing_rename = forcing_dict.get('field_rename', {})
         root_dir = forcing_dict.get('root_dir', '.')
-        forcing_dses.append(
-            xr.open_mfdataset(
-                [os.path.join(root_dir, filename) for filename in forcing_dict['files']],
-                chunks=chunks,
-                data_vars='minimal',
-                compat='override',
-                coords='minimal',
-            ).rename(forcing_rename)
+        day_offset = forcing_dict.get('day_offset', 0)
+        new_ds = xr.open_mfdataset(
+            [os.path.join(root_dir, filename) for filename in forcing_dict['files']],
+            chunks=chunks,
+            data_vars='minimal',
+            compat='override',
+            coords='minimal',
+        ).rename(forcing_rename)
+        new_ds = new_ds.assign_coords(
+            {'forcing_time': new_ds.forcing_time - datetime.timedelta(day_offset)}
         )
+        forcing_dses.append(new_ds)
     forcing_ds = xr.merge(forcing_dses, compat='override', join='override')
     drop_vars = [var for var in ['TLAT', 'TLONG', 'ULAT', 'ULONG'] if var in forcing_ds]
     if drop_vars:
@@ -352,6 +356,30 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks):
             forcing_ds = forcing_ds.assign_coords(
                 {coordname: np.arange(forcing_ds.sizes[coordname])}
             )
+
+    if POP_units:
+        # Conversion from Colleen:
+        # 1e9 nmol in 1 mol C
+        # 1e4 cm2 in 1 m2
+        # 12.01 g C in 1 mol C
+        # 1 g dry W in 9 g wet W (Pauly & Christiansen)
+        nmol_cm2_TO_g_m2 = 1e-9 * 1e4 * 12.01 * 9.0
+        per_s_TO_per_d = 86400
+        # Depth: cm -> m
+        forcing_ds['bathymetry'].data = forcing_ds['bathymetry'].data * 0.01
+
+        # poc_flux_bottom: nmol cm-2 s-1 -> g m-2 d-1
+        forcing_ds['poc_flux_bottom'].data = (
+            forcing_ds['poc_flux_bottom'].data * nmol_cm2_TO_g_m2 * per_s_TO_per_d
+        )
+
+        # zooC: mmol m-3 cm (= nmol cm-2) -> g m-2
+        forcing_ds['zooC'].data = forcing_ds['zooC'].data * nmol_cm2_TO_g_m2
+
+        # zoo_mort: mmol m-3 cm s-1 (= nmol cm-2 s-1) -> g m-2 d-1
+        forcing_ds['zoo_mort'].data = (
+            forcing_ds['zoo_mort'].data * nmol_cm2_TO_g_m2 * per_s_TO_per_d
+        )
 
     return forcing_ds[forcing_vars]
 

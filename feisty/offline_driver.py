@@ -567,7 +567,7 @@ def config_and_run_from_netcdf(
         forcing_rename=forcing_rename,
     )
     if ignore_year_in_forcing:
-        ds = make_forcing_cyclic(ds)
+        ds = make_forcing_cyclic(ds, cyclic_year=1)
 
     ds_ic = generate_ic_ds_for_feisty(
         ds,
@@ -671,13 +671,16 @@ def config_and_run_from_yaml(
 
     start_date = input_dict['start_date']
     end_date = input_dict['end_date']
+    POP_units = input_dict['forcing'].get('POP_units', False)
     ignore_year_in_forcing = input_dict['forcing'].get('use_cyclic_forcing', False)
     diagnostic_names = []
     method = input_dict.get('method', 'euler')
     max_output_time_dim = input_dict.get('max_output_time_dim', 365)
 
     feisty_forcing = get_forcing_from_config(input_dict)
-    ds = generate_forcing_ds_from_config(feisty_forcing, chunks)
+    ds = generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units)
+    if ignore_year_in_forcing:
+        ds = make_forcing_cyclic(ds, input_dict['forcing'].get('cyclic_year', 1))
 
     if 'initial_conditions' in input_dict:
         ic_root = input_dict['initial_conditions'].get('root_dir', '.')

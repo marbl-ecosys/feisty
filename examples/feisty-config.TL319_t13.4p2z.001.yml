@@ -6,7 +6,9 @@ dt:
   # we update the underlying package
 # no "initial_conditions" key => initialize from constant values
 forcing:
+  POP_units: True
   use_cyclic_forcing: False
+  cyclic_year: 1980
   streams:
     - forcing_streams/cesm_JRA_output/T_pelagic.TL319_t13.4p2z.yaml
     - forcing_streams/cesm_JRA_output/T_bottom.TL319_t13.4p2z.yaml
@@ -19,6 +21,9 @@ num_workers: 72
 chunks:
   nlat: 8 # divides into 2400
   nlon: 1200 # divides into 3600
+initial_conditions:
+  root_dir: /glade/campaign/cesm/development/bgcwg/projects/CESM2-OMIP2-like-4p2z-run/FEISTY_ic
+  ic_file: highres_spinup.0103-12-31.zarr
 output:
   hist_file: highres_1980.zarr
   rest_file: highres_1980-12-31.zarr
