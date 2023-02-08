@@ -680,12 +680,6 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/glade/work/mlevy/miniconda3/envs/dev-feisty/lib/python3.8/site-packages/dask_jobqueue/core.py:20: FutureWarning: tmpfile is deprecated and will be removed in a future release. Please use dask.utils.tmpfile instead.
-  from distributed.utils import tmpfile
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="configure-run">
@@ -828,13 +822,13 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Configuring and running test_locs3...
-Starting forcing dataset generation at 17:04:56
-Starting template generation at 17:04:56
-Starting run() at 17:04:56
-Integrating 730 steps (starting at 17:04:56)
-Finished _solve at 17:05:11
-CPU times: user 15.1 s, sys: 49.5 ms, total: 15.2 s
-Wall time: 15.8 s
+Starting forcing dataset generation at 09:56:16
+Starting template generation at 09:56:16
+Starting run() at 09:56:16
+Integrating 730 steps (starting at 09:56:16)
+Finished _solve at 09:56:35
+CPU times: user 18 s, sys: 195 ms, total: 18.2 s
+Wall time: 19.2 s
 </pre></div>
 </div>
 </div>
@@ -849,14 +843,14 @@ Wall time: 15.8 s
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| group | Matlab Value | Python Value | Rel Err |
 | --- | --- | --- | --- |
-| Sf (t=0002-06-20 00:00:00, X=195.5) | 1.7784e-05 | 1.7784e-05 | 5.7154e-16 |
+| Sf (t=0002-02-09 00:00:00, X=280.5) | 3.0534e-05 | 3.0534e-05 | 2.2193e-16 |
 | Sp (t=0001-01-01 00:00:00, X=195.5) | 9.9989e-06 | 9.9989e-06 | 0.0000e+00 |
 | Sd (t=0002-12-08 00:00:00, X=202.5) | 8.7526e-06 | 8.7526e-06 | 1.9355e-16 |
-| Mf (t=0002-10-05 00:00:00, X=195.5) | 5.2255e-04 | 5.2255e-04 | 4.1497e-16 |
-| Mp (t=0001-01-05 00:00:00, X=280.5) | 1.5865e-05 | 1.5865e-05 | 2.1356e-16 |
-| Md (t=0001-09-16 00:00:00, X=195.5) | 1.5325e-04 | 1.5325e-04 | 3.5373e-16 |
-| Lp (t=0001-07-07 00:00:00, X=280.5) | 3.0789e-04 | 3.0789e-04 | 3.5214e-16 |
-| Ld (t=0001-08-03 00:00:00, X=202.5) | 2.0739e-05 | 2.0739e-05 | 1.7971e-15 |
+| Mf (t=0001-03-03 00:00:00, X=195.5) | 4.1794e-05 | 4.1794e-05 | 3.2427e-16 |
+| Mp (t=0001-04-20 00:00:00, X=280.5) | 1.4277e-04 | 1.4277e-04 | 3.7971e-16 |
+| Md (t=0001-01-05 00:00:00, X=280.5) | 1.5650e-05 | 1.5650e-05 | 2.1649e-16 |
+| Lp (t=0002-03-06 00:00:00, X=280.5) | 9.9276e-04 | 9.9276e-04 | 6.5526e-16 |
+| Ld (t=0001-08-03 00:00:00, X=202.5) | 2.0739e-05 | 2.0739e-05 | 1.6337e-15 |
 | benthic_prey (t=0002-01-06 00:00:00, X=202.5) | 3.3466e-01 | 3.3466e-01 | 1.9905e-15 |
 </pre></div>
 </div>
@@ -945,14 +939,14 @@ Wall time: 15.8 s
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>| group | Matlab Value | Python Value | Rel Err |
 | --- | --- | --- | --- |
-| Sf (t=0002-06-20 00:00:00, X=195.5) | 1.7784e-05 | 1.7784e-05 | 5.7154e-16 |
+| Sf (t=0001-01-01 00:00:00, X=195.5) | 9.9997e-06 | 9.9997e-06 | 0.0000e+00 |
 | Sp (t=0001-01-01 00:00:00, X=195.5) | 9.9989e-06 | 9.9989e-06 | 0.0000e+00 |
 | Sd (t=0002-04-06 00:00:00, X=195.5) | 1.0285e-05 | 1.0285e-05 | 1.6472e-16 |
-| Mf (t=0002-10-05 00:00:00, X=195.5) | 5.2255e-04 | 5.2255e-04 | 4.1497e-16 |
+| Mf (t=0001-03-03 00:00:00, X=195.5) | 4.1794e-05 | 4.1794e-05 | 3.2427e-16 |
 | Mp (t=0001-01-01 00:00:00, X=195.5) | 1.0541e-05 | 1.0541e-05 | 0.0000e+00 |
-| Md (t=0001-09-16 00:00:00, X=195.5) | 1.5325e-04 | 1.5325e-04 | 3.5373e-16 |
+| Md (t=0002-04-01 00:00:00, X=195.5) | 2.6491e-04 | 2.6491e-04 | 2.0464e-16 |
 | Lp (t=0001-12-09 00:00:00, X=195.5) | 2.8092e-04 | 2.8092e-04 | 1.9298e-16 |
-| Ld (t=0002-04-30 00:00:00, X=195.5) | 6.6312e-04 | 6.6312e-04 | 4.9050e-16 |
+| Ld (t=0001-05-06 00:00:00, X=195.5) | 4.2578e-05 | 4.2578e-05 | 1.5915e-16 |
 | benthic_prey (t=0001-12-13 00:00:00, X=195.5) | 2.8330e+01 | 2.8330e+01 | 1.6302e-15 |
 </pre></div>
 </div>
@@ -973,7 +967,7 @@ Wall time: 15.8 s
             mode: "conda-env-miniconda3-dev-feisty-py"
         },
         kernelOptions: {
-            kernelName: "conda-env-miniconda3-dev-feisty-py",
+            name: "conda-env-miniconda3-dev-feisty-py",
             path: "./."
         },
         predefinedOutput: true

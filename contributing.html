@@ -692,8 +692,8 @@ without using a local copy.  This can be convenient for small fixes.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Build the documentation locally with the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda env update -f ci/environment.yml
-$  jupyter-book build docs/ --all
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>env<span class="w"> </span>update<span class="w"> </span>-f<span class="w"> </span>ci/environment.yml
+$<span class="w">  </span>jupyter-book<span class="w"> </span>build<span class="w"> </span>docs/<span class="w"> </span>--all
 </pre></div>
 </div>
 <p>The built documentation should be available in the <code class="docutils literal notranslate"><span class="pre">docs/_build/</span></code> and can be viewed using a local browser at:</p>
@@ -720,7 +720,7 @@ $  jupyter-book build docs/ --all
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
