@@ -7,4 +7,6 @@ from .data_wrangling import (
     generate_template,
     get_forcing_from_config,
     map_da_back_to_2D_pop,
+    write_history_file,
+    write_restart_file,
 )

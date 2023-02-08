@@ -1,29 +1,56 @@
+import datetime
+import os
+import shutil
 import time
 from dataclasses import dataclass
 
+import dask
 import numpy as np
 import xarray as xr
 import yaml
 
 
 def generate_ic_ds_for_feisty(
-    X, ic_file, num_chunks, fish_ic=1e-5, benthic_prey_ic=2e-3, ic_rename={}
+    ds, ic_file=None, fish_ic=1e-5, benthic_prey_ic=2e-3, ic_rename={}, chunks={}
 ):
     if ic_file is None:
-        nX = len(X)
-        ds_ic = xr.Dataset(
-            data_vars=dict(
-                fish_ic=(['nfish', 'X'], fish_ic * np.ones((8, nX))),
-                bent_ic=(['nb', 'X'], benthic_prey_ic * np.ones((1, nX))),
-            ),
-            coords=dict(X=X),
-        )
+        if 'X' in ds.coords:
+            nX = len(ds.X)
+            ds_ic = xr.Dataset(
+                data_vars=dict(
+                    fish_ic=(['nfish', 'X'], fish_ic * _ones((8, nX), chunks)),
+                    bent_ic=(['nb', 'X'], benthic_prey_ic * _ones((1, nX), chunks)),
+                ),
+                coords=dict(X=ds.X.data),
+            )
+        else:
+            nlat = len(ds.nlat)
+            nlon = len(ds.nlon)
+            ds_ic = xr.Dataset(
+                data_vars=dict(
+                    fish_ic=(['nfish', 'nlat', 'nlon'], fish_ic * _ones((8, nlat, nlon), chunks)),
+                    bent_ic=(
+                        ['nb', 'nlat', 'nlon'],
+                        benthic_prey_ic * _ones((1, nlat, nlon), chunks),
+                    ),
+                ),
+                coords=dict(nlat=ds.nlat.data, nlon=ds.nlon.data),
+            )
     else:
-        ds_ic = xr.open_dataset(ic_file).rename(ic_rename).assign_coords({'X': X})
+        if ic_file[-3:] == '.nc':
+            ds_ic = xr.open_dataset(ic_file).rename(ic_rename)
+        elif ic_file[-5:] == '.zarr':
+            ds_ic = xr.open_zarr(ic_file).rename(ic_rename)
+        else:
+            raise ValueError(f'Can not determine file type for {ic_file}')
+        if 'X' in ds.coords:
+            ds_ic = ds_ic.assign_coords(dict(X=ds.X.data))
+        else:
+            ds_ic = ds_ic.assign_coords(dict(nlat=ds.nlat.data, nlon=ds.nlon.data))
 
-    if num_chunks > 1:
-        chunks = gen_chunks_dict(ds_ic, num_chunks)
-        ds_ic = ds_ic.chunk(chunks)
+    # if num_chunks > 1:
+    #     chunks = gen_chunks_dict(ds_ic, num_chunks)
+    #     ds_ic = ds_ic.chunk(chunks).persist()
 
     return ds_ic
 
@@ -82,8 +109,7 @@ def generate_single_ds_for_feisty(
         ds = xr.open_dataset(forcing_file).rename(forcing_rename)
 
     if 'X' not in ds.dims:
-        ds_tmp = ds.stack(X=('nlat', 'nlon'))
-        ds = ds_tmp.where(ds_tmp.bathymetry > 0, drop=True)
+        ds = ds.stack(X=('nlat', 'nlon'))  # .where(ds_tmp.bathymetry > 0, drop=True)
 
     if num_chunks > 1:
         chunks = gen_chunks_dict(ds, num_chunks)
@@ -184,12 +210,6 @@ def generate_template(
     diagnostic_names=[],
 ):
     print(f'Starting template generation at {time.strftime("%H:%M:%S")}')
-    # Set chunks
-    if 'X' in ds.chunks:
-        chunks = {'X': ds.chunks['X']}
-    else:
-        chunks = {}
-
     # Create template for output (used for xr.map_blocks)
     # TODO: support alternative calendars
     model_time = xr.cftime_range(
@@ -198,37 +218,68 @@ def generate_template(
         freq=freq,
         calendar='noleap',
     )
-    X = ds['X'].data
 
-    data_vars_dict = dict(
-        biomass=(['time', 'group', 'X'], np.zeros((len(model_time), len(groups), len(X))))
-    )
-    coords_dict = dict(time=(['time'], model_time), group=(['group'], groups), X=(['X'], X))
+    # Set chunks and dims
+    coords_dict = dict(time=(['time'], model_time), group=(['group'], groups))
+    biomass_dims = ['time', 'group']
+    biomass_dimsizes = [len(model_time), len(groups)]
+    feeding_dims = ['time', 'feeding_link']
+    feeding_dimsizes = [len(model_time), len(feeding_link)]
+    fish_dims = ['time', 'fish']
+    fish_dimsizes = [len(model_time), len(fish)]
+    if 'X' in ds.coords:
+        check_chunk = ['X']
+        coords_dict['X'] = (['X'], ds.X.data)
+        biomass_dims.append('X')
+        biomass_dimsizes.append(len(ds.X))
+        feeding_dims.append('X')
+        feeding_dimsizes.append(len(ds.X))
+        fish_dims.append('X')
+        fish_dimsizes.append(len(ds.X))
+    else:
+        check_chunk = ['nlat', 'nlon']
+        coords_dict['nlat'] = (['nlat'], ds.nlat.data)
+        coords_dict['nlon'] = (['nlon'], ds.nlon.data)
+        biomass_dims.append('nlat')
+        biomass_dimsizes.append(len(ds.nlat))
+        biomass_dims.append('nlon')
+        biomass_dimsizes.append(len(ds.nlon))
+        feeding_dims.append('nlat')
+        feeding_dimsizes.append(len(ds.nlat))
+        feeding_dims.append('nlon')
+        feeding_dimsizes.append(len(ds.nlon))
+        fish_dims.append('nlat')
+        fish_dimsizes.append(len(ds.nlat))
+        fish_dims.append('nlon')
+        fish_dimsizes.append(len(ds.nlon))
+
+    chunks = {}
+    for dimname in check_chunk:
+        if dimname in ds.chunks:
+            chunks[dimname] = ds.chunks[dimname]
+
+    data_vars_dict = dict(biomass=(biomass_dims, _zeros(biomass_dimsizes, chunks)))
 
     # TODO: better way to add diagnostics
     for diag in diagnostic_names:
         if diag in ['encounter_rate_link', 'consumption_rate_link']:
-            data_vars_dict[diag] = (
-                ['time', 'feeding_link', 'X'],
-                np.zeros((len(model_time), len(feeding_link), len(X))),
-            )
+            data_vars_dict[diag] = (feeding_dims, _zeros(feeding_dimsizes, chunks))
             coords_dict['feeding_link'] = ('feeding_link', feeding_link)
             coords_dict['predator'] = ('feeding_link', predator)
             coords_dict['prey'] = ('feeding_link', prey)
         else:
-            data_vars_dict[diag] = (
-                ['time', 'fish', 'X'],
-                np.zeros((len(model_time), len(fish), len(X))),
-            )
+            data_vars_dict[diag] = (fish_dims, _zeros(fish_dimsizes, chunks))
             coords_dict['fish'] = ('fish', fish)
 
     ds_out = xr.Dataset(
         data_vars=data_vars_dict,
         coords=coords_dict,
-    ).assign_coords({'X': ds['X']})
+    )
+    if 'X' in coords_dict:
+        ds_out = ds_out.assign_coords({'X': ds.X})
 
-    if chunks:
-        ds_out = ds_out.chunk(chunks)
+    # if chunks:
+    #     ds_out = ds_out.chunk(chunks)
 
     return ds_out
 
@@ -253,23 +304,27 @@ def get_forcing_from_config(feisty_config):
     return feisty_forcing
 
 
-def generate_forcing_ds_from_config(feisty_forcing):
+def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
     forcing_dses = list()
     for forcing_dict in feisty_forcing:
         forcing_rename = forcing_dict.get('field_rename', {})
         root_dir = forcing_dict.get('root_dir', '.')
-        forcing_dses.append(
-            xr.open_mfdataset(
-                [f'{root_dir}/{filename}' for filename in forcing_dict['files']],
-                parallel=False,
-                data_vars='minimal',
-                compat='override',
-                coords='minimal',
-            ).rename(forcing_rename)
+        day_offset = forcing_dict.get('day_offset', 0)
+        new_ds = xr.open_mfdataset(
+            [os.path.join(root_dir, filename) for filename in forcing_dict['files']],
+            chunks=chunks,
+            data_vars='minimal',
+            compat='override',
+            coords='minimal',
+        ).rename(forcing_rename)
+        new_ds = new_ds.assign_coords(
+            {'forcing_time': new_ds.forcing_time + datetime.timedelta(day_offset)}
         )
-    forcing_ds = xr.merge(forcing_dses)
-    if 'TLAT' in forcing_ds:
-        forcing_ds = forcing_ds.drop_vars(['TLAT', 'TLONG', 'ULAT', 'ULONG'])
+        forcing_dses.append(new_ds)
+    forcing_ds = xr.merge(forcing_dses, compat='override', join='override')
+    drop_vars = [var for var in ['TLAT', 'TLONG', 'ULAT', 'ULONG'] if var in forcing_ds]
+    if drop_vars:
+        forcing_ds = forcing_ds.drop_vars(drop_vars)
 
     # Make sure zooplankton dimension exists
     if 'zooplankton' not in forcing_ds.dims:
@@ -277,14 +332,13 @@ def generate_forcing_ds_from_config(feisty_forcing):
         forcing_ds['zoo_mort'] = forcing_ds['zoo_mort'].expand_dims('zooplankton')
         forcing_ds['zooplankton'] = xr.DataArray(['Zoo'], dims='zooplankton')
 
-    if 'X' not in forcing_ds.dims:
-        ds_tmp = forcing_ds.stack(X=('nlat', 'nlon'))
-        forcing_ds = ds_tmp.where(ds_tmp.bathymetry > 0, drop=True)
+    # if 'X' not in forcing_ds.dims:
+    #     forcing_ds = forcing_ds.stack(X=('nlat', 'nlon'))
+    #     forcing_ds = forcing_ds.where(forcing_ds.bathymetry > 0, drop=True)
 
     # Make sure all variables are in the dataset
     forcing_vars = [
         'forcing_time',
-        'X',
         'zooplankton',
         'bathymetry',
         'T_pelagic',
@@ -296,6 +350,36 @@ def generate_forcing_ds_from_config(feisty_forcing):
     for varname in forcing_vars:
         if varname not in forcing_ds.variables:
             raise KeyError(f'Expecting {varname} in forcing dataset')
+
+    for coordname in ['nlat', 'nlon']:
+        if coordname in forcing_ds.dims:
+            forcing_ds = forcing_ds.assign_coords(
+                {coordname: np.arange(forcing_ds.sizes[coordname])}
+            )
+
+    if POP_units:
+        # Conversion from Colleen:
+        # 1e9 nmol in 1 mol C
+        # 1e4 cm2 in 1 m2
+        # 12.01 g C in 1 mol C
+        # 1 g dry W in 9 g wet W (Pauly & Christiansen)
+        nmol_cm2_TO_g_m2 = 1e-9 * 1e4 * 12.01 * 9.0
+        per_s_TO_per_d = 86400
+        # Depth: cm -> m
+        forcing_ds['bathymetry'].data = forcing_ds['bathymetry'].data * 0.01
+
+        # poc_flux_bottom: nmol cm-2 s-1 -> g m-2 d-1
+        forcing_ds['poc_flux_bottom'].data = (
+            forcing_ds['poc_flux_bottom'].data * nmol_cm2_TO_g_m2 * per_s_TO_per_d
+        )
+
+        # zooC: mmol m-3 cm (= nmol cm-2) -> g m-2
+        forcing_ds['zooC'].data = forcing_ds['zooC'].data * nmol_cm2_TO_g_m2
+
+        # zoo_mort: mmol m-3 cm s-1 (= nmol cm-2 s-1) -> g m-2 d-1
+        forcing_ds['zoo_mort'].data = (
+            forcing_ds['zoo_mort'].data * nmol_cm2_TO_g_m2 * per_s_TO_per_d
+        )
 
     return forcing_ds[forcing_vars]
 
@@ -321,3 +405,88 @@ def _generate_1D_to_2D_pop_map(streams):
     ds_out['nlat_dimsize'] = nlat
     ds_out['nlon_dimsize'] = nlon
     return ds_out
+
+
+def _chunk_dict_to_array(dimsizes, chunks):
+    new_chunks = list(dimsizes)
+    if 'X' in chunks:
+        new_chunks[-1] = chunks['X']
+    if 'nlon' in chunks:
+        new_chunks[-1] = chunks['nlon']
+    if 'nlat' in chunks:
+        new_chunks[-2] = chunks['nlat']
+    return new_chunks
+
+
+def _zeros(dimsizes, chunks={}):
+    """
+    if chunked data is requested, return dask.array.zeros
+    otherwise return np.zeros
+    """
+    if chunks:
+        return dask.array.zeros(dimsizes, chunks=_chunk_dict_to_array(dimsizes, chunks))
+    return np.zeros(dimsizes)
+
+
+def _ones(dimsizes, chunks={}):
+    """
+    if chunked data is requested, return dask.array.ones
+    otherwise return np.ones
+    """
+    if chunks:
+        return dask.array.ones(dimsizes, chunks=_chunk_dict_to_array(dimsizes, chunks))
+    return np.ones(dimsizes)
+
+
+def write_restart_file(
+    ds,
+    rest_file,
+    fish_names=['Sf', 'Sp', 'Sd', 'Mf', 'Mp', 'Md', 'Lp', 'Ld'],
+    benthic_names=['benthic_prey'],
+    overwrite=False,
+):
+    fish_ic = (
+        ds.isel(time=-1)
+        .sel(group=fish_names)
+        .drop(['time', 'group'])
+        .biomass.rename({'group': 'nfish'})
+        .to_dataset(name='fish_ic')
+    )
+    bent_ic = (
+        ds.isel(time=-1)
+        .sel(group=benthic_names)
+        .drop(['time', 'group'])
+        .biomass.rename({'group': 'nb'})
+        .to_dataset(name='bent_ic')
+    )
+    new_ic = xr.merge([fish_ic, bent_ic])
+    _write_to_nc_or_zarr(new_ic, rest_file, overwrite)
+
+
+def write_history_file(ds, hist_file, overwrite=False):
+    _write_to_nc_or_zarr(ds, hist_file, overwrite)
+
+
+def _write_to_nc_or_zarr(ds, filename, overwrite=False):
+    if os.path.isfile(filename):
+        if not overwrite:
+            raise ValueError(f'{filename} exists; set overwrite=True to replace')
+        print(f'Removing {filename} before writing new copy')
+        os.remove(filename)
+    elif os.path.isdir(filename):
+        if not overwrite:
+            raise ValueError(f'{filename}/ exists; set overwrite=True to replace')
+        print(f'Removing {filename}/ before writing new copy')
+        shutil.rmtree(filename)
+
+    print(f'Writing {filename}')
+    if filename[-3:] == '.nc':
+        for v in ds.variables:
+            ds[v].encoding['_FillValue'] = 1e34
+        print('Calling to_netcdf...')
+        ds.to_netcdf(filename)
+    elif filename[-5:] == '.zarr':
+        print('Calling to_zarr...')
+        ds.to_zarr(filename)
+    else:
+        raise ValueError(f'Can not determine file type for {filename}')

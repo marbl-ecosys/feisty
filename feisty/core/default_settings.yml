@@ -255,10 +255,6 @@ food_web:
     prey: Mp
     preference: 1.
 
-  - predator: Lp
-    prey: Md
-    preference: 1.
-
   # large demersal
   - predator: Ld
     prey: Mf

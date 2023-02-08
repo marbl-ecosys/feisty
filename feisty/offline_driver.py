@@ -6,6 +6,7 @@ import cftime
 import numpy as np
 import xarray as xr
 import yaml
+from dask.distributed import wait
 
 from . import testcase
 from .core import settings as settings_mod
@@ -18,6 +19,8 @@ from .utils import (
     generate_template,
     get_forcing_from_config,
     make_forcing_cyclic,
+    write_history_file,
+    write_restart_file,
 )
 
 path_to_here = os.path.dirname(os.path.realpath(__file__))
@@ -64,7 +67,6 @@ class _offline_driver(object):
         allow_negative_forcing=False,
         diagnostic_names=[],
         max_output_time_dim=365,
-        num_chunks=1,
     ):
         """Run an integration with the FEISTY model.
 
@@ -103,13 +105,11 @@ class _offline_driver(object):
             allow_negative_forcing=allow_negative_forcing,
             diagnostic_names=diagnostic_names,
             max_output_time_dim=max_output_time_dim,
-            num_chunks=num_chunks,
         )
         self.domain_dict = domain_dict
         self.forcing = forcing
         self.allow_negative_forcing = allow_negative_forcing
         self.ignore_year = ignore_year_in_forcing
-        self.daskify = num_chunks > 1
         date_tuple = None
         if isinstance(start_date, str):
             date_tuple = [int(date_comp) for date_comp in start_date.split('-')]
@@ -126,12 +126,6 @@ class _offline_driver(object):
         # TODO: make this controllable via user input
         self._diagnostic_names = diagnostic_names
 
-        # Parallelize?
-        if self.daskify:
-            self.chunks = dict(X=(len(self.forcing.X) - 1) // num_chunks + 1)
-            self.forcing = self.forcing.chunk(self.chunks)
-            self.domain_dict['bathymetry'] = self.domain_dict['bathymetry'].chunk(self.chunks)
-
         self.obj = feisty_instance_type(
             domain_dict=self.domain_dict,
             settings_dict=self.settings_in,
@@ -139,12 +133,6 @@ class _offline_driver(object):
             benthic_prey_ic_data=benthic_prey_ic_data,
             biomass_init_file=biomass_init_file,
         )
-
-        # Parallelize?
-        if self.daskify:
-            self.obj.biomass = self.obj.biomass.chunk(self.chunks)
-            self.obj.tendency_data = self.obj.tendency_data.chunk(self.chunks)
-            self.obj.zoo_mortality = self.obj.zoo_mortality.chunk(self.chunks)
 
     def _init_output_arrays(self, nt):
         """Create self._ds_list, a list of datasets containing no more than
@@ -197,8 +185,6 @@ class _offline_driver(object):
                 self._ds_list.append(ds_prog)
             self._ds_list[-1]['time'] = time
             self._ds_list[-1] = self._ds_list[-1].assign_coords({'X': self.forcing.X.data})
-            if self.daskify:
-                self._ds_list[-1] = self._ds_list[-1].chunk(self.chunks)
         self._forcing_time = np.concatenate(forcing_time)
 
     def _post_data(self, n):
@@ -306,8 +292,6 @@ class _offline_driver(object):
         """
         print(f'Starting run() at {time.strftime("%H:%M:%S")}')
         self.state_t = self.obj.get_prognostic().copy().assign_coords({'X': self.forcing.X.data})
-        if self.daskify:
-            self.state_t = self.state_t.chunk(self.chunks)
         self._init_output_arrays(nt)
         forcing_time_offset = 0
         for ds_ind in range(len(self._ds_list)):
@@ -348,31 +332,6 @@ class _offline_driver(object):
             print(f'Finished _shutdown() at {time.strftime("%H:%M:%S")}')
         else:
             print(f'Finished _solve at {time.strftime("%H:%M:%S")}')
-
-    def create_restart_file(self, ic_file, overwrite=False):
-        if os.path.isfile(ic_file):
-            if not overwrite:
-                print(f'{ic_file} exists; set overwrite=True to replace')
-                return
-            print(f'Removing {ic_file} before writing new copy')
-            os.remove(ic_file)
-
-        fish_ic = (
-            self._ds_list[-1]
-            .isel(time=-1, group=self.obj.prog_ndx_fish)
-            .drop(['X', 'time', 'group'])
-            .biomass.rename({'group': 'nfish'})
-            .to_dataset(name='fish_ic')
-        )
-        bent_ic = (
-            self._ds_list[-1]
-            .isel(time=-1, group=self.obj.prog_ndx_benthic_prey)
-            .drop(['X', 'time', 'group'])
-            .biomass.rename({'group': 'nb'})
-            .to_dataset(name='bent_ic')
-        )
-        new_ic = xr.merge([fish_ic, bent_ic])
-        new_ic.to_netcdf(ic_file, encoding={v: {'_FillValue': None} for v in new_ic.variables})
 
 
 # PUBLIC FUNCTIONS
@@ -474,9 +433,8 @@ def config_and_run_testcase(
     ds = _test_forcing[forcing_name](domain_dict, **forcing_kwargs)
     ds['bathymetry'] = domain_dict['bathymetry'].assign_coords(X=ds.X.data)
     ds_ic = generate_ic_ds_for_feisty(
-        X=ds.X.data,
+        ds,
         ic_file=None,
-        num_chunks=1,
         fish_ic=fish_ic_data,
         benthic_prey_ic=benthic_prey_ic_data,
     )
@@ -609,11 +567,10 @@ def config_and_run_from_netcdf(
         forcing_rename=forcing_rename,
     )
     if ignore_year_in_forcing:
-        ds = make_forcing_cyclic(ds)
+        ds = make_forcing_cyclic(ds, cyclic_year=1)
 
     ds_ic = generate_ic_ds_for_feisty(
-        ds.X.data,
-        num_chunks=num_chunks,
+        ds,
         ic_file=input_dict.get('biomass_init_file', None),
         fish_ic=input_dict.get('fish_biomass_ic', fish_ic_data),
         benthic_prey_ic=input_dict.get('benthic_prey_biomass_ic', benthic_prey_ic_data),
@@ -706,19 +663,24 @@ def config_and_run_from_yaml(
     #     }
     """
 
-    num_chunks = input_dict.get('num_chunks', 1)
+    num_workers = input_dict.get('num_workers', 1)
+    if num_workers > 1:
+        chunks = input_dict.get('chunks', None)
+    else:
+        chunks = None
+
     start_date = input_dict['start_date']
     end_date = input_dict['end_date']
+    POP_units = input_dict['forcing'].get('POP_units', False)
     ignore_year_in_forcing = input_dict['forcing'].get('use_cyclic_forcing', False)
     diagnostic_names = []
     method = input_dict.get('method', 'euler')
     max_output_time_dim = input_dict.get('max_output_time_dim', 365)
 
     feisty_forcing = get_forcing_from_config(input_dict)
-    ds = generate_forcing_ds_from_config(feisty_forcing)
-    if num_chunks > 1:
-        chunks = gen_chunks_dict(ds, num_chunks)
-        ds = ds.chunk(chunks)
+    ds = generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units)
+    if ignore_year_in_forcing:
+        ds = make_forcing_cyclic(ds, input_dict['forcing'].get('cyclic_year', 1))
 
     if 'initial_conditions' in input_dict:
         ic_root = input_dict['initial_conditions'].get('root_dir', '.')
@@ -726,9 +688,9 @@ def config_and_run_from_yaml(
     else:
         ic_file = None
     ds_ic = generate_ic_ds_for_feisty(
-        ds.X.data,
-        num_chunks=num_chunks,
+        ds,
         ic_file=ic_file,
+        chunks=chunks,
     )
 
     template = generate_template(
@@ -738,7 +700,7 @@ def config_and_run_from_yaml(
         diagnostic_names=diagnostic_names,
     )
 
-    return xr.map_blocks(
+    ds_out = xr.map_blocks(
         config_and_run_from_dataset,
         ds,
         args=(
@@ -752,7 +714,28 @@ def config_and_run_from_yaml(
             method,
         ),
         template=template,
-    )
+    ).persist()
+    wait(ds_out['biomass'])
+
+    # Output according to YAML
+    if 'output' in input_dict:
+        overwrite = input_dict['output'].get('overwrite', False)
+        if 'hist_file' in input_dict['output']:
+            hist_dir = input_dict['output'].get('hist_dir', '.')
+            write_history_file(
+                ds_out,
+                os.path.join(hist_dir, input_dict['output']['hist_file']),
+                overwrite=overwrite,
+            )
+        if 'rest_file' in input_dict['output']:
+            rest_dir = input_dict['output'].get('rest_dir', '.')
+            write_restart_file(
+                ds_out,
+                os.path.join(rest_dir, input_dict['output']['rest_file']),
+                overwrite=overwrite,
+            )
+
+    return ds_out
 
 
 def config_and_run_from_dataset(
@@ -772,6 +755,16 @@ def config_and_run_from_dataset(
     3. calls gen_ds()
     4. returns the resulting ds
     """
+    stacked = False
+    if 'X' not in ds:
+        stacked = True
+        ds = ds.stack(X=('nlat', 'nlon'))
+        ds_ic = ds_ic.stack(X=('nlat', 'nlon'))
+        # # drop land points
+        # ocean_mask = ds['bathymetry'] > 0
+        # ds = ds.where(ocean_mask, drop=True)
+        # ds_ic = ds_ic.where(ocean_mask, drop=True)
+
     domain_dict = dict()
     domain_dict['bathymetry'] = ds['bathymetry']
     domain_dict['NX'] = len(ds['X'])
@@ -796,4 +789,15 @@ def config_and_run_from_dataset(
     feisty_driver.run(nstep, method=method)
     feisty_driver.gen_ds()
 
+    if stacked:
+        # Need to get back to nlat, nlon dimension from X MultiIndex
+        feisty_driver.ds = feisty_driver.ds.drop(['X'])
+        feisty_driver.ds = feisty_driver.ds.assign_coords(
+            {
+                'nlat': xr.DataArray(ds['nlat'].data, dims='X'),
+                'nlon': xr.DataArray(ds['nlon'].data, dims='X'),
+            }
+        )
+        feisty_driver.ds['X'] = ds.indexes['X']
+        feisty_driver.ds = feisty_driver.ds.unstack()
     return feisty_driver.ds

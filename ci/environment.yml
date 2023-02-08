@@ -1,6 +1,7 @@
 name: dev-feisty
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - codecov
   - dask
@@ -25,6 +26,7 @@ dependencies:
   - pytest-cov
   - scipy
   - xarray
+  - zarr
   - pip:
       - sphinx-click
       - sphinxcontrib-autoyaml

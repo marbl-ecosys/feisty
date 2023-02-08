@@ -1,0 +1,51 @@
+root_dir: /glade/campaign/cgd/oce/projects/FOSI_BGC/HR/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001/ocn/proc/tseries/day_1
+day_offset: -0.5
+variables:
+  - zooC
+field_rename:
+  HT: bathymetry
+  mesozooC_zint_150m: zooC
+  time: forcing_time
+files:
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19800102-19810101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19810102-19820101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19820102-19830101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19830102-19840101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19840102-19850101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19850102-19851231.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19860101-19870101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19870102-19880101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19880102-19890101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19890102-19900101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19900102-19910101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19910102-19920101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19920102-19930101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19930102-19940101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19940102-19950101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19950102-19960101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19960102-19970101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19970102-19980101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19980102-19990101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.19990102-19991231.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20000101-20010101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20010102-20020101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20020102-20030101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20030102-20040101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20040102-20050101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20050102-20051231.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20060101-20070101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20070102-20080101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20080102-20090101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20090102-20100101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20100102-20110101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20110102-20111231.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20120101-20130101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20130102-20140101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20140102-20150101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20150102-20160101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20160102-20170101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20170102-20180101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20180102-20190101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20190102-20200101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20200102-20210101.nc
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.mesozooC_zint_150m.20210102-20211231.nc

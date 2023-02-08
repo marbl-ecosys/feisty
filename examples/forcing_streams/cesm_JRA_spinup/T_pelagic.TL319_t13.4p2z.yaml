@@ -1,0 +1,10 @@
+root_dir: /glade/campaign/cgd/oce/projects/FOSI_BGC/HR/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001/ocn/proc/tseries/day_1
+day_offset: -0.5
+variables:
+  - T_pelagic
+field_rename:
+  HT: bathymetry
+  TEMP_mean_150m: T_pelagic
+  time: forcing_time
+files:
+  - g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001.pop.h.nday1.TEMP_mean_150m.19800102-19810101.nc

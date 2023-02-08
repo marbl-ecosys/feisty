@@ -1,3 +1,4 @@
 FEISTY_driver.o*
 *.nc
+*.zarr
 dask*
