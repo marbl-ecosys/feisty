@@ -10,7 +10,9 @@ forcing:
     - forcing_streams/FOSI_CESM.yaml
 max_output_time_dim: 365
 method: euler
-num_chunks: 18
+num_workers: 13
+chunks:
+  X: 6601
 initial_conditions:
   root_dir: /glade/work/mlevy/codes/feisty/input_files
   ic_file: FOSI_cesm_init_200yr.nc

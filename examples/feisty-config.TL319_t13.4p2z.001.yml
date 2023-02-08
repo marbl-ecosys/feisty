@@ -4,7 +4,6 @@ dt:
   1 # dt is currently hardcoded in the package as 1 day
   # changing this variable won't change anything until
   # we update the underlying package
-# no "initial_conditions" key => initialize from constant values
 forcing:
   POP_units: True
   use_cyclic_forcing: False
