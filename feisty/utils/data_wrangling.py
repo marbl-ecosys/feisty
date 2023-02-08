@@ -318,7 +318,7 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
             coords='minimal',
         ).rename(forcing_rename)
         new_ds = new_ds.assign_coords(
-            {'forcing_time': new_ds.forcing_time - datetime.timedelta(day_offset)}
+            {'forcing_time': new_ds.forcing_time + datetime.timedelta(day_offset)}
         )
         forcing_dses.append(new_ds)
     forcing_ds = xr.merge(forcing_dses, compat='override', join='override')

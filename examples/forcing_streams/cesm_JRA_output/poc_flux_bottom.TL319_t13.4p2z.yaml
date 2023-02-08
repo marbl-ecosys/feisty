@@ -1,5 +1,5 @@
 root_dir: /glade/campaign/cgd/oce/projects/FOSI_BGC/HR/g.e22.TL319_t13.G1850ECOIAF_JRA_HR.4p2z.001/ocn/proc/tseries/day_1
-day_offset: 1
+day_offset: -0.5
 variables:
   - poc_flux_bottom
 field_rename:
