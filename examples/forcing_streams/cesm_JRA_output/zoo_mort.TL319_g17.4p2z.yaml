@@ -1,5 +1,5 @@
 root_dir: /glade/campaign/cesm/development/bgcwg/projects/CESM2-OMIP2-like-4p2z-run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch/ocn/proc/tseries/day_1/
-day_offset: -0.5
+day_offset: -1
 variables:
   - zoo_mort
 field_rename:
