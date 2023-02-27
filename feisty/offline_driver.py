@@ -180,6 +180,7 @@ class _offline_driver(object):
             ds_prog = zeros * self.state_t.to_dataset()
             if self._diagnostic_names:
                 ds_diag = zeros * self.obj.tendency_data[self._diagnostic_names]
+                ds_diag = ds_diag.assign_coords({'X': ds_prog.X.data})
                 self._ds_list.append(xr.merge((ds_prog, ds_diag)))
             else:
                 self._ds_list.append(ds_prog)
@@ -673,7 +674,10 @@ def config_and_run_from_yaml(
     end_date = input_dict['end_date']
     POP_units = input_dict['forcing'].get('POP_units', False)
     ignore_year_in_forcing = input_dict['forcing'].get('use_cyclic_forcing', False)
-    diagnostic_names = []
+    if 'output' in input_dict:
+        diagnostic_names = input_dict['output'].get('diagnostic_names', [])
+    else:
+        diagnostic_names = []
     method = input_dict.get('method', 'euler')
     max_output_time_dim = input_dict.get('max_output_time_dim', 365)
 
