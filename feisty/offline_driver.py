@@ -719,7 +719,7 @@ def config_and_run_from_yaml(
         ),
         template=template,
     ).persist()
-    wait(ds_out['biomass'])
+    wait(ds_out)
 
     # Output according to YAML
     if 'output' in input_dict:
@@ -793,6 +793,14 @@ def config_and_run_from_dataset(
     feisty_driver.run(nstep, method=method)
     feisty_driver.gen_ds()
 
+    # apply mask to output variables listed in diagnostic_names
+    if diagnostic_names:
+        mask = np.isfinite(feisty_driver.ds['biomass'].isel(time=0, group=0).data)
+        for variable in diagnostic_names:
+            feisty_driver.ds[variable].data = np.where(
+                mask, feisty_driver.ds[variable].data, np.nan
+            )
+
     if stacked:
         # Need to get back to nlat, nlon dimension from X MultiIndex
         feisty_driver.ds = feisty_driver.ds.drop(['X'])
@@ -804,4 +812,5 @@ def config_and_run_from_dataset(
         )
         feisty_driver.ds['X'] = ds.indexes['X']
         feisty_driver.ds = feisty_driver.ds.unstack()
+
     return feisty_driver.ds
