@@ -43,6 +43,12 @@ jobs:
           environment-name: dev-feisty
           extra-specs: python=${{ matrix.python-version }}
 
+      - name: Downgrade zipp and zarr for python 3.7
+        if: ${{ matrix.python-version }} == '3.7'
+        shell: bash -l {0}
+        run: |
+          mamba install zipp=3.15.0 zarr=2.14.2
+
       - name: Show conda environment
         shell: bash -l {0}
         run: |
