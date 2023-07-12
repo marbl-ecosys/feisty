@@ -487,6 +487,17 @@ def _write_to_nc_or_zarr(ds, filename, overwrite=False):
         ds.to_netcdf(filename)
     elif filename[-5:] == '.zarr':
         print('Calling to_zarr...')
-        ds.to_zarr(filename)
+        # highres history file needs to be written variable by variable
+        # otherwise to_zarr() hangs
+        if 'biomass' in ds.data_vars:
+            print('Starting with biomass')
+            ds['biomass'].to_dataset().to_zarr(filename)
+            for var in ds.data_vars:
+                if var == 'biomass':
+                    continue
+                print(f'Writing {var} to disk')
+                ds[var].to_dataset().to_zarr(filename, mode='a')
+        else:
+            ds.to_zarr(filename)
     else:
         raise ValueError(f'Can not determine file type for {filename}')
