@@ -43,11 +43,6 @@ jobs:
           environment-name: dev-feisty
           extra-specs: python=${{ matrix.python-version }}
 
-      - name: Show conda environment
-        shell: bash -l {0}
-        run: |
-          conda list
-
       - name: Use old versions of packages where conda is out of sync with version support
         run: |
           if [[ ${{ matrix.python-version }} == 3.7 ]] ;
@@ -57,6 +52,11 @@ jobs:
           else
             echo "Not modifying conda environment"
           fi
+
+      - name: Show conda environment
+        shell: bash -l {0}
+        run: |
+          conda list
 
       - name: Run Tests
         shell: bash -l {0}
