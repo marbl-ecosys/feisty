@@ -23,6 +23,9 @@ initial_conditions:
   root_dir: /glade/campaign/cesm/development/bgcwg/projects/CESM2-OMIP2-like-4p2z-run/FEISTY_ic
   ic_file: companion_spinup.0125-12-31.zarr
 output:
+  diagnostic_names:
+    - fish_yield
+    - production
   overwrite: True
   hist_file: companion_1958.zarr
   rest_file: companion_1958-12-31.zarr

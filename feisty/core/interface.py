@@ -391,6 +391,10 @@ class feisty_instance_type(object):
             self.fishing.fishing_rate,
             self.fish,
         )
+        biomass_i = np.arange(len(self.fish)) + self.ndx_fish[0]
+        self.tendency_data.fish_yield.data[:, :] = (
+            self.biomass.data[biomass_i, :] * self.tendency_data.fish_catch_rate.data[:, :]
+        )
 
     def _compute_energy_avail(self):
         process.compute_energy_avail(
@@ -398,6 +402,10 @@ class feisty_instance_type(object):
             self.tendency_data.ingestion_rate,
             self.tendency_data.metabolism_rate,
             self.fish,
+        )
+        biomass_i = np.arange(len(self.fish)) + self.ndx_fish[0]
+        self.tendency_data.production.data[:, :] = (
+            self.biomass.data[biomass_i, :] * self.tendency_data.energy_avail_rate.data[:, :]
         )
 
     def _compute_growth(self):
@@ -602,6 +610,13 @@ def _init_tendency_data(
         name='energy_avail',
         attrs={'long_name': 'Energy available for growth or reproduction (nu)'},
     )
+    ds['production'] = domain.init_array_2d(
+        domain_params,
+        coord_name='fish',
+        coord_values=fish_names,
+        name='production',
+        attrs={'long_name': 'Production'},
+    )
     ds['growth_rate'] = domain.init_array_2d(
         domain_params,
         coord_name='fish',
@@ -629,6 +644,13 @@ def _init_tendency_data(
         coord_values=fish_names,
         name='fish_catch_rate',
         attrs={'long_name': 'Specific fishing rate'},
+    )
+    ds['fish_yield'] = domain.init_array_2d(
+        domain_params,
+        coord_name='fish',
+        coord_values=fish_names,
+        name='fish_yield',
+        attrs={'long_name': 'Yield from fishing'},
     )
     ds['benthic_biomass_new'] = domain.init_array_2d(
         domain_params,
