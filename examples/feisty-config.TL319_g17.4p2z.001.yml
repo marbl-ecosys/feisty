@@ -24,9 +24,8 @@ initial_conditions:
   ic_file: companion_spinup.0125-12-31.zarr
 output:
   diagnostic_names:
-    - recruitment_flux
-    - reproduction_rate
-    - growth_rate
+    - fish_yield
+    - production
   overwrite: True
   hist_file: companion_1958.zarr
   rest_file: companion_1958-12-31.zarr
