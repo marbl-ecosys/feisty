@@ -310,15 +310,13 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
         forcing_rename = forcing_dict.get('field_rename', {})
         root_dir = forcing_dict.get('root_dir', '.')
         day_offset = forcing_dict.get('day_offset', 0)
-        new_ds = xr.open_mfdataset(
-            [os.path.join(root_dir, filename) for filename in forcing_dict['files']],
-            chunks=chunks,
-            data_vars='minimal',
-            compat='override',
-            coords='minimal',
-        ).rename(forcing_rename)
+        # Manually merge datasets instead of using open_mfdataset to avoid chunking in time
+        new_ds_list = []
+        for filename in forcing_dict['files']:
+            new_ds_list.append(xr.open_dataset(os.path.join(root_dir, filename), chunks=chunks))
+        new_ds = xr.merge(new_ds_list, compat='override', join='outer').rename(forcing_rename)
         new_ds = new_ds.assign_coords(
-            {'forcing_time': new_ds.forcing_time + datetime.timedelta(day_offset)}
+            {'forcing_time': new_ds.forcing_time.data + datetime.timedelta(day_offset)}
         )
         forcing_dses.append(new_ds)
     forcing_ds = xr.merge(forcing_dses, compat='override', join='override')
