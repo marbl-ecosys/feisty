@@ -13,7 +13,7 @@ Driver API
 .. autosummary::
    :toctree: generated/
 
-   offline_driver
-   offline_driver.run
-   config_testcase
-   config_from_netcdf
+   .offline_driver
+   .offline_driver.run
+   .offline_driver.config_testcase
+   .offline_driver.config_from_netcdf
