@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 
-<html >
+<html lang="en" >
 
   <head>
     <meta charset="utf-8" />
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,12 +38,14 @@
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
@@ -67,7 +69,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="next" title="Running the model" href="driver-example.html" />
     <link rel="prev" title="Usage" href="usage.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="None"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
   
   
@@ -76,6 +78,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -366,10 +377,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -377,7 +388,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -421,7 +432,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="feisty-test-cases">
-<h1>FEISTY test cases<a class="headerlink" href="#feisty-test-cases" title="Permalink to this headline">#</a></h1>
+<h1>FEISTY test cases<a class="headerlink" href="#feisty-test-cases" title="Permalink to this heading">#</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">testcase</span></code> module provides some utilites to generate domain and forcing data
 for a handful of <code class="docutils literal notranslate"><span class="pre">feisty</span></code> test cases.</p>
 <p>Here we illustrate some of these utilties.</p>
@@ -445,7 +456,7 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
 </div>
 </div>
 <section id="idealized-bathymetry">
-<h2>Idealized bathymetry<a class="headerlink" href="#idealized-bathymetry" title="Permalink to this headline">#</a></h2>
+<h2>Idealized bathymetry<a class="headerlink" href="#idealized-bathymetry" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">domain_dict</span> <span class="o">=</span> <span class="n">feisty</span><span class="o">.</span><span class="n">testcase</span><span class="o">.</span><span class="n">domain_tanh_shelf</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
@@ -483,12 +494,12 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Bathymetry&#39;)
 </pre></div>
 </div>
-<img alt="_images/a67ecaec5584e6a61ababbade240f34e229f2dee26c27c3d9e37deaeaf9cbda9.png" src="_images/a67ecaec5584e6a61ababbade240f34e229f2dee26c27c3d9e37deaeaf9cbda9.png" />
+<img alt="_images/f77e191f096ebc43c0830461256ea63cb2a11ed230ee97a406e5d4c828c5a641.png" src="_images/f77e191f096ebc43c0830461256ea63cb2a11ed230ee97a406e5d4c828c5a641.png" />
 </div>
 </div>
 </section>
 <section id="idealized-forcing-data">
-<h2>Idealized forcing data<a class="headerlink" href="#idealized-forcing-data" title="Permalink to this headline">#</a></h2>
+<h2>Idealized forcing data<a class="headerlink" href="#idealized-forcing-data" title="Permalink to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">testcase</span></code> subpackage of <code class="docutils literal notranslate"><span class="pre">feisty</span></code> includes a utilty to generate idealized
 forcing representing an annual cycle using harmonic function.</p>
 <p>Here is an example dataset returned:</p>
@@ -536,7 +547,7 @@ variables:
 </div>
 </div>
 <section id="visualizing-forcing-data">
-<h3>Visualizing forcing data<a class="headerlink" href="#visualizing-forcing-data" title="Permalink to this headline">#</a></h3>
+<h3>Visualizing forcing data<a class="headerlink" href="#visualizing-forcing-data" title="Permalink to this heading">#</a></h3>
 <p>The temperature field looks like this:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -547,10 +558,10 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7f9375473a50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7f0186f9c510&gt;
 </pre></div>
 </div>
-<img alt="_images/5e2daa5887c09455f992c6be1298034b398ecc6435c3be6620bb8eef0ffb6fe6.png" src="_images/5e2daa5887c09455f992c6be1298034b398ecc6435c3be6620bb8eef0ffb6fe6.png" />
+<img alt="_images/7a5dabcf694777afd7fd034e77fcff9c3fd6ea11eab403761fffe2d30d9ffc1e.png" src="_images/7a5dabcf694777afd7fd034e77fcff9c3fd6ea11eab403761fffe2d30d9ffc1e.png" />
 </div>
 </div>
 <p>Or at a single <code class="docutils literal notranslate"><span class="pre">X</span></code> point:</p>
@@ -563,10 +574,10 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f937d68fd50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f018701cc50&gt;
 </pre></div>
 </div>
-<img alt="_images/679481d74994aa14130a20cc0afc8241150f180f6666e7b85ca0558688e0e6c2.png" src="_images/679481d74994aa14130a20cc0afc8241150f180f6666e7b85ca0558688e0e6c2.png" />
+<img alt="_images/1ec5b5025ead616ae514dbd563602ca6469ca7cb08bcca2bfac531877d8160da.png" src="_images/1ec5b5025ead616ae514dbd563602ca6469ca7cb08bcca2bfac531877d8160da.png" />
 </div>
 </div>
 <p>Zooplankton and POC flux</p>
@@ -580,7 +591,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/ab03331576c1bb0fac294849317e273b7ed22812dc04607aaddee8c5823b2099.png" src="_images/ab03331576c1bb0fac294849317e273b7ed22812dc04607aaddee8c5823b2099.png" />
+<img alt="_images/42f97354bd98c34bb04ba6a9dcc86c2e040b7a090113405bbe03f676fcc9b453.png" src="_images/42f97354bd98c34bb04ba6a9dcc86c2e040b7a090113405bbe03f676fcc9b453.png" />
 </div>
 </div>
 <p>Zooplankton mortality</p>
@@ -594,7 +605,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/eb8accc21f64e2b66e17a019df44561fc850ff7a65ab4c52059cd0d2a6b2719c.png" src="_images/eb8accc21f64e2b66e17a019df44561fc850ff7a65ab4c52059cd0d2a6b2719c.png" />
+<img alt="_images/86bbbd5d1d62d6d120bd24a7722e4e18386390d609b959228b76956a1f8a9f6f.png" src="_images/86bbbd5d1d62d6d120bd24a7722e4e18386390d609b959228b76956a1f8a9f6f.png" />
 </div>
 </div>
 <p>POC flux</p>
@@ -605,10 +616,10 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f937525d650&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f017ec5b3d0&gt;]
 </pre></div>
 </div>
-<img alt="_images/1a5ae1a391787069c1c4c7f9e8ba1ce4bf58c714b2090564f7e63b534d915ba9.png" src="_images/1a5ae1a391787069c1c4c7f9e8ba1ce4bf58c714b2090564f7e63b534d915ba9.png" />
+<img alt="_images/9319ed6bcdf48c7e4c8a0f4ef04ecfe2baab3f31e26f8368099356e34285cf5a.png" src="_images/9319ed6bcdf48c7e4c8a0f4ef04ecfe2baab3f31e26f8368099356e34285cf5a.png" />
 </div>
 </div>
 </section>
@@ -640,11 +651,10 @@ variables:
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="usage.html"
@@ -664,10 +674,7 @@ variables:
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -734,8 +741,8 @@ By Colleen Petrik and Matthew C. Long
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
 
   <footer class="bd-footer">
   </footer>

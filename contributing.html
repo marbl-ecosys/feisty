@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 
-<html >
+<html lang="en" >
 
   <head>
     <meta charset="utf-8" />
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,12 +38,14 @@
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
@@ -67,7 +69,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="next" title="Internal API" href="api-internal.html" />
     <link rel="prev" title="Default settings" href="settings-show-defaults.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="None"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
   
   
@@ -76,6 +78,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -366,10 +377,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -377,7 +388,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -419,14 +430,14 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="contributing-to-the-feisty-model">
-<h1>Contributing to the FEISTY model<a class="headerlink" href="#contributing-to-the-feisty-model" title="Permalink to this headline">#</a></h1>
+<h1>Contributing to the FEISTY model<a class="headerlink" href="#contributing-to-the-feisty-model" title="Permalink to this heading">#</a></h1>
 <p>Contributions are highly welcomed and appreciated.</p>
 <p>The following sections cover some general guidelines
 regarding development in feisty for maintainers and contributors.
 Nothing here is set in stone and can’t be changed.
 Feel free to suggest improvements or changes in the workflow.</p>
 <section id="developing-feisty">
-<span id="pull-requests"></span><h2>Developing FEISTY<a class="headerlink" href="#developing-feisty" title="Permalink to this headline">#</a></h2>
+<span id="pull-requests"></span><h2>Developing FEISTY<a class="headerlink" href="#developing-feisty" title="Permalink to this heading">#</a></h2>
 <p>The best approach to contributing to the FEISTY code or documentation is to fork the repository, clone your fork locally, apply your edits, push back to your fork, then submit a pull request on GitHub.</p>
 <p>Here are some detailed instructions describing these steps.</p>
 <ol class="arabic">
@@ -488,7 +499,7 @@ $ git push -u
 </ol>
 </section>
 <section id="write-documentation">
-<span id="documentation"></span><h2>Write documentation<a class="headerlink" href="#write-documentation" title="Permalink to this headline">#</a></h2>
+<span id="documentation"></span><h2>Write documentation<a class="headerlink" href="#write-documentation" title="Permalink to this heading">#</a></h2>
 <p>Documentation is critical to enabling a robust, usable code base. Documentation files are is in the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> directory and are built with the <a class="reference external" href="https://jupyterbook.org/intro.html">Jupyter Book</a> utility. Documentation files can be Jupyter Notebooks, <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/">MyST Markdown</a>, or <a class="reference external" href="https://docutils.sourceforge.io/rst.html">reStructuredText</a>. The layout of the documentation is expressed in <code class="docutils literal notranslate"><span class="pre">docs/_toc.yml</span></code>.</p>
 <p>Documentation is built automatically using GitHub Actions.</p>
 <p>You can edit documentation files directly in the GitHub web interface,
@@ -507,7 +518,7 @@ $<span class="w">  </span>jupyter-book<span class="w"> </span>build<span class="
 </div>
 </section>
 <section id="feature-requests-and-feedback">
-<span id="submitfeedback"></span><h2>Feature requests and feedback<a class="headerlink" href="#feature-requests-and-feedback" title="Permalink to this headline">#</a></h2>
+<span id="submitfeedback"></span><h2>Feature requests and feedback<a class="headerlink" href="#feature-requests-and-feedback" title="Permalink to this heading">#</a></h2>
 <p>Feature requests, bug reports and questions can be submitted via the GitHub <a class="reference external" href="https://github.com/marbl-ecosys/feisty/issues">issue tracker</a>.</p>
 </section>
 </section>
@@ -537,11 +548,10 @@ $<span class="w">  </span>jupyter-book<span class="w"> </span>build<span class="
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="settings-show-defaults.html"
@@ -561,10 +571,7 @@ $<span class="w">  </span>jupyter-book<span class="w"> </span>build<span class="
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -629,8 +636,8 @@ By Colleen Petrik and Matthew C. Long
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
 
   <footer class="bd-footer">
   </footer>

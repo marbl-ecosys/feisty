@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 
-<html >
+<html lang="en" >
 
   <head>
     <meta charset="utf-8" />
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,12 +38,14 @@
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
@@ -67,7 +69,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="next" title="FEISTY Settings" href="settings.html" />
     <link rel="prev" title="FEISTY Driver" href="api-driver.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="None"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
   
   
@@ -76,6 +78,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -366,10 +377,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -377,7 +388,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -421,7 +432,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="comparing-with-matlab-baselines">
-<h1>Comparing with <code class="docutils literal notranslate"><span class="pre">matlab</span></code> Baselines<a class="headerlink" href="#comparing-with-matlab-baselines" title="Permalink to this headline">#</a></h1>
+<h1>Comparing with <code class="docutils literal notranslate"><span class="pre">matlab</span></code> Baselines<a class="headerlink" href="#comparing-with-matlab-baselines" title="Permalink to this heading">#</a></h1>
 <p>This code is ported from <code class="docutils literal notranslate"><span class="pre">matlab</span></code> scripts.
 Before adding features, we tested a variety of simulations to ensure answers are close (typically within round-off) of the <code class="docutils literal notranslate"><span class="pre">matlab</span></code> solutions.</p>
 <p>First we ran a test case with 9 columns and analytic forcing fields, that can be run with <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'test_case'</span></code>.
@@ -429,7 +440,7 @@ Next we read in forcing for three locations from netCDF files; that test can be 
 Finally, we read in forcing from the CESM FOSI run.
 For exact reproduction, that test can be run with <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'FOSI_cesm_daily'</span></code>.</p>
 <section id="additional-improvements">
-<h2>Additional Improvements<a class="headerlink" href="#additional-improvements" title="Permalink to this headline">#</a></h2>
+<h2>Additional Improvements<a class="headerlink" href="#additional-improvements" title="Permalink to this heading">#</a></h2>
 <p>After verifying we could reproduce the <code class="docutils literal notranslate"><span class="pre">matlab</span></code> solutions with daily forcing, we then added the ability to interpolate from monthly forcing.
 We also modified how the interpolation is done:</p>
 <ol class="arabic simple">
@@ -441,7 +452,7 @@ We also modified how the interpolation is done:</p>
 Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_script</span> <span class="pre">=</span> <span class="pre">'FOSI_cesm_spinup'</span></code> uses cyclic forcing from the first year but with the above changes to interpolation so the resulting initial conditions will not match the <code class="docutils literal notranslate"><span class="pre">matlab</span></code> output.</p>
 </section>
 <section id="running-the-model">
-<h2>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">#</a></h2>
+<h2>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this heading">#</a></h2>
 <p>Setup a <code class="docutils literal notranslate"><span class="pre">feisty</span></code> integration.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -469,7 +480,7 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 </div>
 </section>
 <section id="configure-run">
-<h2>Configure run<a class="headerlink" href="#configure-run" title="Permalink to this headline">#</a></h2>
+<h2>Configure run<a class="headerlink" href="#configure-run" title="Permalink to this heading">#</a></h2>
 <p>There are a few options on how to run:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">test_case</span></code> uses an idealized testcase where forcing and depth are computed analytically</p></li>
@@ -548,7 +559,7 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 </div>
 </section>
 <section id="set-up-dask-cluster-if-chunking-data">
-<h2>Set up Dask cluster (if chunking data)<a class="headerlink" href="#set-up-dask-cluster-if-chunking-data" title="Permalink to this headline">#</a></h2>
+<h2>Set up Dask cluster (if chunking data)<a class="headerlink" href="#set-up-dask-cluster-if-chunking-data" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">driver_config</span><span class="p">[</span><span class="n">matlab_script</span><span class="p">][</span><span class="s1">&#39;num_chunks&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -576,7 +587,7 @@ Similarly, <code class="docutils literal notranslate"><span class="pre">matlab_s
 </div>
 </section>
 <section id="run-the-model">
-<h2>Run the model<a class="headerlink" href="#run-the-model" title="Permalink to this headline">#</a></h2>
+<h2>Run the model<a class="headerlink" href="#run-the-model" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
@@ -766,11 +777,10 @@ Wall time: 19.2 s
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="api-driver.html"
@@ -790,10 +800,7 @@ Wall time: 19.2 s
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -860,8 +867,8 @@ By Colleen Petrik and Matthew C. Long
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
 
   <footer class="bd-footer">
   </footer>
