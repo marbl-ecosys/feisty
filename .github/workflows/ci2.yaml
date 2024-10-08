@@ -22,11 +22,11 @@ jobs:
 
       # Install dependencies
       - name: Set up conda environment with micromamba
-        uses: mamba-org/setup-micromamba@main
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
-          extra-specs: python=${{ matrix.python-version }}
+          create-args: python=3.11
 
       - name: Show conda environment
         shell: bash -l {0}

@@ -37,11 +37,11 @@ jobs:
           fi
           echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
       - name: Set up conda environment with micromamba
-        uses: mamba-org/setup-micromamba@main
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
-          extra-specs: python=${{ matrix.python-version }}
+          create-args: python=${{ matrix.python-version }}
 
       - name: Use old versions of packages where conda is out of sync with version support
         run: |
@@ -79,18 +79,17 @@ jobs:
         shell: bash -l {0}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        # python-version: [3.8]
+        os: ['ubuntu-latest']
     steps:
       - uses: actions/checkout@v2
 
       # Install dependencies
       - name: Set up conda environment with micromamba
-        uses: mamba-org/setup-micromamba@main
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
-          extra-specs: python=${{ matrix.python-version }}
+          create-args: python=3.11
 
       - name: Show conda environment
         shell: bash -l {0}
