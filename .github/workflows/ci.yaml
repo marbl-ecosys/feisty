@@ -79,8 +79,7 @@ jobs:
         shell: bash -l {0}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        # python-version: [3.8]
+        os: ['ubuntu-latest']
     steps:
       - uses: actions/checkout@v2
 
@@ -90,7 +89,7 @@ jobs:
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
-          create-args: python=${{ matrix.python-version }}
+          create-args: python=3.11
 
       - name: Show conda environment
         shell: bash -l {0}
