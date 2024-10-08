@@ -19,6 +19,7 @@ jobs:
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
+          create-args: python=3.11
 
       - name: Run pre-commit
         shell: bash -l {0}
