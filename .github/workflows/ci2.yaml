@@ -26,7 +26,7 @@ jobs:
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
-          extra-specs: python=${{ matrix.python-version }}
+          create-args: python=${{ matrix.python-version }}
 
       - name: Show conda environment
         shell: bash -l {0}
