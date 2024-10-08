@@ -37,7 +37,7 @@ jobs:
           fi
           echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
       - name: Set up conda environment with micromamba
-        uses: mamba-org/setup-micromamba@main
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
@@ -86,7 +86,7 @@ jobs:
 
       # Install dependencies
       - name: Set up conda environment with micromamba
-        uses: mamba-org/setup-micromamba@main
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
