@@ -29,7 +29,7 @@ dependencies:
   - xarray
   - zarr
   - pip:
-      - sphinx-click=6.0.0
-      - sphinxcontrib-autoyaml=1.1.3
-      - git+https://github.com/dask/dask-mpi.git=2022.4.0
+      - sphinx-click==6.0.0
+      - sphinxcontrib-autoyaml==1.1.3
+      - git+https://github.com/dask/dask-mpi.git==2022.4.0
       - '--editable=..'
