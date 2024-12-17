@@ -27,7 +27,7 @@ dependencies:
   - pyyaml
   - scipy
   - sphinx-click
-  - sphinxcontrib-autoyaml
+  - sphinxcontrib-autoyaml==1.1.3
   - xarray
   - zarr
   - pip:
