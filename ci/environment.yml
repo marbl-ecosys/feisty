@@ -24,6 +24,7 @@ dependencies:
   - pre-commit
   - pytest
   - pytest-cov
+  - pyyaml
   - scipy
   - xarray
   - zarr
