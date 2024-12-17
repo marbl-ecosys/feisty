@@ -20,9 +20,6 @@ jobs:
       - uses: actions/checkout@v2
 
       # Install dependencies
-      - name: Install pyyaml so mamba can pip install other packages
-        run: |
-          pip install pyyaml
       - name: Set up conda environment with micromamba
         uses: mamba-org/setup-micromamba@v2
         with:

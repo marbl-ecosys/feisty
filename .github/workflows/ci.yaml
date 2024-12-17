@@ -36,9 +36,6 @@ jobs:
 
           fi
           echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
-      - name: Install pyyaml so mamba can pip install other packages
-        run: |
-          pip install pyyaml
       - name: Set up conda environment with micromamba
         uses: mamba-org/setup-micromamba@v2
         with:
