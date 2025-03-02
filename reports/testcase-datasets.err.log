@@ -1,0 +1,115 @@
+Traceback (most recent call last):
+  File "/home/runner/micromamba/envs/dev-feisty/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/micromamba/envs/dev-feisty/lib/python3.11/site-packages/nbclient/client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/dev-feisty/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/dev-feisty/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/dev-feisty/lib/python3.11/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/micromamba/envs/dev-feisty/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/micromamba/envs/dev-feisty/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+%load_ext autoreload
+%autoreload 2
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mModuleNotFoundError[39m                       Traceback (most recent call last)
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:62[39m, in [36mExtensionManager.load_extension[39m[34m(self, module_str)[39m
+[32m     61[39m [38;5;28;01mtry[39;00m:
+[32m---> [39m[32m62[39m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43m_load_extension[49m[43m([49m[43mmodule_str[49m[43m)[49m
+[32m     63[39m [38;5;28;01mexcept[39;00m [38;5;167;01mModuleNotFoundError[39;00m:
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:77[39m, in [36mExtensionManager._load_extension[39m[34m(self, module_str)[39m
+[32m     76[39m [38;5;28;01mif[39;00m module_str [38;5;129;01mnot[39;00m [38;5;129;01min[39;00m sys.modules:
+[32m---> [39m[32m77[39m     mod = [43mimport_module[49m[43m([49m[43mmodule_str[49m[43m)[49m
+[32m     78[39m mod = sys.modules[module_str]
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/importlib/__init__.py:126[39m, in [36mimport_module[39m[34m(name, package)[39m
+[32m    125[39m         level += [32m1[39m
+[32m--> [39m[32m126[39m [38;5;28;01mreturn[39;00m [43m_bootstrap[49m[43m.[49m[43m_gcd_import[49m[43m([49m[43mname[49m[43m[[49m[43mlevel[49m[43m:[49m[43m][49m[43m,[49m[43m [49m[43mpackage[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:1204[39m, in [36m_gcd_import[39m[34m(name, package, level)[39m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:1176[39m, in [36m_find_and_load[39m[34m(name, import_)[39m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:1140[39m, in [36m_find_and_load_unlocked[39m[34m(name, import_)[39m
+
+[31mModuleNotFoundError[39m: No module named 'autoreload'
+
+During handling of the above exception, another exception occurred:
+
+[31mModuleNotFoundError[39m                       Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 1[39m
+[32m----> [39m[32m1[39m [43mget_ipython[49m[43m([49m[43m)[49m[43m.[49m[43mrun_line_magic[49m[43m([49m[33;43m'[39;49m[33;43mload_ext[39;49m[33;43m'[39;49m[43m,[49m[43m [49m[33;43m'[39;49m[33;43mautoreload[39;49m[33;43m'[39;49m[43m)[49m
+[32m      2[39m get_ipython().run_line_magic([33m'[39m[33mautoreload[39m[33m'[39m, [33m'[39m[33m2[39m[33m'[39m)
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/interactiveshell.py:2478[39m, in [36mInteractiveShell.run_line_magic[39m[34m(self, magic_name, line, _stack_depth)[39m
+[32m   2476[39m     kwargs[[33m'[39m[33mlocal_ns[39m[33m'[39m] = [38;5;28mself[39m.get_local_scope(stack_depth)
+[32m   2477[39m [38;5;28;01mwith[39;00m [38;5;28mself[39m.builtin_trap:
+[32m-> [39m[32m2478[39m     result = [43mfn[49m[43m([49m[43m*[49m[43margs[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mkwargs[49m[43m)[49m
+[32m   2480[39m [38;5;66;03m# The code below prevents the output from being displayed[39;00m
+[32m   2481[39m [38;5;66;03m# when using magics with decorator @output_can_be_silenced[39;00m
+[32m   2482[39m [38;5;66;03m# when the last Python token in the expression is a ';'.[39;00m
+[32m   2483[39m [38;5;28;01mif[39;00m [38;5;28mgetattr[39m(fn, magic.MAGIC_OUTPUT_CAN_BE_SILENCED, [38;5;28;01mFalse[39;00m):
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/magics/extension.py:33[39m, in [36mExtensionMagics.load_ext[39m[34m(self, module_str)[39m
+[32m     31[39m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m module_str:
+[32m     32[39m     [38;5;28;01mraise[39;00m UsageError([33m'[39m[33mMissing module name.[39m[33m'[39m)
+[32m---> [39m[32m33[39m res = [38;5;28;43mself[39;49m[43m.[49m[43mshell[49m[43m.[49m[43mextension_manager[49m[43m.[49m[43mload_extension[49m[43m([49m[43mmodule_str[49m[43m)[49m
+[32m     35[39m [38;5;28;01mif[39;00m res == [33m'[39m[33malready loaded[39m[33m'[39m:
+[32m     36[39m     [38;5;28mprint[39m([33m"[39m[33mThe [39m[38;5;132;01m%s[39;00m[33m extension is already loaded. To reload it, use:[39m[33m"[39m % module_str)
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:66[39m, in [36mExtensionManager.load_extension[39m[34m(self, module_str)[39m
+[32m     64[39m [38;5;28;01mif[39;00m module_str [38;5;129;01min[39;00m BUILTINS_EXTS:
+[32m     65[39m     BUILTINS_EXTS[module_str] = [38;5;28;01mTrue[39;00m
+[32m---> [39m[32m66[39m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43m_load_extension[49m[43m([49m[33;43m"[39;49m[33;43mIPython.extensions.[39;49m[33;43m"[39;49m[43m [49m[43m+[49m[43m [49m[43mmodule_str[49m[43m)[49m
+[32m     67[39m [38;5;28;01mraise[39;00m
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:77[39m, in [36mExtensionManager._load_extension[39m[34m(self, module_str)[39m
+[32m     75[39m [38;5;28;01mwith[39;00m [38;5;28mself[39m.shell.builtin_trap:
+[32m     76[39m     [38;5;28;01mif[39;00m module_str [38;5;129;01mnot[39;00m [38;5;129;01min[39;00m sys.modules:
+[32m---> [39m[32m77[39m         mod = [43mimport_module[49m[43m([49m[43mmodule_str[49m[43m)[49m
+[32m     78[39m     mod = sys.modules[module_str]
+[32m     79[39m     [38;5;28;01mif[39;00m [38;5;28mself[39m._call_load_ipython_extension(mod):
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/importlib/__init__.py:126[39m, in [36mimport_module[39m[34m(name, package)[39m
+[32m    124[39m             [38;5;28;01mbreak[39;00m
+[32m    125[39m         level += [32m1[39m
+[32m--> [39m[32m126[39m [38;5;28;01mreturn[39;00m [43m_bootstrap[49m[43m.[49m[43m_gcd_import[49m[43m([49m[43mname[49m[43m[[49m[43mlevel[49m[43m:[49m[43m][49m[43m,[49m[43m [49m[43mpackage[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:1204[39m, in [36m_gcd_import[39m[34m(name, package, level)[39m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:1176[39m, in [36m_find_and_load[39m[34m(name, import_)[39m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:1147[39m, in [36m_find_and_load_unlocked[39m[34m(name, import_)[39m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:690[39m, in [36m_load_unlocked[39m[34m(spec)[39m
+
+[36mFile [39m[32m<frozen importlib._bootstrap_external>:940[39m, in [36mexec_module[39m[34m(self, module)[39m
+
+[36mFile [39m[32m<frozen importlib._bootstrap>:241[39m, in [36m_call_with_frames_removed[39m[34m(f, *args, **kwds)[39m
+
+[36mFile [39m[32m~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/extensions/autoreload.py:110[39m
+[32m    108[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mIPython[39;00m[34;01m.[39;00m[34;01mcore[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m magic_arguments
+[32m    109[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mIPython[39;00m[34;01m.[39;00m[34;01mcore[39;00m[34;01m.[39;00m[34;01mmagic[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Magics, magics_class, line_magic
+[32m--> [39m[32m110[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mIPython[39;00m[34;01m.[39;00m[34;01mextensions[39;00m[34;01m.[39;00m[34;01mdeduperreload[39;00m[34;01m.[39;00m[34;01mdeduperreload[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m DeduperReloader
+[32m    112[39m __skip_doctest__ = [38;5;28;01mTrue[39;00m
+[32m    114[39m [38;5;66;03m# -----------------------------------------------------------------------------[39;00m
+[32m    115[39m [38;5;66;03m#  Copyright (C) 2000 Thomas Heller[39;00m
+[32m    116[39m [38;5;66;03m#  Copyright (C) 2008 Pauli Virtanen <pav@iki.fi>[39;00m
+[32m   (...)[39m[32m    127[39m [38;5;66;03m# Imports[39;00m
+[32m    128[39m [38;5;66;03m# -----------------------------------------------------------------------------[39;00m
+
+[31mModuleNotFoundError[39m: No module named 'IPython.extensions.deduperreload'
+
