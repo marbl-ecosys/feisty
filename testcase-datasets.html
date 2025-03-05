@@ -460,99 +460,6 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:62,</span> in <span class="ni">ExtensionManager.load_extension</span><span class="nt">(self, module_str)</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span> <span class="k">try</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">62</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_extension</span><span class="p">(</span><span class="n">module_str</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">63</span> <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
-
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:77,</span> in <span class="ni">ExtensionManager._load_extension</span><span class="nt">(self, module_str)</span>
-<span class="g g-Whitespace">     </span><span class="mi">76</span> <span class="k">if</span> <span class="n">module_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">77</span>     <span class="n">mod</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">module_str</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span> <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_str</span><span class="p">]</span>
-
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/importlib/__init__.py:126,</span> in <span class="ni">import_module</span><span class="nt">(name, package)</span>
-<span class="g g-Whitespace">    </span><span class="mi">125</span>         <span class="n">level</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="ne">--&gt; </span><span class="mi">126</span> <span class="k">return</span> <span class="n">_bootstrap</span><span class="o">.</span><span class="n">_gcd_import</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="n">level</span><span class="p">:],</span> <span class="n">package</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1204,</span> in <span class="ni">_gcd_import</span><span class="nt">(name, package, level)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1176,</span> in <span class="ni">_find_and_load</span><span class="nt">(name, import_)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1140,</span> in <span class="ni">_find_and_load_unlocked</span><span class="nt">(name, import_)</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;autoreload&#39;
-
-<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
-
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;load_ext&#39;</span><span class="p">,</span> <span class="s1">&#39;autoreload&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;autoreload&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
-
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/interactiveshell.py:2478,</span> in <span class="ni">InteractiveShell.run_line_magic</span><span class="nt">(self, magic_name, line, _stack_depth)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2476</span>     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;local_ns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_local_scope</span><span class="p">(</span><span class="n">stack_depth</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2477</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">builtin_trap</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">2478</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2480</span> <span class="c1"># The code below prevents the output from being displayed</span>
-<span class="g g-Whitespace">   </span><span class="mi">2481</span> <span class="c1"># when using magics with decorator @output_can_be_silenced</span>
-<span class="g g-Whitespace">   </span><span class="mi">2482</span> <span class="c1"># when the last Python token in the expression is a &#39;;&#39;.</span>
-<span class="g g-Whitespace">   </span><span class="mi">2483</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">magic</span><span class="o">.</span><span class="n">MAGIC_OUTPUT_CAN_BE_SILENCED</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/magics/extension.py:33,</span> in <span class="ni">ExtensionMagics.load_ext</span><span class="nt">(self, module_str)</span>
-<span class="g g-Whitespace">     </span><span class="mi">31</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">module_str</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span>     <span class="k">raise</span> <span class="n">UsageError</span><span class="p">(</span><span class="s1">&#39;Missing module name.&#39;</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">33</span> <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">extension_manager</span><span class="o">.</span><span class="n">load_extension</span><span class="p">(</span><span class="n">module_str</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="s1">&#39;already loaded&#39;</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">36</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The </span><span class="si">%s</span><span class="s2"> extension is already loaded. To reload it, use:&quot;</span> <span class="o">%</span> <span class="n">module_str</span><span class="p">)</span>
-
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:66,</span> in <span class="ni">ExtensionManager.load_extension</span><span class="nt">(self, module_str)</span>
-<span class="g g-Whitespace">     </span><span class="mi">64</span> <span class="k">if</span> <span class="n">module_str</span> <span class="ow">in</span> <span class="n">BUILTINS_EXTS</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="n">BUILTINS_EXTS</span><span class="p">[</span><span class="n">module_str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="ne">---&gt; </span><span class="mi">66</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_extension</span><span class="p">(</span><span class="s2">&quot;IPython.extensions.&quot;</span> <span class="o">+</span> <span class="n">module_str</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span> <span class="k">raise</span>
-
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/site-packages/IPython/core/extensions.py:77,</span> in <span class="ni">ExtensionManager._load_extension</span><span class="nt">(self, module_str)</span>
-<span class="g g-Whitespace">     </span><span class="mi">75</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">builtin_trap</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">76</span>     <span class="k">if</span> <span class="n">module_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">77</span>         <span class="n">mod</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">module_str</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span>     <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_str</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_load_ipython_extension</span><span class="p">(</span><span class="n">mod</span><span class="p">):</span>
-
-<span class="nn">File ~/micromamba/envs/dev-feisty/lib/python3.11/importlib/__init__.py:126,</span> in <span class="ni">import_module</span><span class="nt">(name, package)</span>
-<span class="g g-Whitespace">    </span><span class="mi">124</span>             <span class="k">break</span>
-<span class="g g-Whitespace">    </span><span class="mi">125</span>         <span class="n">level</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="ne">--&gt; </span><span class="mi">126</span> <span class="k">return</span> <span class="n">_bootstrap</span><span class="o">.</span><span class="n">_gcd_import</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="n">level</span><span class="p">:],</span> <span class="n">package</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1204,</span> in <span class="ni">_gcd_import</span><span class="nt">(name, package, level)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1176,</span> in <span class="ni">_find_and_load</span><span class="nt">(name, import_)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1147,</span> in <span class="ni">_find_and_load_unlocked</span><span class="nt">(name, import_)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:690,</span> in <span class="ni">_load_unlocked</span><span class="nt">(spec)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap_external&gt;:940,</span> in <span class="ni">exec_module</span><span class="nt">(self, module)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:241,</span> in <span class="ni">_call_with_frames_removed</span><span class="nt">(f, *args, **kwds)</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">micromamba</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">dev</span><span class="o">-</span><span class="n">feisty</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.11</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">IPython</span><span class="o">/</span><span class="n">extensions</span><span class="o">/</span><span class="n">autoreload</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">110</span>
-<span class="g g-Whitespace">    </span><span class="mi">108</span> <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">magic_arguments</span>
-<span class="g g-Whitespace">    </span><span class="mi">109</span> <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.core.magic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Magics</span><span class="p">,</span> <span class="n">magics_class</span><span class="p">,</span> <span class="n">line_magic</span>
-<span class="ne">--&gt; </span><span class="mi">110</span> <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.extensions.deduperreload.deduperreload</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeduperReloader</span>
-<span class="g g-Whitespace">    </span><span class="mi">112</span> <span class="n">__skip_doctest__</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="g g-Whitespace">    </span><span class="mi">114</span> <span class="c1"># -----------------------------------------------------------------------------</span>
-<span class="g g-Whitespace">    </span><span class="mi">115</span> <span class="c1">#  Copyright (C) 2000 Thomas Heller</span>
-<span class="g g-Whitespace">    </span><span class="mi">116</span> <span class="c1">#  Copyright (C) 2008 Pauli Virtanen &lt;pav@iki.fi&gt;</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>    <span class="mi">127</span> <span class="c1"># Imports</span>
-<span class="g g-Whitespace">    </span><span class="mi">128</span> <span class="c1"># -----------------------------------------------------------------------------</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;IPython.extensions.deduperreload&#39;
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -575,7 +482,7 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;bathymetry&#39;: &lt;xarray.DataArray &#39;bathymetry&#39; (X: 22)&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;bathymetry&#39;: &lt;xarray.DataArray &#39;bathymetry&#39; (X: 22)&gt; Size: 176B
  array([  30.04108171,   30.19902725,   31.17873201,   36.8321355 ,
           61.34734988,  131.85502453,  264.42098685,  437.55383604,
          609.22301965,  749.85055796,  851.52743149,  919.48569869,
@@ -583,7 +490,7 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
         1021.43508524, 1024.91716307, 1026.98605941, 1028.21370613,
         1028.94160815, 1029.37300191])
  Coordinates:
-   * X        (X) float64 -0.5 -0.2381 0.02381 0.2857 ... 4.214 4.476 4.738 5.0
+   * X        (X) float64 176B -0.5 -0.2381 0.02381 0.2857 ... 4.476 4.738 5.0
  Attributes:
      long_name:  depth
      units:      m,
@@ -604,7 +511,7 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Bathymetry&#39;)
 </pre></div>
 </div>
-<img alt="_images/93866b4f0673c8dd7fdb7c7d60d43d8ba07c2bb07624f1fd8098f4285d70ad4c.png" src="_images/93866b4f0673c8dd7fdb7c7d60d43d8ba07c2bb07624f1fd8098f4285d70ad4c.png" />
+<img alt="_images/3556260a1922804f45109811466e7f0e56f8dfe2ee59647b2a5477375685baa9.png" src="_images/3556260a1922804f45109811466e7f0e56f8dfe2ee59647b2a5477375685baa9.png" />
 </div>
 </div>
 </section>
@@ -623,29 +530,29 @@ forcing representing an annual cycle using harmonic function.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>xarray.Dataset {
 dimensions:
-	time = 366 ;
+	forcing_time = 365 ;
 	X = 22 ;
 	zooplankton = 1 ;
 
 variables:
-	float64 time(time) ;
+	object forcing_time(forcing_time) ;
 	float64 X(X) ;
-	float64 T_pelagic(time, X) ;
+	float64 T_pelagic(forcing_time, X) ;
 		T_pelagic:long_name = T_pelagic ;
 		T_pelagic:units = degC ;
-	float64 T_bottom(time, X) ;
+	float64 T_bottom(forcing_time, X) ;
 		T_bottom:long_name = T_bottom ;
 		T_bottom:units = degC ;
-	float64 poc_flux_bottom(time, X) ;
+	float64 poc_flux_bottom(forcing_time, X) ;
 		poc_flux_bottom:long_name = POC flux ;
 		poc_flux_bottom:units = g/m^2/d ;
 		poc_flux_bottom:b = 0.7 ;
 	&lt;U3 zooplankton(zooplankton) ;
-	float64 zooC(zooplankton, time, X) ;
+	float64 zooC(zooplankton, forcing_time, X) ;
 		zooC:long_name = Zooplankton biomass ;
 		zooC:units = g/m^2 ;
 		zooC:harmonic_parms = Zoo = {&#39;mu&#39;: 4.0, &#39;amp_fraction&#39;: 0.2, &#39;phase&#39;: 10.0} ;
-	float64 zoo_mort(zooplankton, time, X) ;
+	float64 zoo_mort(zooplankton, forcing_time, X) ;
 		zoo_mort:long_name = Zooplankton quadratic mortality ;
 		zoo_mort:units = g/m^2/d ;
 
@@ -668,10 +575,10 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x162bdd0a0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7f28c15c1c50&gt;
 </pre></div>
 </div>
-<img alt="_images/7857ac5ec01c67299647e7f86ca0bf0ec54f8a82e2aa0d8b6fdb59b39e033c18.png" src="_images/7857ac5ec01c67299647e7f86ca0bf0ec54f8a82e2aa0d8b6fdb59b39e033c18.png" />
+<img alt="_images/f8b37b1820df8f515d2853cd9eae47bc394264c4248f05d084ee39077b9b21be.png" src="_images/f8b37b1820df8f515d2853cd9eae47bc394264c4248f05d084ee39077b9b21be.png" />
 </div>
 </div>
 <p>Or at a single <code class="docutils literal notranslate"><span class="pre">X</span></code> point:</p>
@@ -684,10 +591,10 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x162ab3f10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f28c15c1250&gt;
 </pre></div>
 </div>
-<img alt="_images/6933f6c2dd51441bd46d0b8f76ddfa813435916cbf421b71aad625c57c4299e5.png" src="_images/6933f6c2dd51441bd46d0b8f76ddfa813435916cbf421b71aad625c57c4299e5.png" />
+<img alt="_images/5cf63ea8ee07d274e607d334fed264f479e2537f1f8ef1ce05f3ecce845acbcc.png" src="_images/5cf63ea8ee07d274e607d334fed264f479e2537f1f8ef1ce05f3ecce845acbcc.png" />
 </div>
 </div>
 <p>Zooplankton and POC flux</p>
@@ -701,7 +608,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/8542d57f35e817e8f5f04e58b23745d472062da713f441d81b5e0e15dca3710f.png" src="_images/8542d57f35e817e8f5f04e58b23745d472062da713f441d81b5e0e15dca3710f.png" />
+<img alt="_images/034bff38964c88b23d7c341ffd2b936d053425de4c1b4d1af33e0472f071c80e.png" src="_images/034bff38964c88b23d7c341ffd2b936d053425de4c1b4d1af33e0472f071c80e.png" />
 </div>
 </div>
 <p>Zooplankton mortality</p>
@@ -715,7 +622,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/c526bf269b42817e70d856b79f138227a16afd0a3b2c3bd560ba6a27c57046c7.png" src="_images/c526bf269b42817e70d856b79f138227a16afd0a3b2c3bd560ba6a27c57046c7.png" />
+<img alt="_images/17a5248bff5967f292f9f8008452d70113262945a148170b16f3695fec9d419e.png" src="_images/17a5248bff5967f292f9f8008452d70113262945a148170b16f3695fec9d419e.png" />
 </div>
 </div>
 <p>POC flux</p>
@@ -726,10 +633,10 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x162e17760&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f28c13b6290&gt;]
 </pre></div>
 </div>
-<img alt="_images/f0ea42b26957a1e1641cf9234907e25a32ead1bb33f6075c2c6b0b5a11d4999c.png" src="_images/f0ea42b26957a1e1641cf9234907e25a32ead1bb33f6075c2c6b0b5a11d4999c.png" />
+<img alt="_images/754839f63e1f056b88b99b44af663d7c61961a7e3958d3b28ff863b4544f1cb8.png" src="_images/754839f63e1f056b88b99b44af663d7c61961a7e3958d3b28ff863b4544f1cb8.png" />
 </div>
 </div>
 </section>
