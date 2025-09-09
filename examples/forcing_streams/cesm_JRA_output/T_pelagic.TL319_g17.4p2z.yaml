@@ -1,4 +1,4 @@
-root_dir: /glade/campaign/cesm/development/bgcwg/projects/CESM2-OMIP2-like-4p2z-run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch/ocn/proc/tseries/day_1/
+root_dir: /glade/campaign/cesm/development/bgcwg/projects/CESM2-OMIP2-like-4p2z-run/g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.002branch/ocn/proc/tseries/day_1/
 day_offset: -1
 variables:
   - T_pelagic
@@ -7,4 +7,4 @@ field_rename:
   TEMP_mean_150m: T_pelagic
   time: forcing_time
 files:
-  - g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.001branch.pop.h.ecosys.nday1.TEMP_mean_150m.19580101-20211231.nc
+  - g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.4p2z.002branch.pop.h.ecosys.nday1.TEMP_mean_150m.19580101-20211231.nc

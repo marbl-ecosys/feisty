@@ -8,6 +8,7 @@ import dask
 import numpy as np
 import xarray as xr
 import yaml
+import zarr
 
 
 def generate_ic_ds_for_feisty(
@@ -278,9 +279,6 @@ def generate_template(
     if 'X' in coords_dict:
         ds_out = ds_out.assign_coords({'X': ds.X})
 
-    # if chunks:
-    #     ds_out = ds_out.chunk(chunks)
-
     return ds_out
 
 
@@ -304,24 +302,36 @@ def get_forcing_from_config(feisty_config):
     return feisty_forcing
 
 
-def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
+def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False, debug_outdir=None):
     forcing_dses = list()
     for forcing_dict in feisty_forcing:
         forcing_rename = forcing_dict.get('field_rename', {})
         root_dir = forcing_dict.get('root_dir', '.')
         day_offset = forcing_dict.get('day_offset', 0)
+
+        default_chunks = {
+            'forcing_time': -1,  # entire time series as one chunk
+            'nlat': 128,
+            'nlon': 80,
+        }
+
         new_ds = xr.open_mfdataset(
             [os.path.join(root_dir, filename) for filename in forcing_dict['files']],
-            chunks=chunks,
             data_vars='minimal',
             compat='override',
             coords='minimal',
+            decode_timedelta=True,
         ).rename(forcing_rename)
+
+        new_ds = new_ds.chunk(default_chunks)
+
         new_ds = new_ds.assign_coords(
             {'forcing_time': new_ds.forcing_time + datetime.timedelta(day_offset)}
         )
         forcing_dses.append(new_ds)
+
     forcing_ds = xr.merge(forcing_dses, compat='override', join='override')
+
     drop_vars = [var for var in ['TLAT', 'TLONG', 'ULAT', 'ULONG'] if var in forcing_ds]
     if drop_vars:
         forcing_ds = forcing_ds.drop_vars(drop_vars)
@@ -380,6 +390,18 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
         forcing_ds['zoo_mort'].data = (
             forcing_ds['zoo_mort'].data * nmol_cm2_TO_g_m2 * per_s_TO_per_d
         )
+
+    if debug_outdir is None:
+        raise ValueError('You must manually specify debug_outdir to avoid overwriting Zarr files.')
+
+    if os.path.exists(debug_outdir):
+        print(f'Removing existing Zarr directory at {debug_outdir}')
+        shutil.rmtree(debug_outdir)
+
+    print(f'Saving forcing dataset to {debug_outdir}')
+    forcing_ds = forcing_ds.chunk(default_chunks)
+    forcing_ds.to_zarr(debug_outdir, mode='w', consolidated=True)
+    zarr.consolidate_metadata(debug_outdir)
 
     return forcing_ds[forcing_vars]
 

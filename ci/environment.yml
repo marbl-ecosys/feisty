@@ -15,6 +15,7 @@ dependencies:
   - mpich
   - mpi4py
   - myst-nb
+  - nb_conda_kernels
   - nbformat
   - nbsphinx
   - nc-time-axis
