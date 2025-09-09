@@ -601,11 +601,7 @@ def config_and_run_from_netcdf(
     ).compute()
 
 
-def config_and_run_from_yaml(
-    input_dict,
-    settings_in={},
-    ds = None
-):
+def config_and_run_from_yaml(input_dict, settings_in={}, ds=None):
 
     """Return an instance of ``feisty.driver.offline_driver`` configured from a YAML file.
        This should eventually replace config_and_run_from_netcdf() as it is a better YAML schema.
@@ -665,31 +661,33 @@ def config_and_run_from_yaml(
     #     }
     """
 
-    num_workers = input_dict.get("num_workers", 1)
-    chunks = input_dict.get("chunks") if num_workers > 1 else None
+    num_workers = input_dict.get('num_workers', 1)
+    chunks = input_dict.get('chunks') if num_workers > 1 else None
 
-    start_date = input_dict["start_date"]
-    end_date = input_dict["end_date"]
-    POP_units = input_dict["forcing"].get("POP_units", False)
-    ignore_year_in_forcing = input_dict["forcing"].get("use_cyclic_forcing", False)
+    start_date = input_dict['start_date']
+    end_date = input_dict['end_date']
+    POP_units = input_dict['forcing'].get('POP_units', False)
+    ignore_year_in_forcing = input_dict['forcing'].get('use_cyclic_forcing', False)
 
-    diagnostic_names = input_dict.get("output", {}).get("diagnostic_names", [])
-    method = input_dict.get("method", "euler")
-    max_output_time_dim = input_dict.get("max_output_time_dim", 365)
+    diagnostic_names = input_dict.get('output', {}).get('diagnostic_names', [])
+    method = input_dict.get('method', 'euler')
+    max_output_time_dim = input_dict.get('max_output_time_dim', 365)
 
     feisty_forcing = get_forcing_from_config(input_dict)
 
-    #include date for zarr
-    debug_outdir = "/glade/derecho/scratch/akenney/final.zarr"
+    # include date for zarr
+    debug_outdir = '/glade/derecho/scratch/akenney/final.zarr'
 
     if ds is None:
-        ds = generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units, debug_outdir=debug_outdir)
+        ds = generate_forcing_ds_from_config(
+            feisty_forcing, chunks, POP_units, debug_outdir=debug_outdir
+        )
 
         if ignore_year_in_forcing:
-            ds = make_forcing_cyclic(ds, input_dict["forcing"].get("cyclic_year", 1))
+            ds = make_forcing_cyclic(ds, input_dict['forcing'].get('cyclic_year', 1))
 
-    if "initial_conditions" in input_dict:
-        ic_root = input_dict["initial_conditions"].get("root_dir", ".")
+    if 'initial_conditions' in input_dict:
+        ic_root = input_dict['initial_conditions'].get('root_dir', '.')
         ic_file = f"{ic_root}/{input_dict['initial_conditions']['ic_file']}"
     else:
         ic_file = None
@@ -711,7 +709,7 @@ def config_and_run_from_yaml(
         ds,
         args=(
             ds_ic,
-            len(template["time"]),
+            len(template['time']),
             start_date,
             ignore_year_in_forcing,
             settings_in,
@@ -724,20 +722,20 @@ def config_and_run_from_yaml(
     wait(ds_out)
 
     # Output according to YAML
-    if "output" in input_dict:
-        overwrite = input_dict["output"].get("overwrite", False)
-        if "hist_file" in input_dict["output"]:
-            hist_dir = input_dict["output"].get("hist_dir", ".")
+    if 'output' in input_dict:
+        overwrite = input_dict['output'].get('overwrite', False)
+        if 'hist_file' in input_dict['output']:
+            hist_dir = input_dict['output'].get('hist_dir', '.')
             write_history_file(
                 ds_out,
-                os.path.join(hist_dir, input_dict["output"]["hist_file"]),
+                os.path.join(hist_dir, input_dict['output']['hist_file']),
                 overwrite=overwrite,
             )
-        if "rest_file" in input_dict["output"]:
-            rest_dir = input_dict["output"].get("rest_dir", ".")
+        if 'rest_file' in input_dict['output']:
+            rest_dir = input_dict['output'].get('rest_dir', '.')
             write_restart_file(
                 ds_out,
-                os.path.join(rest_dir, input_dict["output"]["rest_file"]),
+                os.path.join(rest_dir, input_dict['output']['rest_file']),
                 overwrite=overwrite,
             )
 
