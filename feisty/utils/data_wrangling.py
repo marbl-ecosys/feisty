@@ -41,7 +41,7 @@ def generate_ic_ds_for_feisty(
         if ic_file[-3:] == '.nc':
             ds_ic = xr.open_dataset(ic_file).rename(ic_rename)
         elif ic_file[-5:] == '.zarr':
-            ds_ic = xr.open_zarr(ic_file).rename(ic_rename)
+            ds_ic = xr.open_zarr(ic_file, consolidated=False).rename(ic_rename)
         else:
             raise ValueError(f'Can not determine file type for {ic_file}')
         if 'X' in ds.coords:
@@ -400,7 +400,7 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False, deb
 
     print(f'Saving forcing dataset to {debug_outdir}')
     forcing_ds = forcing_ds.chunk(default_chunks)
-    forcing_ds.to_zarr(debug_outdir, mode='w', consolidated=True)
+    forcing_ds.to_zarr(debug_outdir, mode='w', consolidated=False, zarr_format=2)
     zarr.consolidate_metadata(debug_outdir)
 
     return forcing_ds[forcing_vars]
@@ -513,13 +513,13 @@ def _write_to_nc_or_zarr(ds, filename, overwrite=False):
         # otherwise to_zarr() hangs
         if 'biomass' in ds.data_vars:
             print('Starting with biomass')
-            ds['biomass'].to_dataset().to_zarr(filename)
+            ds['biomass'].to_dataset().to_zarr(filename, consolidated=False, zarr_format=2)
             for var in ds.data_vars:
                 if var == 'biomass':
                     continue
                 print(f'Writing {var} to disk')
-                ds[var].to_dataset().to_zarr(filename, mode='a')
+                ds[var].to_dataset().to_zarr(filename, mode='a', consolidated=False, zarr_format=2)
         else:
-            ds.to_zarr(filename)
+            ds.to_zarr(filename, consolidated=False, zarr_format=2)
     else:
         raise ValueError(f'Can not determine file type for {filename}')
