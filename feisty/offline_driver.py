@@ -196,7 +196,11 @@ class _offline_driver(object):
             print(f'Starting a new output dataset for timestep {n} ({time.strftime("%H:%M:%S")})')
         self._ds_list[ds_ind].biomass.data[data_ind, :, :] = self.state_t.data
         for v in self._diagnostic_names:
-            self._ds_list[ds_ind][v].data[data_ind, :] = self.obj.tendency_data[v].data
+            print(f'{v}: {np.shape(self.obj.tendency_data[v].data)}')
+            if v == 'forcings':
+                pass
+            else:
+                self._ds_list[ds_ind][v].data[data_ind, :] = self.obj.tendency_data[v].data
 
     # @property
     # def ds(self):

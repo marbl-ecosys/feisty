@@ -26,6 +26,7 @@ benthic_prey_ic_data = 2e-3
 
 n_zoo = len(settings_dict_def['zooplankton']['members'])
 n_fish = len(settings_dict_def['fish']['members'])
+n_forcings = 5
 n_benthic_prey = len(settings_dict_def['benthic_prey']['members'])
 
 NX = 10
@@ -359,6 +360,7 @@ def test_init_tendency_arrays():
         'group',
         'zooplankton',
         'fish',
+        'forcings',
         'benthic_prey',
         'feeding_link',
         'prey',
@@ -401,6 +403,10 @@ def test_init_tendency_arrays():
         if key in fish_coord_vars:
             assert da.dims == ('fish', 'X')
             assert da.shape == (n_fish, NX)
+            checked.append(key)
+        elif key == 'forcing_data':
+            assert da.dims == ('forcings', 'X')
+            assert da.shape == (n_forcings, NX)
             checked.append(key)
         elif key in group_coord_vars:
             assert da.dims == ('group', 'X')
