@@ -1,0 +1,11 @@
+root_dir: /glade/campaign/cesm/development/bgcwg/projects/CESM2-4p2z-CMIP6-like-run/b.e21p5.BHIST.f09_g17.4p2z.003/ocn/proc/tseries/day_1/
+day_offset: -1
+variables:
+  - zoo_mort
+field_rename:
+  HT: bathymetry
+  mesozoo_loss_zint_150m: zoo_mort
+  time: forcing_time
+files:
+  - b.e21p5.BHIST.f09_g17.4p2z.003.pop.h.ecosys.nday1.mesozoo_loss_zint_150m.19160101-19660101.nc
+  - b.e21p5.BHIST.f09_g17.4p2z.003.pop.h.ecosys.nday1.mesozoo_loss_zint_150m.19660102-20141231.nc

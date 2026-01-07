@@ -300,9 +300,6 @@ def generate_template(
     if 'X' in coords_dict:
         ds_out = ds_out.assign_coords({'X': ds.X})
 
-    # if chunks:
-    # ds_out = ds_out.chunk(chunks)
-
     return ds_out
 
 
@@ -417,18 +414,14 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False, deb
 
     if debug_outdir is None:
         raise ValueError('You must manually specify debug_outdir to avoid overwriting Zarr files.')
-    print(f'Saving forcing dataset to {debug_outdir}')
 
     if os.path.exists(debug_outdir):
         print(f'Removing existing Zarr directory at {debug_outdir}')
         shutil.rmtree(debug_outdir)
 
     print(f'Saving forcing dataset to {debug_outdir}')
-
     forcing_ds = forcing_ds.chunk(default_chunks)
-
     forcing_ds.to_zarr(debug_outdir, mode='w', consolidated=True)
-
     zarr.consolidate_metadata(debug_outdir)
 
     return forcing_ds[forcing_vars]
@@ -539,7 +532,6 @@ def _write_to_nc_or_zarr(ds, filename, overwrite=False):
         print('Calling to_zarr...')
         # highres history file needs to be written variable by variable
         # otherwise to_zarr() hangs
-        print(f'data_vars! {ds.data_vars}')
         if 'biomass' in ds.data_vars or 'forcings' in ds.data_vars:
             if 'biomass' in ds.data_vars:
                 print('Writing biomass')

@@ -8,13 +8,14 @@ dependencies:
   - dask-mpi
   - dask-jobqueue
   - jupyter
-  - jupyter-book
+  - jupyter-book<2
   - jupyter_client==6.1.12
   - jupyterlab
   - matplotlib
   - mpich
   - mpi4py
   - myst-nb
+  - nb_conda_kernels
   - nbformat
   - nbsphinx
   - nc-time-axis
