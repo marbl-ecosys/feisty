@@ -26,6 +26,7 @@ dependencies:
   - pytest
   - pytest-cov
   - pyyaml
+  - ruamel.yaml=0.18.17
   - scipy
   - sphinx-click
   - sphinxcontrib-autoyaml==1.1.3
