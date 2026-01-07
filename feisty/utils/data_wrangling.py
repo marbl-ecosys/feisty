@@ -8,6 +8,7 @@ import dask
 import numpy as np
 import xarray as xr
 import yaml
+import zarr
 
 
 def generate_ic_ds_for_feisty(
@@ -207,6 +208,16 @@ def generate_template(
         ],
         dtype='<U12',
     ),
+    forcings=np.array(
+        [
+            'zooC',
+            'zoo_mort',
+            'T_bottom',
+            'T_pelagic',
+            'poc_flux',
+        ],
+        dtype='<U12',
+    ),
     diagnostic_names=[],
 ):
     print(f'Starting template generation at {time.strftime("%H:%M:%S")}')
@@ -227,6 +238,8 @@ def generate_template(
     feeding_dimsizes = [len(model_time), len(feeding_link)]
     fish_dims = ['time', 'fish']
     fish_dimsizes = [len(model_time), len(fish)]
+    forcings_dims = ['time', 'forcings']
+    forcings_dimsizes = [len(model_time), len(forcings)]
     if 'X' in ds.coords:
         check_chunk = ['X']
         coords_dict['X'] = (['X'], ds.X.data)
@@ -236,6 +249,8 @@ def generate_template(
         feeding_dimsizes.append(len(ds.X))
         fish_dims.append('X')
         fish_dimsizes.append(len(ds.X))
+        forcings_dims.append('X')
+        forcings_dimsizes.append(len(ds.X))
     else:
         check_chunk = ['nlat', 'nlon']
         coords_dict['nlat'] = (['nlat'], ds.nlat.data)
@@ -252,6 +267,10 @@ def generate_template(
         fish_dimsizes.append(len(ds.nlat))
         fish_dims.append('nlon')
         fish_dimsizes.append(len(ds.nlon))
+        forcings_dims.append('nlat')
+        forcings_dimsizes.append(len(ds.nlat))
+        forcings_dims.append('nlon')
+        forcings_dimsizes.append(len(ds.nlon))
 
     chunks = {}
     for dimname in check_chunk:
@@ -267,6 +286,9 @@ def generate_template(
             coords_dict['feeding_link'] = ('feeding_link', feeding_link)
             coords_dict['predator'] = ('feeding_link', predator)
             coords_dict['prey'] = ('feeding_link', prey)
+        elif diag == 'forcing_data':
+            data_vars_dict[diag] = (forcings_dims, _zeros(forcings_dimsizes, chunks))
+            coords_dict['forcings'] = ('forcings', forcings)
         else:
             data_vars_dict[diag] = (fish_dims, _zeros(fish_dimsizes, chunks))
             coords_dict['fish'] = ('fish', fish)
@@ -279,7 +301,7 @@ def generate_template(
         ds_out = ds_out.assign_coords({'X': ds.X})
 
     # if chunks:
-    #     ds_out = ds_out.chunk(chunks)
+    # ds_out = ds_out.chunk(chunks)
 
     return ds_out
 
@@ -304,24 +326,36 @@ def get_forcing_from_config(feisty_config):
     return feisty_forcing
 
 
-def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
+def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False, debug_outdir=None):
     forcing_dses = list()
     for forcing_dict in feisty_forcing:
         forcing_rename = forcing_dict.get('field_rename', {})
         root_dir = forcing_dict.get('root_dir', '.')
         day_offset = forcing_dict.get('day_offset', 0)
+
+        default_chunks = {
+            'forcing_time': -1,  # entire time series as one chunk
+            'nlat': 128,
+            'nlon': 80,
+        }
+
         new_ds = xr.open_mfdataset(
             [os.path.join(root_dir, filename) for filename in forcing_dict['files']],
-            chunks=chunks,
             data_vars='minimal',
             compat='override',
             coords='minimal',
+            decode_timedelta=True,
         ).rename(forcing_rename)
+
+        new_ds = new_ds.chunk(default_chunks)
+
         new_ds = new_ds.assign_coords(
             {'forcing_time': new_ds.forcing_time + datetime.timedelta(day_offset)}
         )
         forcing_dses.append(new_ds)
+
     forcing_ds = xr.merge(forcing_dses, compat='override', join='override')
+
     drop_vars = [var for var in ['TLAT', 'TLONG', 'ULAT', 'ULONG'] if var in forcing_ds]
     if drop_vars:
         forcing_ds = forcing_ds.drop_vars(drop_vars)
@@ -380,6 +414,22 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False):
         forcing_ds['zoo_mort'].data = (
             forcing_ds['zoo_mort'].data * nmol_cm2_TO_g_m2 * per_s_TO_per_d
         )
+
+    if debug_outdir is None:
+        raise ValueError('You must manually specify debug_outdir to avoid overwriting Zarr files.')
+    print(f'Saving forcing dataset to {debug_outdir}')
+
+    if os.path.exists(debug_outdir):
+        print(f'Removing existing Zarr directory at {debug_outdir}')
+        shutil.rmtree(debug_outdir)
+
+    print(f'Saving forcing dataset to {debug_outdir}')
+
+    forcing_ds = forcing_ds.chunk(default_chunks)
+
+    forcing_ds.to_zarr(debug_outdir, mode='w', consolidated=True)
+
+    zarr.consolidate_metadata(debug_outdir)
 
     return forcing_ds[forcing_vars]
 
@@ -489,11 +539,16 @@ def _write_to_nc_or_zarr(ds, filename, overwrite=False):
         print('Calling to_zarr...')
         # highres history file needs to be written variable by variable
         # otherwise to_zarr() hangs
-        if 'biomass' in ds.data_vars:
-            print('Starting with biomass')
-            ds['biomass'].to_dataset().to_zarr(filename)
+        print(f'data_vars! {ds.data_vars}')
+        if 'biomass' in ds.data_vars or 'forcings' in ds.data_vars:
+            if 'biomass' in ds.data_vars:
+                print('Writing biomass')
+                ds['biomass'].to_dataset().to_zarr(filename)
+            if 'forcings' in ds.data_vars:
+                print('Writing forcings')
+                ds['forcings'].to_dataset().to_zarr(filename)
             for var in ds.data_vars:
-                if var == 'biomass':
+                if var in ['biomass', 'forcings']:
                     continue
                 print(f'Writing {var} to disk')
                 ds[var].to_dataset().to_zarr(filename, mode='a')

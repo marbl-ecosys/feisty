@@ -66,6 +66,7 @@ class feisty_instance_type(object):
 
         self.loffline = self.settings_dict['loffline']
         self._init_domain(self.domain_dict)
+        self.gcm_state = gcm_state_type(self.domain_params)
 
         self._init_model_settings(self.settings_dict['model_settings'])
 
@@ -92,8 +93,6 @@ class feisty_instance_type(object):
         self._init_reproduction_routing(self.settings_dict['reproduction_routing'])
         self._init_fishing(self.settings_dict['fishing'])
         self._init_tendency_arrays()
-
-        self.gcm_state = gcm_state_type(self.domain_params)
 
     def _init_domain(self, domain_dict):
         """initialize domain"""
@@ -209,12 +208,16 @@ class feisty_instance_type(object):
 
     def _init_tendency_arrays(self):
         """initialize components of the computation"""
+        forcings_list = ['zooC', 'zoo_mort']
+        for f in self.gcm_state.var_names():
+            forcings_list.append(f)
         self.tendency_data = _init_tendency_data(
             self.domain_params,
             self.zooplankton,
             self.fish,
             self.benthic_prey,
             self.member_obj_list,
+            forcings_list,
             self.food_web,
         )
 
@@ -489,6 +492,15 @@ class feisty_instance_type(object):
         self._set_zoo_mortality(zoo_mortality_data)
         self.gcm_state.update(**gcm_state_update_kwargs)
 
+        # Add forcings to diagnostic output
+        # Forcings are zooC, zoo_mort, and then gcm_state.var_names()
+        self.tendency_data.forcing_data[0, :] = zooplankton_biomass[0, :]
+        self.tendency_data.forcing_data[1, :] = zoo_mortality_data[0, :]
+        for forcing_ind, gcm_state_var_name in enumerate(self.gcm_state.var_names()):
+            self.tendency_data.forcing_data[forcing_ind + 2, :] = eval(
+                f'self.gcm_state.{gcm_state_var_name}'
+            )
+
         # compute temperature terms
         self._compute_t_frac_pelagic()
         self._compute_temperature()
@@ -515,7 +527,7 @@ class feisty_instance_type(object):
 
 
 def _init_tendency_data(
-    domain_params, zoo_list, fish_list, benthic_prey_list, member_obj_list, food_web
+    domain_params, zoo_list, fish_list, benthic_prey_list, member_obj_list, forcings_list, food_web
 ):
     """Return an xarray.Dataset with initialized tendency data arrays."""
 
@@ -539,6 +551,7 @@ def _init_tendency_data(
             fish=fish_names,
             benthic_prey=benthic_prey_names,
             feeding_link=feeding_link_coord,
+            forcings=forcings_list,
             **add_coords,
         ),
     )
@@ -719,6 +732,12 @@ def _init_tendency_data(
         coord_values=feeding_link_coord,
         name='consumption_zoo_raw',
     )
+    ds['forcing_data'] = domain.init_array_2d(
+        domain_params,
+        coord_name='forcings',
+        coord_values=forcings_list,
+        name='forcing_data',
+    )
 
     return ds
 
@@ -736,3 +755,12 @@ class gcm_state_type(object):
         self.T_pelagic.data[:] = T_pelagic
         self.T_bottom.data[:] = T_bottom
         self.poc_flux.data[:] = poc_flux
+
+    def var_names(self):
+        return sorted(
+            [
+                attr
+                for attr in dir(self)
+                if not callable(getattr(self, attr)) and not attr.startswith('__')
+            ]
+        )

@@ -196,7 +196,11 @@ class _offline_driver(object):
             print(f'Starting a new output dataset for timestep {n} ({time.strftime("%H:%M:%S")})')
         self._ds_list[ds_ind].biomass.data[data_ind, :, :] = self.state_t.data
         for v in self._diagnostic_names:
-            self._ds_list[ds_ind][v].data[data_ind, :] = self.obj.tendency_data[v].data
+            print(f'{v}: {np.shape(self.obj.tendency_data[v].data)}')
+            if v == 'forcings':
+                pass
+            else:
+                self._ds_list[ds_ind][v].data[data_ind, :] = self.obj.tendency_data[v].data
 
     # @property
     # def ds(self):
@@ -601,10 +605,7 @@ def config_and_run_from_netcdf(
     ).compute()
 
 
-def config_and_run_from_yaml(
-    input_dict,
-    settings_in={},
-):
+def config_and_run_from_yaml(input_dict, settings_in={}, ds=None):
 
     """Return an instance of ``feisty.driver.offline_driver`` configured from a YAML file.
        This should eventually replace config_and_run_from_netcdf() as it is a better YAML schema.
@@ -665,30 +666,33 @@ def config_and_run_from_yaml(
     """
 
     num_workers = input_dict.get('num_workers', 1)
-    if num_workers > 1:
-        chunks = input_dict.get('chunks', None)
-    else:
-        chunks = None
+    chunks = input_dict.get('chunks') if num_workers > 1 else None
 
     start_date = input_dict['start_date']
     end_date = input_dict['end_date']
     POP_units = input_dict['forcing'].get('POP_units', False)
     ignore_year_in_forcing = input_dict['forcing'].get('use_cyclic_forcing', False)
-    if 'output' in input_dict:
-        diagnostic_names = input_dict['output'].get('diagnostic_names', [])
-    else:
-        diagnostic_names = []
+
+    diagnostic_names = input_dict.get('output', {}).get('diagnostic_names', [])
     method = input_dict.get('method', 'euler')
     max_output_time_dim = input_dict.get('max_output_time_dim', 365)
 
     feisty_forcing = get_forcing_from_config(input_dict)
-    ds = generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units)
-    if ignore_year_in_forcing:
-        ds = make_forcing_cyclic(ds, input_dict['forcing'].get('cyclic_year', 1))
+
+    # include date for zarr
+    debug_outdir = '/glade/derecho/scratch/akenney/final.zarr'
+
+    if ds is None:
+        ds = generate_forcing_ds_from_config(
+            feisty_forcing, chunks, POP_units, debug_outdir=debug_outdir
+        )
+
+        if ignore_year_in_forcing:
+            ds = make_forcing_cyclic(ds, input_dict['forcing'].get('cyclic_year', 1))
 
     if 'initial_conditions' in input_dict:
         ic_root = input_dict['initial_conditions'].get('root_dir', '.')
-        ic_file = f'{ic_root}/{input_dict["initial_conditions"]["ic_file"]}'
+        ic_file = f"{ic_root}/{input_dict['initial_conditions']['ic_file']}"
     else:
         ic_file = None
     ds_ic = generate_ic_ds_for_feisty(
