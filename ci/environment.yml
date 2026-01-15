@@ -4,7 +4,7 @@ channels:
   - nodefaults
 dependencies:
   - codecov
-  - dask=2025.9
+  - dask<=2025.9
   - dask-mpi
   - dask-jobqueue
   - jupyter
@@ -26,11 +26,11 @@ dependencies:
   - pytest
   - pytest-cov
   - pyyaml
-  - ruamel.yaml=0.18.17
+  - ruamel.yaml<=0.18.17
   - scipy
   - sphinx-click
   - sphinxcontrib-autoyaml==1.1.3
-  - xarray=2025.9
+  - xarray<=2025.9
   - zarr
   - pip:
       - '--editable=..'
