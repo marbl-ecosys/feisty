@@ -536,7 +536,7 @@ def _write_to_nc_or_zarr(ds, filename, overwrite=False):
         ds_kwargs = {}
         for n, var in enumerate(ds.data_vars):
             print(f'Writing {var} to disk')
-            if n>0:
+            if n > 0:
                 ds_kwargs['mode'] = 'a'
             ds[var].to_dataset().to_zarr(filename, **ds_kwargs)
     else:
