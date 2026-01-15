@@ -531,20 +531,13 @@ def _write_to_nc_or_zarr(ds, filename, overwrite=False):
     elif filename[-5:] == '.zarr':
         print('Calling to_zarr...')
         # highres history file needs to be written variable by variable
-        # otherwise to_zarr() hangs
-        if 'biomass' in ds.data_vars or 'forcings' in ds.data_vars:
-            if 'biomass' in ds.data_vars:
-                print('Writing biomass')
-                ds['biomass'].to_dataset().to_zarr(filename)
-            if 'forcings' in ds.data_vars:
-                print('Writing forcings')
-                ds['forcings'].to_dataset().to_zarr(filename)
-            for var in ds.data_vars:
-                if var in ['biomass', 'forcings']:
-                    continue
-                print(f'Writing {var} to disk')
-                ds[var].to_dataset().to_zarr(filename, mode='a')
-        else:
-            ds.to_zarr(filename)
+        # otherwise to_zarr() hangs; we'll just always write the file
+        # one variable at a time
+        ds_kwargs = {}
+        for n, var in enumerate(ds.data_vars):
+            print(f'Writing {var} to disk')
+            if n>0:
+                ds_kwargs['mode'] = 'a'
+            ds[var].to_dataset().to_zarr(filename, **ds_kwargs)
     else:
         raise ValueError(f'Can not determine file type for {filename}')
