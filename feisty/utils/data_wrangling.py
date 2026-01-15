@@ -208,6 +208,16 @@ def generate_template(
         ],
         dtype='<U12',
     ),
+    forcings=np.array(
+        [
+            'zooC',
+            'zoo_mort',
+            'T_bottom',
+            'T_pelagic',
+            'poc_flux',
+        ],
+        dtype='<U12',
+    ),
     diagnostic_names=[],
 ):
     print(f'Starting template generation at {time.strftime("%H:%M:%S")}')
@@ -228,6 +238,8 @@ def generate_template(
     feeding_dimsizes = [len(model_time), len(feeding_link)]
     fish_dims = ['time', 'fish']
     fish_dimsizes = [len(model_time), len(fish)]
+    forcings_dims = ['time', 'forcings']
+    forcings_dimsizes = [len(model_time), len(forcings)]
     if 'X' in ds.coords:
         check_chunk = ['X']
         coords_dict['X'] = (['X'], ds.X.data)
@@ -237,6 +249,8 @@ def generate_template(
         feeding_dimsizes.append(len(ds.X))
         fish_dims.append('X')
         fish_dimsizes.append(len(ds.X))
+        forcings_dims.append('X')
+        forcings_dimsizes.append(len(ds.X))
     else:
         check_chunk = ['nlat', 'nlon']
         coords_dict['nlat'] = (['nlat'], ds.nlat.data)
@@ -253,6 +267,10 @@ def generate_template(
         fish_dimsizes.append(len(ds.nlat))
         fish_dims.append('nlon')
         fish_dimsizes.append(len(ds.nlon))
+        forcings_dims.append('nlat')
+        forcings_dimsizes.append(len(ds.nlat))
+        forcings_dims.append('nlon')
+        forcings_dimsizes.append(len(ds.nlon))
 
     chunks = {}
     for dimname in check_chunk:
@@ -268,6 +286,9 @@ def generate_template(
             coords_dict['feeding_link'] = ('feeding_link', feeding_link)
             coords_dict['predator'] = ('feeding_link', predator)
             coords_dict['prey'] = ('feeding_link', prey)
+        elif diag == 'forcing_data':
+            data_vars_dict[diag] = (forcings_dims, _zeros(forcings_dimsizes, chunks))
+            coords_dict['forcings'] = ('forcings', forcings)
         else:
             data_vars_dict[diag] = (fish_dims, _zeros(fish_dimsizes, chunks))
             coords_dict['fish'] = ('fish', fish)
@@ -510,16 +531,13 @@ def _write_to_nc_or_zarr(ds, filename, overwrite=False):
     elif filename[-5:] == '.zarr':
         print('Calling to_zarr...')
         # highres history file needs to be written variable by variable
-        # otherwise to_zarr() hangs
-        if 'biomass' in ds.data_vars:
-            print('Starting with biomass')
-            ds['biomass'].to_dataset().to_zarr(filename)
-            for var in ds.data_vars:
-                if var == 'biomass':
-                    continue
-                print(f'Writing {var} to disk')
-                ds[var].to_dataset().to_zarr(filename, mode='a')
-        else:
-            ds.to_zarr(filename)
+        # otherwise to_zarr() hangs; we'll just always write the file
+        # one variable at a time
+        ds_kwargs = {}
+        for n, var in enumerate(ds.data_vars):
+            print(f'Writing {var} to disk')
+            if n > 0:
+                ds_kwargs['mode'] = 'a'
+            ds[var].to_dataset().to_zarr(filename, **ds_kwargs)
     else:
         raise ValueError(f'Can not determine file type for {filename}')
