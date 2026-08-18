@@ -474,7 +474,7 @@ For initial conditions, I drop anything smaller than 1e-300 to 0 (this threshold
 <span class="c1"># Helper function for common task of generating netCDF file</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Removing </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> before writing new copy&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Removing </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> before writing new copy'</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="n">ds</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 </pre></div>
@@ -488,40 +488,40 @@ For initial conditions, I drop anything smaller than 1e-300 to 0 (this threshold
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># /glade/work/kristenk/fish-offline/g.e11_LENS.GECOIAF.T62_g16.009.FIESTY-forcing.nc</span>
 <span class="n">cesm_output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span>
-    <span class="s2">&quot;glade&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;work&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;kristenk&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;fish-offline&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;g.e11_LENS.GECOIAF.T62_g16.009.FIESTY-forcing.nc&quot;</span><span class="p">,</span>
+    <span class="s2">"glade"</span><span class="p">,</span>
+    <span class="s2">"work"</span><span class="p">,</span>
+    <span class="s2">"kristenk"</span><span class="p">,</span>
+    <span class="s2">"fish-offline"</span><span class="p">,</span>
+    <span class="s2">"g.e11_LENS.GECOIAF.T62_g16.009.FIESTY-forcing.nc"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">ds_in</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">cesm_output</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">vert_grid_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
     <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span>
-    <span class="s1">&#39;glade&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;p&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;cesmdata&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;cseg&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;releases&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;cesm2_0&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;components&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;pop&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;input_templates&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;gx1v7_vert_grid&#39;</span><span class="p">,</span>
+    <span class="s1">'glade'</span><span class="p">,</span>
+    <span class="s1">'p'</span><span class="p">,</span>
+    <span class="s1">'cesmdata'</span><span class="p">,</span>
+    <span class="s1">'cseg'</span><span class="p">,</span>
+    <span class="s1">'releases'</span><span class="p">,</span>
+    <span class="s1">'cesm2_0'</span><span class="p">,</span>
+    <span class="s1">'components'</span><span class="p">,</span>
+    <span class="s1">'pop'</span><span class="p">,</span>
+    <span class="s1">'input_templates'</span><span class="p">,</span>
+    <span class="s1">'gx1v7_vert_grid'</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">spinup_forcing_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;input_files&#39;</span><span class="p">,</span> <span class="s1">&#39;feisty_input_from_FOSI_monthly_1year.nc&#39;</span>
+    <span class="s1">'..'</span><span class="p">,</span> <span class="s1">'input_files'</span><span class="p">,</span> <span class="s1">'feisty_input_from_FOSI_monthly_1year.nc'</span>
 <span class="p">)</span>
 
-<span class="n">forcing_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;input_files&#39;</span><span class="p">,</span> <span class="s1">&#39;feisty_input_from_FOSI_monthly.nc&#39;</span><span class="p">)</span>
+<span class="n">forcing_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'..'</span><span class="p">,</span> <span class="s1">'input_files'</span><span class="p">,</span> <span class="s1">'feisty_input_from_FOSI_monthly.nc'</span><span class="p">)</span>
 
 <span class="n">depth</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vert_grid_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">depth</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;column depths are </span><span class="si">{</span><span class="n">depth</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'column depths are </span><span class="si">{</span><span class="n">depth</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="n">ds_in</span>
 </pre></div>
 </div>
@@ -915,8 +915,8 @@ Attributes:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">time0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">249</span> <span class="o">*</span> <span class="mi">365</span><span class="p">]),</span> <span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
-<span class="n">time1</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">time0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">249</span> <span class="o">*</span> <span class="mi">365</span><span class="p">]),</span> <span class="n">ds_in</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">time1</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="c1"># ds_in = xr.Dataset(</span>
 <span class="n">new_time</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">time0</span> <span class="o">+</span> <span class="n">time1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">365</span>
 <span class="n">new_time</span><span class="p">[:</span><span class="mi">24</span><span class="p">]</span>
@@ -966,7 +966,7 @@ Attributes:
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">my_reshape</span><span class="p">(</span><span class="n">da</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">'time'</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">816</span><span class="p">,</span> <span class="mi">384</span> <span class="o">*</span> <span class="mi">320</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">384</span> <span class="o">*</span> <span class="mi">320</span><span class="p">)</span>
@@ -976,27 +976,27 @@ Attributes:
 <span class="n">flux_conversion</span> <span class="o">=</span> <span class="n">biomass_conversion</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span>  <span class="c1"># nmolC cm-2 s-1 to g(WW) m-2 d-1</span>
 
 <span class="c1"># Grid variables</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;KMT&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;TLONG&quot;</span><span class="p">])[</span><span class="n">mask</span><span class="p">]</span>
-<span class="n">lat</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;TLAT&quot;</span><span class="p">])[</span><span class="n">mask</span><span class="p">]</span>
-<span class="n">kmt</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;KMT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">))[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"KMT"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"TLONG"</span><span class="p">])[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"TLAT"</span><span class="p">])[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">kmt</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"KMT"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int'</span><span class="p">))[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
 <span class="n">dep</span> <span class="o">=</span> <span class="p">[</span><span class="n">depth</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kmt</span><span class="p">]</span>
 <span class="n">dep</span>
 
 <span class="c1"># Intermediate forcing variables</span>
 <span class="c1"># (zooC and zoo_mort are scaled by fraction of autoC coming from diatoms)</span>
-<span class="n">spC</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;spC_150m&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
-<span class="n">diatC</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;diatC_150m&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
-<span class="n">diazC</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;diazC_150m&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
+<span class="n">spC</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"spC_150m"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
+<span class="n">diatC</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"diatC_150m"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
+<span class="n">diazC</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"diazC_150m"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
 <span class="n">totC</span> <span class="o">=</span> <span class="n">spC</span> <span class="o">+</span> <span class="n">diatC</span> <span class="o">+</span> <span class="n">diazC</span>
 <span class="n">fracL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">totC</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">diatC</span> <span class="o">/</span> <span class="n">totC</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Forcing variables</span>
-<span class="n">T_pelagic</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;TEMP_150m&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
-<span class="n">T_bottom</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;TEMP_bottom&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
-<span class="n">poc_flux_bottom</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;POC_FLUX_IN_bottom&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">flux_conversion</span>
-<span class="n">zooC</span> <span class="o">=</span> <span class="n">fracL</span> <span class="o">*</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;zooC_150m&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">biomass_conversion</span>
-<span class="n">zoo_mort</span> <span class="o">=</span> <span class="n">fracL</span> <span class="o">*</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;zoo_loss_150m&quot;</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">flux_conversion</span>
+<span class="n">T_pelagic</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"TEMP_150m"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
+<span class="n">T_bottom</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"TEMP_bottom"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span>
+<span class="n">poc_flux_bottom</span> <span class="o">=</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"POC_FLUX_IN_bottom"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">flux_conversion</span>
+<span class="n">zooC</span> <span class="o">=</span> <span class="n">fracL</span> <span class="o">*</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"zooC_150m"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">biomass_conversion</span>
+<span class="n">zoo_mort</span> <span class="o">=</span> <span class="n">fracL</span> <span class="o">*</span> <span class="n">my_reshape</span><span class="p">(</span><span class="n">ds_in</span><span class="p">[</span><span class="s2">"zoo_loss_150m"</span><span class="p">])[:,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">flux_conversion</span>
 </pre></div>
 </div>
 </div>
@@ -1011,43 +1011,43 @@ Wall time: 30.4 s
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;days since 0001-01-01 00:00:00&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="s1">&#39;calendar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;noleap&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;T&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'time'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'time'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'time'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'time'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'days since 0001-01-01 00:00:00'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'time'</span><span class="p">][</span><span class="s1">'calendar'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'noleap'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'time'</span><span class="p">][</span><span class="s1">'axis'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'T'</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;latitude&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="s1">&#39;standard_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;latitude&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;degrees_north&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Y&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'latitude'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">][</span><span class="s1">'standard_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'latitude'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'degrees_north'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">][</span><span class="s1">'axis'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Y'</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;dep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;dep&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;    bottom depth&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;dep&#39;</span><span class="p">][</span><span class="s1">&#39;standard_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;    bottom depth&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;dep&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;dep&#39;</span><span class="p">][</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Z&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'dep'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'dep'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'    bottom depth'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'dep'</span><span class="p">][</span><span class="s1">'standard_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'    bottom depth'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'dep'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'m'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'dep'</span><span class="p">][</span><span class="s1">'axis'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Z'</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;T_pelagic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;T_pelagic&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Pelagic mean temperature&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;T_pelagic&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;degrees C&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'T_pelagic'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'T_pelagic'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Pelagic mean temperature'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'T_pelagic'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'degrees C'</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;T_bottom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;T_bottom&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bottom temperature&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;T_bottom&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;degrees C&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'T_bottom'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'T_bottom'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Bottom temperature'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'T_bottom'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'degrees C'</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;poc_flux_bottom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;poc_flux_bottom&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Particulate organic matter flux to seafloor&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;poc_flux_bottom&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;g m-2 d-1&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'poc_flux_bottom'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'poc_flux_bottom'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Particulate organic matter flux to seafloor'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'poc_flux_bottom'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'g m-2 d-1'</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;zooC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;zooC&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Biomass of mesozooplankton&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;zooC&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;g m-2&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'zooC'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'zooC'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Biomass of mesozooplankton'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'zooC'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'g m-2'</span>
 
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;zoo_mort&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;zoo_mort&#39;</span><span class="p">][</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mortality loss of mesozooplankton&#39;</span>
-<span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;zoo_mort&#39;</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;g m-2 d-1&#39;</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'zoo_mort'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'zoo_mort'</span><span class="p">][</span><span class="s1">'long_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Mortality loss of mesozooplankton'</span>
+<span class="n">metadata</span><span class="p">[</span><span class="s1">'zoo_mort'</span><span class="p">][</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'g m-2 d-1'</span>
 </pre></div>
 </div>
 </div>
@@ -1056,20 +1056,20 @@ Wall time: 30.4 s
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_forcing</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">lat</span><span class="p">),</span>
-        <span class="s1">&#39;dep&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">dep</span><span class="p">),</span>
-        <span class="s1">&#39;T_pelagic&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">T_pelagic</span><span class="p">),</span>
-        <span class="s1">&#39;T_bottom&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">T_bottom</span><span class="p">),</span>
-        <span class="s1">&#39;poc_flux_bottom&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">poc_flux_bottom</span><span class="p">),</span>
-        <span class="s1">&#39;zooC&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">zooC</span><span class="p">),</span>
-        <span class="s1">&#39;zoo_mort&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">zoo_mort</span><span class="p">),</span>
+        <span class="s1">'lat'</span><span class="p">:</span> <span class="p">([</span><span class="s1">'X'</span><span class="p">],</span> <span class="n">lat</span><span class="p">),</span>
+        <span class="s1">'dep'</span><span class="p">:</span> <span class="p">([</span><span class="s1">'X'</span><span class="p">],</span> <span class="n">dep</span><span class="p">),</span>
+        <span class="s1">'T_pelagic'</span><span class="p">:</span> <span class="p">([</span><span class="s1">'time'</span><span class="p">,</span> <span class="s1">'X'</span><span class="p">],</span> <span class="n">T_pelagic</span><span class="p">),</span>
+        <span class="s1">'T_bottom'</span><span class="p">:</span> <span class="p">([</span><span class="s1">'time'</span><span class="p">,</span> <span class="s1">'X'</span><span class="p">],</span> <span class="n">T_bottom</span><span class="p">),</span>
+        <span class="s1">'poc_flux_bottom'</span><span class="p">:</span> <span class="p">([</span><span class="s1">'time'</span><span class="p">,</span> <span class="s1">'X'</span><span class="p">],</span> <span class="n">poc_flux_bottom</span><span class="p">),</span>
+        <span class="s1">'zooC'</span><span class="p">:</span> <span class="p">([</span><span class="s1">'time'</span><span class="p">,</span> <span class="s1">'X'</span><span class="p">],</span> <span class="n">zooC</span><span class="p">),</span>
+        <span class="s1">'zoo_mort'</span><span class="p">:</span> <span class="p">([</span><span class="s1">'time'</span><span class="p">,</span> <span class="s1">'X'</span><span class="p">],</span> <span class="n">zoo_mort</span><span class="p">),</span>
     <span class="p">}</span>
 <span class="p">)</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">new_time</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
-<span class="n">ds_forcing</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
-<span class="n">ds_forcing</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;axis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span>
+<span class="n">ds_forcing</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+<span class="n">ds_forcing</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"axis"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"T"</span>
 <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
     <span class="n">ds_forcing</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
-    <span class="n">ds_forcing</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s1">&#39;_FillValue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ds_forcing</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s1">'_FillValue'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">ds_forcing</span>
 </pre></div>
 </div>

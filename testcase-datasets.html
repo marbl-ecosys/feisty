@@ -482,7 +482,7 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;bathymetry&#39;: &lt;xarray.DataArray &#39;bathymetry&#39; (X: 22)&gt; Size: 176B
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'bathymetry': &lt;xarray.DataArray 'bathymetry' (X: 22)&gt; Size: 176B
  array([  30.04108171,   30.19902725,   31.17873201,   36.8321355 ,
           61.34734988,  131.85502453,  264.42098685,  437.55383604,
          609.22301965,  749.85055796,  851.52743149,  919.48569869,
@@ -494,21 +494,21 @@ for a handful of <code class="docutils literal notranslate"><span class="pre">fe
  Attributes:
      long_name:  depth
      units:      m,
- &#39;NX&#39;: 22}
+ 'NX': 22}
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">domain_dict</span><span class="p">[</span><span class="s2">&quot;bathymetry&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">domain_dict</span><span class="p">[</span><span class="s2">"bathymetry"</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Bathymetry&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Bathymetry"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Bathymetry&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, 'Bathymetry')
 </pre></div>
 </div>
 <img alt="_images/1c6f23166aac87778c40cf0dc037aff47f9c222b566f8e24bbc0ee809fcb2343.png" src="_images/1c6f23166aac87778c40cf0dc037aff47f9c222b566f8e24bbc0ee809fcb2343.png" />
@@ -551,7 +551,7 @@ variables:
 	float64 zooC(zooplankton, forcing_time, X) ;
 		zooC:long_name = Zooplankton biomass ;
 		zooC:units = g/m^2 ;
-		zooC:harmonic_parms = Zoo = {&#39;mu&#39;: 4.0, &#39;amp_fraction&#39;: 0.2, &#39;phase&#39;: 10.0} ;
+		zooC:harmonic_parms = Zoo = {'mu': 4.0, 'amp_fraction': 0.2, 'phase': 10.0} ;
 	float64 zoo_mort(zooplankton, forcing_time, X) ;
 		zoo_mort:long_name = Zooplankton quadratic mortality ;
 		zoo_mort:units = g/m^2/d ;
@@ -575,7 +575,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7f43b2848f50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7fab72ff0a50&gt;
 </pre></div>
 </div>
 <img alt="_images/ae5570f25ed44097f3b5ff017e0d2bbf9457e215b8a586affa75c502a8bc2377.png" src="_images/ae5570f25ed44097f3b5ff017e0d2bbf9457e215b8a586affa75c502a8bc2377.png" />
@@ -584,14 +584,14 @@ variables:
 <p>Or at a single <code class="docutils literal notranslate"><span class="pre">X</span></code> point:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">forcing</span><span class="o">.</span><span class="n">T_pelagic</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;T_pelagic&quot;</span><span class="p">)</span>
-<span class="n">forcing</span><span class="o">.</span><span class="n">T_bottom</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;T_bottom&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">forcing</span><span class="o">.</span><span class="n">T_pelagic</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"T_pelagic"</span><span class="p">)</span>
+<span class="n">forcing</span><span class="o">.</span><span class="n">T_bottom</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"T_bottom"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f43b290b090&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fab7305ccd0&gt;
 </pre></div>
 </div>
 <img alt="_images/2e4bee59178cb388500a659c9f4a5ab77880f99afd6d928b0937bbbc67ac912a.png" src="_images/2e4bee59178cb388500a659c9f4a5ab77880f99afd6d928b0937bbbc67ac912a.png" />
@@ -633,7 +633,7 @@ variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f43b28f6750&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fab6ac30750&gt;]
 </pre></div>
 </div>
 <img alt="_images/cd6e05c3dd4668b438b36b8131840025e6f04abbb7a5ff4cc74c3275c79daae9.png" src="_images/cd6e05c3dd4668b438b36b8131840025e6f04abbb7a5ff4cc74c3275c79daae9.png" />
