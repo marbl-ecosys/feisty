@@ -26,6 +26,7 @@ jobs:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
           create-args: python=3.11
+          generate-run-shell: true
 
       - name: Show conda environment
         shell: bash -l {0}
