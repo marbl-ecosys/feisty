@@ -25,7 +25,7 @@ jobs:
       - name: Show conda environment
         shell: bash -l {0}
         run: |
-          conda list
+          mamba list
 
       - name: Run pre-commit
         shell: bash -l {0}
