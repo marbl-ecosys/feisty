@@ -42,6 +42,7 @@ jobs:
           environment-file: ci/environment.yml
           environment-name: dev-feisty
           create-args: python=${{ matrix.python-version }}
+          generate-run-shell: true
 
       - name: Use old versions of packages where conda is out of sync with version support
         run: |
