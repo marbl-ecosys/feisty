@@ -6,7 +6,7 @@ import cftime
 import numpy as np
 import xarray as xr
 import yaml
-from dask.distributed import wait
+from dask.distributed import print as ddprint, wait
 
 from . import testcase
 from .core import settings as settings_mod
@@ -150,8 +150,8 @@ class _offline_driver(object):
         for ind in time_levs_per_ds:
             ind_cnt += ind
         forcing_time = []
-        for nt_loc, start_date in zip(time_levs_per_ds, start_dates):
-            time = xr.cftime_range(start=start_date, periods=nt_loc, calendar='noleap')
+        for nt_loc, model_time in zip(time_levs_per_ds, start_dates):
+            time = xr.cftime_range(start=model_time, periods=nt_loc, calendar='noleap')
             if self.ignore_year:
                 units = 'days since 0001-01-01 00:00:00'
                 forcing_time.append(
@@ -235,7 +235,7 @@ class _offline_driver(object):
 
     def _solve_foward_euler(self, nt):
         """use forward-euler to solve feisty model"""
-        print(f'Integrating {nt} steps (starting at {time.strftime("%H:%M:%S")})')
+        ddprint(f'Integrating {nt} steps (starting at {time.strftime("%H:%M:%S")})')
         for n in range(nt):
             dsdt = self._compute_tendency(self._forcing_time[n])
             self.state_t.data[self.obj.prog_ndx_prognostic, :] = (

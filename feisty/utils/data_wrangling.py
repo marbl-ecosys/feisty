@@ -347,7 +347,7 @@ def generate_forcing_ds_from_config(feisty_forcing, chunks, POP_units=False, deb
         new_ds = new_ds.chunk(default_chunks)
 
         new_ds = new_ds.assign_coords(
-            {'forcing_time': new_ds.forcing_time + datetime.timedelta(day_offset)}
+            {'forcing_time': new_ds.forcing_time.data + datetime.timedelta(day_offset)}
         )
         forcing_dses.append(new_ds)
 
